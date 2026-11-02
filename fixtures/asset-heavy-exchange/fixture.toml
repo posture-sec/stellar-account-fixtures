@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "asset-heavy-exchange"
+kind = "captured"
+scenario = "37 trustlines and a home domain, the account shape that makes a naive response body large"
+account_id = "GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S"
+captured_at = "2026-11-02T11:48:55Z"
+ledger = 65266866
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "dc7ccffebd29f079e61482a764013a418fc496e150c6129ec10d82d11fa3f9bc"
+shape = ["has_home_domain", "many_balances", "master_is_signer", "no_data", "no_inflation", "not_sponsored", "single_signer", "sponsoring", "thresholds_zero"]

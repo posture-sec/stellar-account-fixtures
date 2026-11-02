@@ -1,0 +1,121 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75",
+  "balances": [
+    {
+      "asset_code": "FIDR",
+      "asset_issuer": "GBZQNUAGO4DZFWOHJ3PVXZKZ2LTSOVAMCTVM46OEMWNWTED4DFS3NAYH",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 60126306,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "iFIDR",
+      "asset_issuer": "GBVVM7ZYANANRP3DWVRANRDUU4M7J5W77EDTSZFD62LQ7SOHJD5IFIDR",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 60049342,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "KALE",
+      "asset_issuer": "GBDVX4VELCDSQ54KQJYTNHXAHFLBCA77ZY2USQBM4CSHTTV7DME7KALE",
+      "asset_type": "credit_alphanum4",
+      "balance": "32.9687700",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266843,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "USDC",
+      "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 60082392,
+      "limit": "999999.0000000",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "3.0020490",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "id": "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75",
+  "last_modified_ledger": 65266813,
+  "last_modified_time": "2026-11-02T11:44:09Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 0,
+  "paging_token": "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75",
+  "sequence": "256656761593812653",
+  "sequence_ledger": 65266813,
+  "sequence_time": "1793619849",
+  "signers": [
+    {
+      "key": "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75",
+      "type": "ed25519_public_key",
+      "weight": 1
+    }
+  ],
+  "subentry_count": 4,
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

@@ -1,0 +1,10 @@
+# Python and editor caches. Nothing here is built or installed, so there are no
+# build artifacts to ignore; if that changes, add the artifacts rather than
+# loosening a rule.
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.mypy_cache/
+.coverage
+.venv/
+venv/

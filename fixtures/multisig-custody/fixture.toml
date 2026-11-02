@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "multisig-custody"
+kind = "captured"
+scenario = "two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain"
+account_id = "GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR"
+captured_at = "2026-11-02T11:48:49Z"
+ledger = 65266865
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "c960f2f7f2b9573493d0f4a78bcc02fe11e0c5c829b7dea3b30938b196470711"
+shape = ["has_inflation", "master_is_signer", "multi_signer", "no_data", "no_home_domain", "not_sponsored", "not_sponsoring", "thresholds_nonzero"]

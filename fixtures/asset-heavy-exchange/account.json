@@ -1,0 +1,506 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S",
+  "balances": [
+    {
+      "asset_code": "ABI",
+      "asset_issuer": "GCVT6CMZHFUFXDZOODG55H53OB6CGCELUXJLL3ZJWLTCRBAWJ3CEJZBH",
+      "asset_type": "credit_alphanum4",
+      "balance": "344.5013812",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702687,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "ASX",
+      "asset_issuer": "GAI7GIU6GITEYJLR4PAOWGF7D4GM23TQVCQYUL66DBK5X32LGVXB4SX2",
+      "asset_type": "credit_alphanum4",
+      "balance": "1504.1606379",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63251079,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "AYU",
+      "asset_issuer": "GD7R5ZNBSGGS6UB4JHTGXQHKGNFDYJAG2XDDX2LGDXKRRADOV2O3MMU6",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0060292",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 49546085,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "BATIQ",
+      "asset_issuer": "GAQNFRO3DSN54OLWHSTI67IYGDM6D2MYXBEZOSVN656LFZ2HQNQYWEK7",
+      "asset_type": "credit_alphanum12",
+      "balance": "32.5910953",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63251060,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "BBR",
+      "asset_issuer": "GBJ5UGKGO5K2OCU3KW374ZD3Z27FY5AHHTATO5WXRESEDMY3J6A4ATNT",
+      "asset_type": "credit_alphanum4",
+      "balance": "2.8411717",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702679,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "CDR",
+      "asset_issuer": "GAHO3ER5MMBCH6HWR6XSET5RAREEM3FZ4FOSL6CBNUYH2IDGNUQKEUEK",
+      "asset_type": "credit_alphanum4",
+      "balance": "148.3661142",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266866,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "CODEX",
+      "asset_issuer": "GBIML5SB4CLYYCUWS2GQHC64BCULSIRZKUYU2TJ7RTFHNC2O53KRJZA7",
+      "asset_type": "credit_alphanum12",
+      "balance": "12.5866346",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 62430353,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "CORY",
+      "asset_issuer": "GD23WOYREU5DGNUWPQYYR5KL64LMVNCHMPXMAF4UR5YBW3VXINEZPCKN",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.2771908",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 61423719,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "CYC",
+      "asset_issuer": "GARIQONJD6LVPUV6Z6WLGMM76JOJN7FSGHZMGW6ED2UJ6XKCCUHJAAAX",
+      "asset_type": "credit_alphanum4",
+      "balance": "18.2298641",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 62430364,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "DGOLD",
+      "asset_issuer": "GBGOJ4FWHK4IMX4434NYZW4N6L5X7GUWTKT2ON3HBYTOHCQOKRNON34N",
+      "asset_type": "credit_alphanum12",
+      "balance": "115.3818460",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266809,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "DRX",
+      "asset_issuer": "GCMC6AUASNZY77OM4E6C3VM4AU6EK2CPJRA22LTEJEYIBRPPCMQJTOHD",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.1457414",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 61904201,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "ELX",
+      "asset_issuer": "GB2SWLK5HDWESA27NSQ4KPJJ66TEMQYUFTRXVMDRIIB6XQWTECNM4WKU",
+      "asset_type": "credit_alphanum4",
+      "balance": "9.2360530",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266780,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "EZIO",
+      "asset_issuer": "GBJA5FR26RKKMEZALKLDANCUFHTDC3ZCTZIK2APWG4XGPWNMJH6RMIRZ",
+      "asset_type": "credit_alphanum4",
+      "balance": "77.4532385",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702634,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "FOG",
+      "asset_issuer": "GC4NJX3L563TIDR4LSWBQ5PPIZ2ZGEXI4PXFJYZKT7GTFUHICDP4HG6C",
+      "asset_type": "credit_alphanum4",
+      "balance": "140.4689004",
+      "buying_liabilities": "268.0550144",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266769,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "Gagas",
+      "asset_issuer": "GALYZZUD42EHJ63EDJNH773WMTU4O42PAVYVFX75NNK2THL64T27QYVQ",
+      "asset_type": "credit_alphanum12",
+      "balance": "34.2011190",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 62100955,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "IGA",
+      "asset_issuer": "GC7J3C5IVE5VYPQXD7A23UK2LTHQ77XO4BM3YVV5BBT57EGZYOERECWV",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.0330999",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627762,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "KC",
+      "asset_issuer": "GCMVGLL4KDQJY7RA6N4QYEKSC2BWDJ47JV5QXPWJFTBW65KJMAA7F2VF",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.7320197",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63250875,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "KNK",
+      "asset_issuer": "GAQMMHRFGE2HYSUGRTL3U2MINUFBFM26JDKVEMRTDIHN52SSGRHMBCRM",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.9830796",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702668,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "LANDK",
+      "asset_issuer": "GC7STZOPBFA4NFOXN6HRUAA7RD7JOSOAHGDK6SCQ4A3RRVHMX6PFSJO3",
+      "asset_type": "credit_alphanum12",
+      "balance": "17.1716260",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 62430370,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "LET",
+      "asset_issuer": "GDZXWSISJESQ7SGFBZU6NSYZY64IWTBD4JFUMCX4PG6IELA66LKJX3J6",
+      "asset_type": "credit_alphanum4",
+      "balance": "8.8843909",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266799,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "LZX",
+      "asset_issuer": "GAEP4RZ2NZYTB7EAHZY5LSLAZPNEXXOQ6Y2FU4XSVWAYCLWBYSO4RHWV",
+      "asset_type": "credit_alphanum4",
+      "balance": "197586.7576581",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702616,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "Maroon",
+      "asset_issuer": "GBGOJ4FWHK4IMX4434NYZW4N6L5X7GUWTKT2ON3HBYTOHCQOKRNON34N",
+      "asset_type": "credit_alphanum12",
+      "balance": "171.1149001",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266819,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "MDU",
+      "asset_issuer": "GBPBVJWRA7TLWSDY3F6UJM47PGCIYJUZBRFUJJJL6267KJCAJHQJNCU3",
+      "asset_type": "credit_alphanum4",
+      "balance": "4.3304865",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702715,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "OBT",
+      "asset_issuer": "GCAPPSPRBVXM2AIMFK6TVHKKPL3L4NDNLIVM42FNTROP3RDWGYF34RXI",
+      "asset_type": "credit_alphanum4",
+      "balance": "10.3562093",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63251035,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "OXI",
+      "asset_issuer": "GBSOXTJ7OMUAKWVNTTKLRQL5JWSSY3ZOPKDUUTV2YZIBFMGPRGAXFC2M",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.6114012",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627796,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "QRC",
+      "asset_issuer": "GDPIT2ABUHQ4LFE3FSPO6AUPD6XOEPFXWULDMYFPN5WK74W6OKEGEJVH",
+      "asset_type": "credit_alphanum4",
+      "balance": "7.7116004",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266826,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "RMB",
+      "asset_issuer": "GC7IV7ENYJINQZDO4FHUUD6OSRSKSR2WJYZXH23PGEQYJWZAJAMRNKPC",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.6886171",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 61738016,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "RZX",
+      "asset_issuer": "GD643ULDPLR2FG2B6FGB5HBU3D37XXQ4AWF5XR3J3VDEY2J2OTVRECLW",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.9796923",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627778,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "SAGUBA",
+      "asset_issuer": "GCAWFQNPOBNZ22W5J6PTPCOUV5KJY6YORG43WH2XLLHP4OWURZCBAAMO",
+      "asset_type": "credit_alphanum12",
+      "balance": "1.5618636",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627786,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "SKB",
+      "asset_issuer": "GACAMZXIGUSWHLZAMZSKRMJ4KPWMMQWQHMW424BNBKHHI4TZJRCPEC36",
+      "asset_type": "credit_alphanum4",
+      "balance": "1035.6791645",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63251070,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "SYC",
+      "asset_issuer": "GCKFV7LAAL3O73VD4S66Y5WYH2UPXWYCPH75ORL7TWOWQ2BNQT35TMYX",
+      "asset_type": "credit_alphanum4",
+      "balance": "3.7367239",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702660,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "TPC",
+      "asset_issuer": "GA5W5KLBZGGFVRKVYFCUTEMKBA4O7IVD2L7DWCVP4WMEPR7NHULPZ4W7",
+      "asset_type": "credit_alphanum4",
+      "balance": "1.1192997",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627757,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "TPX",
+      "asset_issuer": "GCOCWTU32YSFMGUKCSVKODVGLVHCVI2FSZX4SFPJCALVPCC4DFWZOUWH",
+      "asset_type": "credit_alphanum4",
+      "balance": "11.1427573",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 63702648,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "USDC",
+      "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000009",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65122256,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "WRA",
+      "asset_issuer": "GDLGYD3RY6TMNOLY2EPMYCLGAVBASBN54SM5CA4SSH2KNOC2DW6YV3TV",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000167",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 49531606,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "XLC",
+      "asset_issuer": "GCQ2IVYK522SCHNPDN7LQ4Q4RD5YQZXKNLAJKK5FHQNCFWFIMDAY5U46",
+      "asset_type": "credit_alphanum4",
+      "balance": "1000000.0000001",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 56627813,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "440.0353523",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "79.0002427"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": "stellarterm.com",
+  "id": "GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S",
+  "last_modified_ledger": 65266866,
+  "last_modified_time": "2026-11-02T11:48:34Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 127,
+  "paging_token": "GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S",
+  "sequence": "168899936807554548",
+  "sequence_ledger": 65266866,
+  "sequence_time": "1793620114",
+  "signers": [
+    {
+      "key": "GDAYKKYOJ545SUQZ4V26IOHRN6K4VGLAZXK2EOGJCYG4SGRZSA5EOY2S",
+      "type": "ed25519_public_key",
+      "weight": 1
+    }
+  ],
+  "subentry_count": 39,
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

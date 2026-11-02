@@ -1,0 +1,129 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR",
+  "balances": [
+    {
+      "asset_code": "TZS",
+      "asset_issuer": "GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO",
+      "asset_type": "credit_alphanum4",
+      "balance": "51610697.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266865,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "TZSRSV",
+      "asset_issuer": "GANNTI6OTKR6WSOVOIGUMT7GMSSEPV3UL3W4VI22VLFW3NT5ABOZ2YFB",
+      "asset_type": "credit_alphanum12",
+      "balance": "17348318.9900000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "is_clawback_enabled": true,
+      "last_modified_ledger": 65037487,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "USD",
+      "asset_issuer": "GA2MSSZKJOU6RNL3EJKH3S5TB5CDYTFQFWRYFGUJVIN5I6AOIRTLUHTO",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 58566579,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "USDRSV",
+      "asset_issuer": "GANNTI6OTKR6WSOVOIGUMT7GMSSEPV3UL3W4VI22VLFW3NT5ABOZ2YFB",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "is_clawback_enabled": true,
+      "last_modified_ledger": 64912889,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "4.0716985",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "id": "GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR",
+  "inflation_destination": "GA6WRVV7W2XJTIGBOHR37HZM2X3AAINJ76UNRTWBBXUBWNMJCKWTMID3",
+  "last_modified_ledger": 65266865,
+  "last_modified_time": "2026-11-02T11:48:29Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 0,
+  "paging_token": "GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR",
+  "sequence": "251541528558742775",
+  "sequence_ledger": 65266865,
+  "sequence_time": "1793620109",
+  "signers": [
+    {
+      "key": "GA2TBSAIX6W3C6IND7KC3PIRW6ON5OR7LHMRWD4AJKXEIYMF7B6MAAGR",
+      "type": "ed25519_public_key",
+      "weight": 2
+    },
+    {
+      "key": "GANNTI6OTKR6WSOVOIGUMT7GMSSEPV3UL3W4VI22VLFW3NT5ABOZ2YFB",
+      "type": "ed25519_public_key",
+      "weight": 4
+    }
+  ],
+  "subentry_count": 5,
+  "thresholds": {
+    "high_threshold": 4,
+    "low_threshold": 2,
+    "med_threshold": 3
+  }
+}

@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "domain-and-inflation"
+kind = "captured"
+scenario = "home_domain lobstr.co with an inflation destination and two sponsorships, a well-formed SEP-1 candidate"
+account_id = "GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6"
+captured_at = "2026-11-02T11:49:02Z"
+ledger = 65266813
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "b33a885e520b9cfcd5cc515a3b678e5413d7880b7185cbcdcbe8de863757de76"
+shape = ["has_home_domain", "has_inflation", "master_is_signer", "no_data", "not_sponsored", "single_signer", "sponsoring", "thresholds_zero"]

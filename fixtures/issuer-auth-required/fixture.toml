@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "issuer-auth-required"
+kind = "captured"
+scenario = "an issuer account with auth_required set, two signers at weight 1 and 150 sponsored entries"
+account_id = "GD3ZN2T6QQMKLAGKKMWHHY4FITANVJBTREEJERHTWGWF2GSBPOSHGCLU"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GD3ZN2T6QQMKLAGKKMWHHY4FITANVJBTREEJERHTWGWF2GSBPOSHGCLU"
+captured_at = "2026-11-02T11:48:52Z"
+ledger = 65266862
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "701981c0c40d4d6a109274df6a6bb735f876b2c7204ffa86eb79071a2654f7de"
+shape = ["auth_required", "master_is_signer", "multi_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsored", "sponsoring", "thresholds_nonzero"]

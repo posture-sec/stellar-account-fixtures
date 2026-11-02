@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "default-plain"
+kind = "captured"
+scenario = "one signer which is the master key at weight 1, all thresholds zero and no optional fields, the account a rule has to leave alone"
+account_id = "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75"
+captured_at = "2026-11-02T11:48:46Z"
+ledger = 65266813
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "d14f1f7bbcf10f9e1d7e162b59db1481ecd1ea542a7f21766a53fafdebdb4cdb"
+shape = ["master_is_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsored", "not_sponsoring", "single_signer", "thresholds_zero"]

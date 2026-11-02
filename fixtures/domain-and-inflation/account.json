@@ -1,0 +1,124 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6",
+  "balances": [
+    {
+      "asset_code": "iDRA",
+      "asset_issuer": "GA7NLOF4EHWMJF6DBXXV2H6AYI7IHYWNFZR6R52BYBLY7TE5Q74AIDRA",
+      "asset_type": "credit_alphanum4",
+      "balance": "3.3458294",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 61326362,
+      "limit": "100000000000.0000000",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "iFIDR",
+      "asset_issuer": "GBVVM7ZYANANRP3DWVRANRDUU4M7J5W77EDTSZFD62LQ7SOHJD5IFIDR",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 61342082,
+      "limit": "100000000000.0000000",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "KALE",
+      "asset_issuer": "GBDVX4VELCDSQ54KQJYTNHXAHFLBCA77ZY2USQBM4CSHTTV7DME7KALE",
+      "asset_type": "credit_alphanum4",
+      "balance": "36.5799520",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65266846,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "KALIEN",
+      "asset_issuer": "GB53F5Y2DC5ZNRVMTVNUECM5DVTGY2SFJMHE3DWO53CGL62OXKKALIEN",
+      "asset_type": "credit_alphanum12",
+      "balance": "1997740.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "is_clawback_enabled": true,
+      "last_modified_ledger": 63227140,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "5.0104048",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": "lobstr.co",
+  "id": "GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6",
+  "inflation_destination": "GDCHDRSDOBRMSUDKRE2C4U4KDLNEATJPIHHR2ORFL5BSD56G4DQXL4VW",
+  "last_modified_ledger": 65266813,
+  "last_modified_time": "2026-11-02T11:44:09Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 2,
+  "paging_token": "GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6",
+  "sequence": "87342338967428410",
+  "sequence_ledger": 65266813,
+  "sequence_time": "1793619849",
+  "signers": [
+    {
+      "key": "GB4UOCL7R5UZQ3C7HM4VNFHB6GGTFDQZ2WEQUTXTDXLXY3UUXKXYV2X6",
+      "type": "ed25519_public_key",
+      "weight": 1
+    }
+  ],
+  "subentry_count": 4,
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

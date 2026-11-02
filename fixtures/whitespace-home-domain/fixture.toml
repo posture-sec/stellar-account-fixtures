@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "whitespace-home-domain"
+kind = "captured"
+scenario = "home_domain is a single space, which a tool that trims before validating reads as absent"
+account_id = "GBDAZM3LPTHP3IFPDAUQGLSANPW5S5K5WFKBFVHQ3SMT3JDRQICMTSNZ"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GBDAZM3LPTHP3IFPDAUQGLSANPW5S5K5WFKBFVHQ3SMT3JDRQICMTSNZ"
+captured_at = "2026-11-02T11:48:58Z"
+ledger = 65266813
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "768c86e8393955ec943eb951e4ec25bf9cba83a3c8bb8a5b25ca04fca2093b0e"
+shape = ["blank_home_domain", "has_inflation", "master_is_signer", "no_data", "not_sponsored", "single_signer", "sponsoring", "thresholds_zero"]
