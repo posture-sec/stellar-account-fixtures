@@ -1,0 +1,18 @@
+# Review ownership (task 1.5). The org has one member, so the ruleset leaves
+# require_code_owner_review off: naming a reviewer nobody can satisfy would only block
+# the repository. Airlock's first CODEOWNERS named an account that no longer exists and
+# GitHub said nothing in the UI, so this file is checked through
+# GET /repos/posture-sec/stellar-account-fixtures/codeowners/errors rather than assumed.
+
+*                                       @bolabeatz
+
+/validate.py                            @bolabeatz
+/test_validate.py                       @bolabeatz
+/tools/                                 @bolabeatz
+/fixtures/                              @bolabeatz
+/corpus/                                @bolabeatz
+/scripts/                               @bolabeatz
+/.github/                               @bolabeatz
+/SCHEMA.md                              @bolabeatz
+/pyproject.toml                         @bolabeatz
+/requirements-dev.txt                   @bolabeatz
