@@ -1,0 +1,57 @@
+name: Fixture request
+description: The corpus lacks a shape a consumer needs.
+labels: ["type: fixture", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A fixture is a real read, so this form asks for the account before it asks for the
+        code. D-01 in `ROADMAP.md` is that captured beats synthetic: a shape is fabricated
+        only after the search for a live account failed, and the sidecar has to say so.
+  - type: dropdown
+    id: network
+    attributes:
+      label: Network
+      description: The capture verifies the endpoint's passphrase against this.
+      options:
+        - public
+        - testnet
+    validations:
+      required: true
+  - type: textarea
+    id: shapes
+    attributes:
+      label: Which shape labels are missing
+      description: >-
+        Tokens from the vocabulary in `SCHEMA.md` 5, one line each. A label that already has a
+        fixture is not a request; say which fixture is not covering the case instead.
+      placeholder: |
+        auth_revocable
+    validations:
+      required: true
+  - type: textarea
+    id: account
+    attributes:
+      label: The account to capture
+      description: >-
+        A `G...` id, or the search you ran and what it returned. `M...` and `C...` addresses
+        cannot be captured here. Leave this blank only if you have looked and found nothing.
+      placeholder: G...
+  - type: textarea
+    id: why
+    attributes:
+      label: What would read it
+      description: >-
+        The Gauge rule, the Airlock detector or the test this fixture unblocks. A shape nobody
+        consumes is corpus weight, not coverage.
+    validations:
+      required: true
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done when
+      description: >-
+        The observable end state, the way `ROADMAP.md` writes it. Usually: the label appears in
+        `python3 validate.py --report` and `README.md` loses it from the gap list.
+    validations:
+      required: true

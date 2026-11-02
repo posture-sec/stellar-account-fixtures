@@ -1,0 +1,53 @@
+name: Bug report
+description: The validator, the capture tool or a check does not behave as documented.
+labels: ["type: bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This corpus is read by other projects' tests, so a bug is anything that lets a false
+        statement about provenance through. Do not paste a secret seed here; if one reached a
+        file in this tree, move the key first and then report through the security advisory.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: >-
+        The full command, the exit code and the output. A traceback counts as a bug: the
+        validator reports problems, it does not raise them.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the docs say should happen
+      description: Cite the `SCHEMA.md` section, the `README.md` claim or the roadmap task.
+    validations:
+      required: true
+  - type: textarea
+    id: corpus
+    attributes:
+      label: Output of validate.py --report
+      description: >-
+        The whole run, plus the fixture directory if one fixture is involved. Account ids are
+        public, so leave them in.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit or tag
+      description: There is no release yet, so this is a commit sha.
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: >-
+        Run `python3 --version`. The floor is 3.11 because `tomllib` is the standard library
+        from there on.
+    validations:
+      required: true

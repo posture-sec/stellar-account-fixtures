@@ -1,0 +1,10 @@
+# Development tooling only. The corpus, the validator and the capture tool import nothing
+# outside the standard library (ROADMAP.md D-02), so there is no runtime dependency here and
+# nothing to install for a consumer that only reads fixtures.
+#
+# These two pins are what .github/workflows/ci.yml installs, which is the point: a lint or
+# type result on a laptop has to mean the same thing as the one on GitHub. The current pair is
+# what produced the clean run recorded in the roadmap changelog; mypy 2.4.1 is on PyPI and
+# moving to it is a change to make deliberately, with the diff read.
+ruff==0.17.3
+mypy==2.4.0
