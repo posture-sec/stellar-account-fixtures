@@ -27,7 +27,9 @@ if ! printf '%s\n' "${changed}" | grep -qx 'ROADMAP.md'; then
   exit 1
 fi
 
-old_line="$(git show "${base}:ROADMAP.md" | grep -m1 '^Last updated:' || true)"
+# The first pull request in a repository has no ROADMAP.md on its base. Reading the old
+# line then is expected to fail, so the fatal text stays out of a passing run's output.
+old_line="$(git show "${base}:ROADMAP.md" 2>/dev/null | grep -m1 '^Last updated:' || true)"
 new_line="$(grep -m1 '^Last updated:' ROADMAP.md || true)"
 
 if [ -z "${new_line}" ]; then
