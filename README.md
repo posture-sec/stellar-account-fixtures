@@ -113,6 +113,7 @@ python3 validate.py                 # corpus against its own sidecars
 python3 -m unittest test_validate    # 95 tests, no network except two loopback checks
 ruff check . && ruff format --check .
 mypy
+python3 scripts/roadmap_progress.py --check ROADMAP.md   # the table is derived, not typed
 ```
 
 `.github/workflows/ci.yml` runs those on Python 3.11 for every pull request and every push

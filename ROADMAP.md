@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-02 13:00 UTC
+Last updated: 2026-11-02 13:18 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -18,7 +18,9 @@ Every pull request in this repository updates this file in the same change:
    data; a hand-edited row is a row that will be wrong.
 4. Update `Last updated` at the top.
 
-CI enforces steps 1 and 3 as the required `roadmap-check / gate` check.
+CI enforces steps 1 and 3 as the required `roadmap-check / gate` check: pull request #1,
+which changed both, passed it at 13:03Z, and probe pull request #2, which changed one file
+and not this document, failed it at 13:09:35Z.
 
 ## 1. What "ready" means
 
@@ -33,35 +35,40 @@ empty gap list is gate G2.
 | Phase | Name | Done | Total | Progress |
 |---|---|---|---|---|
 | 0 | Ground truth | 5 | 6 | 83% |
-| 1 | Repository wrapper | 0 | 9 | 0% |
+| 1 | Repository wrapper | 6 | 9 | 67% |
 | 2 | Coverage | 0 | 6 | 0% |
 | 3 | Consumer contract | 0 | 3 | 0% |
-| **All phases** | **Readiness total** | **5** | **24** | **21%** |
-| Gates | G1 to G5 | 0 | 5 | 0% |
+| **All phases** | **Readiness total** | **11** | **24** | **46%** |
+| Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
 ## 3. Readiness gates
 
-- [ ] **G1** `python3 validate.py` exits 0 on the corpus in a hosted CI run, not only locally.
+- [x] **G1** `python3 validate.py` exits 0 on the corpus in a hosted CI run, not only locally. (done 2026-11-02: the `Corpus against its own sidecars` step in run 41449642178 printed `validate: corpus agrees with itself` at 13:03:33Z on a Python 3.11 runner, and the job's conclusion is success.)
 - [ ] **G2** Every shape label in `SCHEMA.md` 5 is covered by a captured fixture or by a synthetic fixture that says so, and the gap list in `README.md` is empty.
 - [ ] **G3** No sidecar key goes unchecked: each key in `SCHEMA.md` 3 has a test that fails when a fixture lies about it.
-- [ ] **G4** `main` is protected, both workflows are required checks, and a pull request that drops the roadmap edit is observed failing.
+- [x] **G4** `main` is protected, both workflows are required checks, and a pull request that drops the roadmap edit is observed failing. (done 2026-11-02: the ruleset refuses a direct push at 12:57:48Z with `Changes must be made through a pull request` and `2 of 2 required status checks are expected`; `ci / python` and `roadmap-check / gate` are the two required contexts in ruleset 26367047; probe pull request #2 failed the gate at 13:09:35Z and was closed unmerged. What bought this was the `conditions` key, not the rules: see 1.2.)
 - [ ] **G5** At least one consumer (Gauge or Airlock) uses two or more fixtures in its own test suite and says which ones in that repository.
 
 ## 4. Current focus
 
-Phase 0 is nearly closed and Phase 1 has not started on GitHub. The six captures and the
-validator exist in the tree; the hosted CI run (1.3), the push refusal that proves the
-ruleset (1.2) and the probe pull request that proves the gate (1.4) are the three claims
-this repository cannot make from a laptop. Phase 2 is the corpus work that actually adds
-value, and 2.2 and 2.4 are blocked on finding accounts with those shapes rather than on
-code.
+Phase 1 is six tasks down and three to go, and the GitHub side now has evidence rather than
+intent: the repository is public, `main` refuses a direct push, both checks are required, and
+the gate has been seen to fail a pull request that earned it. What is left before Phase 2 is
+the backlog itself (1.7), a self-test for the gate scripts (1.8) and a Scorecard run (1.9),
+none of which needs a new account. Phase 0 has one open line, 0.6, and it is a decision rather
+than a build.
+
+Phase 2 is where this corpus becomes worth reading: eight of the 24 shape labels have no
+fixture, and 2.2 and 2.4 are blocked on finding accounts that carry those shapes rather than on
+writing code for them.
 
 ```
 python3 validate.py --report
 python3 -m unittest test_validate
 ruff check . && ruff format --check .
 mypy
+python3 scripts/roadmap_progress.py --check ROADMAP.md
 ```
 
 ## 5. Phases and tasks
@@ -77,12 +84,12 @@ mypy
 
 ### Phase 1: Repository wrapper
 
-- [ ] **1.1** Create `posture-sec/stellar-account-fixtures` public, with the About description, homepage, topics and the wiki off. Public because the org's plan refuses rulesets and Pages on a private repository, and a corpus nobody can read is not a public good. M. Deps: none. Done when: the repository page shows the description and the topics, and `/wiki` serves no wiki.
-- [ ] **1.2** A `protect main` ruleset requiring a pull request and both checks, observed by a direct push being refused against `main` itself. M. Deps: 1.1. Done when: the refusal text is quoted here with its date and `main` has not moved.
-- [ ] **1.3** `.github/workflows/ci.yml`: unittest, `ruff check`, `ruff format --check` and `mypy` on Python 3.11, both actions pinned by commit SHA with the tag in the comment. M. Deps: 1.1. Done when: a hosted run is green and its date is recorded here. Until then the local run is a local run.
-- [ ] **1.4** `.github/workflows/roadmap-check.yml` plus `scripts/check_roadmap_touched.sh` and `scripts/roadmap_progress.py` as a required check. M. Deps: 1.2, 1.3. Done when: a probe pull request that changes a file and not this document fails, and one that changes both passes, each observed on GitHub rather than inferred.
-- [ ] **1.5** `.github/CODEOWNERS` naming the only member of the org across every protected path, with `require_code_owner_review` left off while one maintainer exists. M. Deps: 1.2. Done when: `GET /repos/posture-sec/stellar-account-fixtures/codeowners/errors` returns zero errors. Airlock's file was dead on arrival for a day because a suspended account was still named in it, and nothing in the UI said so.
-- [ ] **1.6** `CONTRIBUTING.md`, `SECURITY.md`, `.github/pull_request_template.md` and the two issue templates. M. Deps: none. Done when: merged, and the hard rules in `CONTRIBUTING.md` match the refusals the code actually implements.
+- [x] **1.1** Create `posture-sec/stellar-account-fixtures` public, with the About description, homepage, topics and the wiki off. Public because the org's plan refuses rulesets and Pages on a private repository, and a corpus nobody can read is not a public good. M. Deps: none. Done when: the repository page shows the description and the topics, and `/wiki` serves no wiki. (done 2026-11-02: created public at 12:49:02Z. The description names what a fixture is rather than what the corpus recommends, the homepage points at `SCHEMA.md` because the schema is the contract a consumer reads first, and the five topics are `stellar`, `horizon`, `test-fixtures`, `account-posture` and `fixtures`. Topics need `PUT /repos/.../topics` with a `names` array; a `PATCH` on the repository body takes the key and does nothing. `has_wiki` is false and `/wiki` answers 302 to the repository root, which is what no wiki looks like.)
+- [x] **1.2** A `protect main` ruleset requiring a pull request and both checks, observed by a direct push being refused against `main` itself. M. Deps: 1.1. Done when: the refusal text is quoted here with its date and `main` has not moved. (done 2026-11-02: ruleset 26367047, `protect main`, active, no bypass actors, carrying `deletion`, `non_fast_forward`, `pull_request` with `required_approving_review_count: 0` and `require_code_owner_review: false`, and `required_status_checks` for `ci / python` and `roadmap-check / gate`. A direct push at 12:57:48Z came back as: `GH013: Repository rule violations found for refs/heads/main`, `Changes must be made through a pull request`, `2 of 2 required status checks are expected`. `main` has not moved by a direct push since. It did move by two direct pushes before that, at 12:53:13Z and 12:55:40Z, because the ruleset was created with `condition` where the API reads `conditions`, which stores an empty pattern set: the rule shows in the UI as active and applies to no branch. Both empty probe commits are still in `main`'s history, since rewriting shared history to tidy a mistake is the one thing this repository's own rules forbid more sharply than tidying.)
+- [x] **1.3** `.github/workflows/ci.yml`: unittest, `ruff check`, `ruff format --check` and `mypy` on Python 3.11, both actions pinned by commit SHA with the tag in the comment. M. Deps: 1.1. Done when: a hosted run is green and its date is recorded here. Until then the local run is a local run. (done 2026-11-02: run 41449642178 on pull request #1, created 13:03:05Z, `ci / python` success at 13:03:39Z on a Python 3.11 runner. The hosted log carries `validate: corpus agrees with itself`, `Ran 95 tests in 1.131s`, `All checks passed!`, `4 files already formatted` and `Success: no issues found in 3 source files`, which is the same six results the laptop produced, now from a machine nobody owns.)
+- [x] **1.4** `.github/workflows/roadmap-check.yml` plus `scripts/check_roadmap_touched.sh` and `scripts/roadmap_progress.py` as a required check. M. Deps: 1.2, 1.3. Done when: a probe pull request that changes a file and not this document fails, and one that changes both passes, each observed on GitHub rather than inferred. (done 2026-11-02: the pass is pull request #1, `roadmap-check / gate` green in run 41449642136 at 6s. The fail is probe pull request #2, which added one line to `README.md` and did not touch this file; run 41450543726 failed at 13:09:35Z printing `check_roadmap_touched: ROADMAP.md must be updated in the same pull request.` over `  README.md`. #2 was closed unmerged and its branch deleted, and the line it carried arrives here instead, with this file updated alongside it.)
+- [x] **1.5** `.github/CODEOWNERS` naming the only member of the org across every protected path, with `require_code_owner_review` left off while one maintainer exists. M. Deps: 1.2. Done when: `GET /repos/posture-sec/stellar-account-fixtures/codeowners/errors` returns zero errors. Airlock's file was dead on arrival for a day because a suspended account was still named in it, and nothing in the UI said so. (done 2026-11-02: read on the default branch at 13:15:13Z, `{"errors": []}`, with `*` and the ten paths that hold the validator, the corpus, the tooling, the schema, the pins and the workflows all pointing at `@bolabeatz`.)
+- [x] **1.6** `CONTRIBUTING.md`, `SECURITY.md`, `.github/pull_request_template.md` and the two issue templates. M. Deps: none. Done when: merged, and the hard rules in `CONTRIBUTING.md` match the refusals the code actually implements. (done 2026-11-02: merged as df1d8cf7f84f7a21d46b9a74e8d5f63c3a959813 at 13:07:03Z. Two rules were wrong as first written and were read back against the code before that: the non-`G...` refusal does not name a version byte, and it is the decodable seed sample in the test suite that is built at run time from thirty-two zero bytes, not the shape-only literal of `Q` characters beside it.)
 - [ ] **1.7** One issue per open task in Phases 0 to 3, no issue for a closed task. S. Deps: 1.1. Done when: the issue list and this file agree.
 - [ ] **1.8** `tests/test_roadmap_gate.py`: run both gate scripts as subprocesses over a temporary roadmap and a temporary git repository, including the case where a branch passes the gate it is adding. S. Deps: 1.4. Done when: the suite covers a missing progress block and a phase heading with no tasks as errors rather than tracebacks.
 - [ ] **1.9** An OSSF Scorecard run on `main`. S. Deps: 1.2. Done when: Branch Protection returns a score rather than a warning, which is what a ruleset on the default branch buys.
@@ -118,3 +125,4 @@ mypy
 |---|---|---|
 | 2026-11-02 12:42 | Six mainnet accounts, `validate.py`, `tools/capture.py` and `test_validate.py` land in the first commit on `main`, captured from `horizon.stellar.org` on Horizon 30.0.0 at ledgers 65266813 to 65266866 and written as sorted-key JSON with one sidecar each. `validate.py` checks every sidecar against the bytes beside it and against the shape vocabulary. Eight defects were found by writing the tests and fixed in the same work, all of them in the code rather than in a fixture: `REQUIRED` demanded the five provenance keys from a `synthetic` fixture that `check_common` forbids them, so no synthetic fixture could ever validate; `load_manifest` read the sidecar with `read_text`, whose universal newlines turned CRLF into LF before the CRLF check could see it, so that check was dead code; `check_root` indexed `NETWORKS[network]` with an unvalidated key, so a sidecar naming a made-up network plus a file of that name raised instead of reporting; `shapes_of` did unguarded arithmetic and iteration over body fields, so a threshold written as a string crashed the validator rather than failing it; `tools/capture.py` accepted a `G`-shaped address whose CRC16 does not verify, so a typo cost a Horizon round trip instead of a refusal; its local refusals ran after the request rather than before it; the root document was parsed with no guard, so an HTML error page raised instead of refusing; and `urllib` follows a 3xx by default, which is the one that matters most here, because a redirect would have written bytes served from somewhere else under the URL the sidecar records as its source and the passphrase check on the root document would never have seen it. `fetch` now uses an opener that refuses a redirect, and the loopback suite covers that and the size cap. `issuer-auth-required`'s scenario said 152 sponsorships where the bytes say `num_sponsoring` is 150; corrected, and that drift is why 0.6 is open. `SCHEMA.md` is version 1, `README.md` states the eight uncovered labels rather than implying coverage, and its report block is the command's output with a staleness note rather than a hand-written list. Not verified: any GitHub state at all, since this document was written before the repository existed. Verified locally: `validate.py` exits 0, 95 tests pass on Python 3.12.3 and again on 3.11.16, `ruff check` and `ruff format --check` are clean, `mypy` is clean on three files, and the `shape` line `capture.py` now generates is byte-identical to the six already on disk. | 0.1 to 0.5, 0.6 left open |
 | 2026-11-02 13:00 | The repository wrapper arrives as a pull request: this file, `CONTRIBUTING.md` with a rule table that names the refusal behind every rule, `SECURITY.md` with the scope written around provenance rather than around the accounts, `.github/CODEOWNERS`, the pull request template, two issue forms, `ci.yml` and `roadmap-check.yml` with both actions pinned by commit SHA, `requirements-dev.txt` pinning ruff 0.17.3 and mypy 2.4.0 so CI installs what the laptop ran, and `scripts/roadmap_progress.py` adapted from the Airlock script of the same name so the two repositories count tasks the same way. Its readiness row reads "All phases" because this roadmap has four phases and no backlog phase. `scripts/check_roadmap_touched.sh` also stops printing git's `fatal:` line when the base has no `ROADMAP.md`, which is the state of the first pull request in a repository; the comparison it feeds is unchanged and still empty there. No hosted evidence is claimed in this row: 1.1 to 1.4 and 1.7 stay open until the repository, the ruleset, a green run and the probe exist on GitHub, 1.5 stays open until `GET /repos/.../codeowners/errors` returns zero errors, and 1.6 stays open until this change is merged. | 1.3, 1.4, 1.5, 1.6, 1.7 left open |
+| 2026-11-02 13:18 | Phase 1 is ticked against what GitHub now shows rather than against what a laptop did. 1.1: the repository has been public since 12:49:02Z with the description, the `SCHEMA.md` homepage, five topics and the wiki off, `/wiki` answering 302 to the repository root. 1.2: ruleset 26367047 requires a pull request and both checks on the default branch with no bypass, and a direct push at 12:57:48Z came back `GH013`, `Changes must be made through a pull request`, `2 of 2 required status checks are expected`; the two empty probe commits from 12:53:13Z and 12:55:40Z stay in `main`'s history because they got there while the ruleset carried an empty pattern set (`condition` where the API reads `conditions`) and this project does not rewrite shared history to tidy itself. 1.3: run 41449642178, `ci / python` success 13:03:05Z to 13:03:39Z on Python 3.11, log lines quoted in the task. 1.4: pull request #1 passed the gate in run 41449642136, probe pull request #2 failed it at 13:09:35Z and was closed unmerged, and the line it carried lands here instead with this file updated alongside it. 1.5: `codeowners/errors` is `{"errors": []}` at 13:15:13Z. 1.6: merged as df1d8cf7 at 13:07:03Z. Gates G1 and G4 tick on the same readings. Still unverified: 1.7 needs the issue backlog, 1.8 needs the gate scripts run as subprocesses over a temporary repository, 1.9 needs a Scorecard workflow that does not exist yet, and D-03 is open, so 3.2 has nowhere to land. Verified locally again at 13:18: `validate.py` exit 0, 95 tests, `ruff check`, `ruff format --check` and `mypy` clean, and both gate scripts green against `main`. | 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, G1, G4 |
