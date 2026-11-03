@@ -1,0 +1,57 @@
+# An OSSF Scorecard run on `main` (task 1.9).
+#
+# Scorecard reads the ruleset on the default branch through the default workflow token,
+# which is why this runs on pushes to `main` and on a schedule rather than on pull
+# requests: a pull request run would report the state of a branch that has no protection
+# of its own. The publish step needs the restrictions in the job below: no workflow-level
+# write permission, no job-level env, GitHub-hosted Ubuntu, and only actions pinned by
+# commit SHA. The four pins are the same commits Gauge runs, which is the only reason to
+# trust them without reading each tag's diff here as well; a bump is a deliberate change
+# with its own changelog row, not a refresh.
+#
+# This run is the evidence for 1.9 and for the Branch-Protection line it asks about. A
+# score is not a verdict on the corpus: `validate.py` exiting 0 in `ci / python` is the
+# check that guards these fixtures, and Scorecard grades the repository around them.
+
+name: scorecard
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 1 * * 6'
+
+permissions:
+  contents: read
+
+jobs:
+  scorecard:
+    name: scorecard / analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # SARIF upload to the code scanning dashboard.
+      security-events: write
+      # OIDC token for publishing results, which feeds api.scorecard.dev.
+      id-token: write
+    steps:
+      - name: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: run analysis
+        uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+      - name: upload artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: Scorecard SARIF
+          path: results.sarif
+          retention-days: 5
+      - name: upload to code scanning
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: results.sarif
