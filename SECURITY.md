@@ -56,10 +56,13 @@ key material, into a corpus that other projects' tests read:
 have written bytes served from somewhere else under the URL the sidecar records. A ninth may be
 waiting; the suite is 95 cases, not a proof.
 
-**No hosted run yet.** The checks that matter today (`validate.py`, the test suite, `ruff`,
-`mypy`) have been run on a laptop on Python 3.11.16 and 3.12.3. Phase 1 tasks 1.2 and 1.3
-cover branch protection and the hosted CI run, and until they are ticked nothing here should
-be read as "CI is guarding this". See `ROADMAP.md` section 4.
+**A hosted run guards the merge, not the semantics.** `ci / python` and
+`roadmap-check / gate` are required status checks on `main` (ruleset 26367047, no bypass
+actors) and have been green on this repository's `main` since 2026-11-02; what they prove is
+that `validate.py` exits 0, 95 tests pass, `ruff` and `mypy` are clean, and the roadmap moved
+with the change. They do not prove the corpus is right about the network: no third party has
+reviewed it, there is no OSSF Scorecard run here yet, and a run cannot see a fixture that
+should exist and does not. See `ROADMAP.md` section 4.
 
 **`scenario` is unchecked prose.** It is free text, and one of the six already drifted from
 the bytes it described. Task 0.6 is open on that. A sidecar can therefore be accurate about
