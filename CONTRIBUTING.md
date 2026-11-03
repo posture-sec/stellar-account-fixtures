@@ -6,7 +6,7 @@ fixture: it cannot produce a false pass. Read `SCHEMA.md` before touching a fixt
 
 ## Status
 
-Six mainnet captures, `validate.py`, `tools/capture.py`, 95 tests of the corpus and its
+Nine captures, eight of them mainnet, `validate.py`, `tools/capture.py`, 95 tests of the corpus and its
 capture path, and 18 cases that run the two roadmap gate scripts as subprocesses over a
 temporary repository all exist and pass in a local checkout on Python 3.11.16 and 3.12.3,
 and both suites are green in this repository's own CI on a 3.11 runner. `main` refuses a direct push and both checks are

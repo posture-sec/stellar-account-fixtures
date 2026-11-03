@@ -1,0 +1,287 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54",
+  "balances": [
+    {
+      "asset_code": "AQUA",
+      "asset_issuer": "GBNZILSTVQZ4R7IKQDGHYGY2QXL5QOFJYQMXPKWRRM5PAV7Y4M67AQUA",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "CASSATOR",
+      "asset_issuer": "GDB7KZYYA4QC2DGXPBZHE42II2F6MTLJB4S3W4JZGM2AVFIP2ZJAA5LO",
+      "asset_type": "credit_alphanum12",
+      "balance": "1799.1600000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "FUCKELON",
+      "asset_issuer": "GAZEUTFGMAIQEBAYRGUJASC25UVXOBVNN6KB7RQFZOIPFFX34IM5RAKB",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "GEAGLE",
+      "asset_issuer": "GA6U3A3WJREWMRNZX4XQBYV6U3QHWHGFM5ERYMQEB4EHFMAMBVVNCLZ7",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "LSP",
+      "asset_issuer": "GAB7STHVD5BDH3EEYXPI3OM7PCS4V443PYB5FNT6CFGJVPDLMKDM24WK",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "LUSI",
+      "asset_issuer": "GDICJE3HDJ5E72GQKGQXSISUJFEHYJIDEE7R3YHNF4A226QI5KLORNFX",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "SCOP",
+      "asset_issuer": "GC6OYQJIZF3HFXCYPFCBXYXNGIBQ4TNSFUBUXQJOZWIP6F3YZK4QH3VQ",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "SEAGLE",
+      "asset_issuer": "GA6U3A3WJREWMRNZX4XQBYV6U3QHWHGFM5ERYMQEB4EHFMAMBVVNCLZ7",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "SHX",
+      "asset_issuer": "GDSTRSHXHGJ7ZIVRBXEYE5Q74XUVCUSEKEBR7UCHEUUEK72N7I7KJ6JH",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "SSLX",
+      "asset_issuer": "GBHFGY3ZNEJWLNO4LBUKLYOCEK4V7ENEBJGPRHHX7JU47GWHBREH37UR",
+      "asset_type": "credit_alphanum4",
+      "balance": "9795.6228947",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65281127,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "STARDUST",
+      "asset_issuer": "GCPLNANLXTV2G6NPIRDPOLM5NAO5XH2IPYQBZCTTAKPNV4IRTU5X5B4S",
+      "asset_type": "credit_alphanum12",
+      "balance": "1197055.9731136",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65282568,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "UAF",
+      "asset_issuer": "GDT5EUZMXIABSKZAQA4HNTWYOJI2D64DATP6KNVTV4WDZJ3K7FZDRC5E",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "USDC",
+      "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0265642",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "VELO",
+      "asset_issuer": "GDM4RQUQQUVSKQA7S6EM7XBZP3FCGH4Q7CL6TABQ7B2BEJ5ERARM2M5M",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "yUSDC",
+      "asset_issuer": "GDGTVWSM4MGS4T7Z6W4RPWOCHE2I6RDFCIFZGS3DOA63LWQTRNZNTTFF",
+      "asset_type": "credit_alphanum12",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_code": "yXLM",
+      "asset_issuer": "GARDNV3Q7YGT4AKSDF25LT32YSCCW4EV22Y2TV3I2PU2MMXJTEDL5T55",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65031166,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU"
+    },
+    {
+      "asset_type": "native",
+      "balance": "1.0000000",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": "sl8.online",
+  "id": "GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54",
+  "last_modified_ledger": 65110665,
+  "last_modified_time": "2026-10-24T10:51:48Z",
+  "num_sponsored": 17,
+  "num_sponsoring": 0,
+  "paging_token": "GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54",
+  "sequence": "279306731190747141",
+  "sequence_ledger": 65110665,
+  "sequence_time": "1792839108",
+  "signers": [
+    {
+      "key": "GAYMTOTEZZZAA5LVQP53OICEH7V2UJB6FPQSCIZ3MFAKP6RBKUBQCGEG",
+      "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU",
+      "type": "ed25519_public_key",
+      "weight": 2
+    },
+    {
+      "key": "GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54",
+      "type": "ed25519_public_key",
+      "weight": 0
+    }
+  ],
+  "sponsor": "GDB3RSSWTUXO7MBTNMHUP3DRBIUR3QRV2CVFRAKMN4GM2B4QNGEUT6CU",
+  "subentry_count": 17,
+  "thresholds": {
+    "high_threshold": 2,
+    "low_threshold": 0,
+    "med_threshold": 1
+  }
+}

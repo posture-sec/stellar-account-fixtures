@@ -1,0 +1,139 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU",
+  "balances": [
+    {
+      "asset_code": "EURC",
+      "asset_issuer": "GDHU6WRG4IEQXM5NZ4BMPKOXHW76MZM4Y2IEMFDVXBSDP6SJY4ITNPP2",
+      "asset_type": "credit_alphanum4",
+      "balance": "10078.8900000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65282653,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_code": "USDC",
+      "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "asset_type": "credit_alphanum4",
+      "balance": "862174.8547781",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 65282653,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "2455677.9898519",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {
+    "config.multisig.coordinator": "djEubXVsdGlzaWcuc2F0b3NoaXBheS5pbw=="
+  },
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "id": "GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU",
+  "last_modified_ledger": 65282653,
+  "last_modified_time": "2026-11-03T09:48:24Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 4135797,
+  "paging_token": "GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU",
+  "sequence": "206632444273623290",
+  "sequence_ledger": 65218995,
+  "sequence_time": "1793380759",
+  "signers": [
+    {
+      "key": "GAP5GK5CXT5DXBITLIH5WU2VFXRRT22YAQLQITF4XCMPAQ7JQGUQ4E3Z",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GAPUR2F7OAHMLOEGZI67V7TQSYSPFLULQ2ABQ3WT5QAWIF27YTYPEHDR",
+      "type": "ed25519_public_key",
+      "weight": 2
+    },
+    {
+      "key": "GAVNCSZG2BHKV2BUTHQCTL7NDQUXE6RP6TT2HDCK5XXP7ND2FAU2ZHX4",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GBYHZ6KJJPETZXVUU5QJILH47KB7XZDABB43J3W4NDLTXB66ME3HDWVL",
+      "type": "ed25519_public_key",
+      "weight": 2
+    },
+    {
+      "key": "GCGP7I5BPYNGDCQRRH2EQ6RSWZZDJPICB3H2N5T3LFGURHUCHPYBDUPK",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GD7LBT2KB3PX57RQCILAMY4THCI5KRST6AQRMWL7AL7KEZGY6QSBUPHY",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GDGJHJYYXNZFMATLO2UOVNWDNJQKRGSJEHYT4U4QUI3BLEJBC3TRZX57",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GDUZXSXAHGCNRMOMXBQ2JACZFUKB7QJ35A75WERNO4FPP2RTSMLF2EWO",
+      "type": "ed25519_public_key",
+      "weight": 1
+    },
+    {
+      "key": "GAUA7XL5K54CC2DDGP77FJ2YBHRJLT36CPZDXWPM6MP7MANOGG77PNJU",
+      "type": "ed25519_public_key",
+      "weight": 0
+    }
+  ],
+  "subentry_count": 11,
+  "thresholds": {
+    "high_threshold": 2,
+    "low_threshold": 2,
+    "med_threshold": 2
+  }
+}
