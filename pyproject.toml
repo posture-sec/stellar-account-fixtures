@@ -10,5 +10,5 @@ select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.mypy]
 python_version = "3.11"
-files = ["validate.py", "tools/capture.py", "test_validate.py"]
+files = ["validate.py", "tools/capture.py", "test_validate.py", "tests/test_roadmap_gate.py"]
 check_untyped_defs = true

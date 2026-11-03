@@ -51,6 +51,11 @@ class Count:
 
 
 def _percent(done: int, total: int) -> str:
+    # A roadmap can legitimately have no gate lines yet, and a row still has to render,
+    # so an empty denominator is 0% rather than a crash. The shell sibling in
+    # `posture-sec/guage` prints 0% for the same case.
+    if total == 0:
+        return "0%"
     return f"{round(done / total * 100)}%"
 
 

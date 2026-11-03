@@ -6,9 +6,10 @@ fixture: it cannot produce a false pass. Read `SCHEMA.md` before touching a fixt
 
 ## Status
 
-Six mainnet captures, `validate.py`, `tools/capture.py` and 95 tests exist and pass in a
-local checkout on Python 3.11.16 and 3.12.3, and the same suite is green in this
-repository's own CI on a 3.11 runner. `main` refuses a direct push and both checks are
+Six mainnet captures, `validate.py`, `tools/capture.py`, 95 tests of the corpus and its
+capture path, and 18 cases that run the two roadmap gate scripts as subprocesses over a
+temporary repository all exist and pass in a local checkout on Python 3.11.16 and 3.12.3,
+and both suites are green in this repository's own CI on a 3.11 runner. `main` refuses a direct push and both checks are
 required status checks, so a pull request that skips `ROADMAP.md` fails at the gate rather
 than at review. No tag, no release, nothing to install. An OSSF Scorecard run on `main`
 published on 2026-11-03 scores the repository 5.2 overall, with Branch-Protection at 4 rather
@@ -58,6 +59,7 @@ non-zero and says why in one line.
 ```bash
 python3 validate.py
 python3 -m unittest test_validate
+python3 -m unittest discover -s tests -t tests
 ruff check . && ruff format --check .
 mypy
 scripts/check_roadmap_touched.sh origin/main
@@ -66,7 +68,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 `ruff` and `mypy` are pinned in `requirements-dev.txt`, the file CI installs from, so a local
 run and a hosted run use the same two versions. `mypy` reads its target list from
-`pyproject.toml`; three files are type-checked, including the test suite.
+`pyproject.toml`; four files are type-checked, including both test suites.
 
 ## When a shape is missing
 

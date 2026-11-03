@@ -40,7 +40,12 @@ jobs:
         run: python validate.py
 
       - name: Tests
-        run: python -m unittest test_validate
+        # Both suites, named: default discovery starts at the repository root and skips a
+        # directory that is not a package, so a tests/ tree nobody names here is a suite
+        # that never runs rather than a suite that fails.
+        run: |
+          python -m unittest test_validate
+          python -m unittest discover -s tests -t tests
 
       - name: Lint
         run: ruff check .
