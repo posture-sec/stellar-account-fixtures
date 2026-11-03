@@ -10,8 +10,11 @@ Six mainnet captures, `validate.py`, `tools/capture.py` and 95 tests exist and p
 local checkout on Python 3.11.16 and 3.12.3, and the same suite is green in this
 repository's own CI on a 3.11 runner. `main` refuses a direct push and both checks are
 required status checks, so a pull request that skips `ROADMAP.md` fails at the gate rather
-than at review. No tag, no release, nothing to install, and no OSSF Scorecard run yet.
-What is open is in `ROADMAP.md` section 4, and a claim there is backed by a named run or
+than at review. No tag, no release, nothing to install. An OSSF Scorecard run on `main`
+published on 2026-11-03 scores the repository 5.2 overall, with Branch-Protection at 4 rather
+than erroring; most of the gap is a repository with one maintainer, one contributing company
+and nothing to publish, and `ROADMAP.md` 1.9 says which of those numbers mean anything for a
+corpus. What is open is in `ROADMAP.md` section 4, and a claim there is backed by a named run or
 says that it is not.
 
 ## The rules, and what enforces each one
