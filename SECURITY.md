@@ -61,8 +61,11 @@ waiting; the suite is 95 cases, not a proof.
 actors) and have been green on this repository's `main` since 2026-11-02; what they prove is
 that `validate.py` exits 0, 95 tests pass, `ruff` and `mypy` are clean, and the roadmap moved
 with the change. They do not prove the corpus is right about the network: no third party has
-reviewed it, there is no OSSF Scorecard run here yet, and a run cannot see a fixture that
-should exist and does not. See `ROADMAP.md` section 4.
+reviewed it, and a run cannot see a fixture that should exist and does not. The OSSF Scorecard
+run `main` has published since 2026-11-03 (aggregate 5.2, Branch-Protection 4) grades the
+repository around these fixtures, not the claims inside them; `ROADMAP.md` 1.9 records which of
+its checks are load-bearing and which are a one-maintainer repository being measured. See
+`ROADMAP.md` section 4.
 
 **`scenario` is unchecked prose.** It is free text, and one of the six already drifted from
 the bytes it described. Task 0.6 is open on that. A sidecar can therefore be accurate about
