@@ -127,6 +127,9 @@ shape set will grow rather than stay fixed. Apache License 2.0; see `LICENSE`. T
 data itself is public ledger state, so what is licensed here is the compilation, the
 sidecars and the tooling.
 
-Sibling projects: [Gauge](https://github.com/posture-sec/guage), which reads one of these
-accounts and evaluates rules against it, and
-[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories.
+Sibling projects: [Gauge](https://github.com/posture-sec/guage), which reads a real Stellar account
+and evaluates rules against it, and
+[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories. Both were the
+reason this corpus exists, and neither has been pointed at these fixtures yet: that is gate G5, and
+until a consumer names the two or more files it reads in its own test suite the sentence above
+describes intent rather than a run.
