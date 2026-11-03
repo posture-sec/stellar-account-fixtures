@@ -7,9 +7,12 @@ fixture: it cannot produce a false pass. Read `SCHEMA.md` before touching a fixt
 ## Status
 
 Six mainnet captures, `validate.py`, `tools/capture.py` and 95 tests exist and pass in a
-local checkout on Python 3.11.16 and 3.12.3. No tag, no release, nothing to install. The
-hosted checks and the branch protection are Phase 1 and are open, so read `ROADMAP.md`
-section 4 for the difference between a check that ran here and a check that ran on GitHub.
+local checkout on Python 3.11.16 and 3.12.3, and the same suite is green in this
+repository's own CI on a 3.11 runner. `main` refuses a direct push and both checks are
+required status checks, so a pull request that skips `ROADMAP.md` fails at the gate rather
+than at review. No tag, no release, nothing to install, and no OSSF Scorecard run yet.
+What is open is in `ROADMAP.md` section 4, and a claim there is backed by a named run or
+says that it is not.
 
 ## The rules, and what enforces each one
 
