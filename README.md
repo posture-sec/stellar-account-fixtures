@@ -111,6 +111,7 @@ real read.
 ```
 python3 validate.py                 # corpus against its own sidecars
 python3 -m unittest test_validate    # 95 tests, no network except two loopback checks
+python3 -m unittest discover -s tests -t tests   # 18 cases that run the two roadmap gate scripts
 ruff check . && ruff format --check .
 mypy
 python3 scripts/roadmap_progress.py --check ROADMAP.md   # the table is derived, not typed

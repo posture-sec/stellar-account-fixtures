@@ -16,6 +16,8 @@ tools/
   capture.py        writes a new captured fixture and its root document
 validate.py         checks the whole tree against this schema
 test_validate.py    the tests for both
+tests/
+  test_roadmap_gate.py  the two roadmap gate scripts, run as subprocesses
 ```
 
 A fixture id is kebab-case (`^[a-z0-9]+(-[a-z0-9]+)*$`) and equals its directory name.

@@ -54,13 +54,13 @@ key material, into a corpus that other projects' tests read:
 **The validator is only as strict as its tests.** Eight defects were found while writing
 `test_validate.py` and fixed there, including one where `urllib` followed a redirect and would
 have written bytes served from somewhere else under the URL the sidecar records. A ninth may be
-waiting; the suite is 95 cases, not a proof.
+waiting; the suite is 113 cases across the corpus and the two gate scripts, not a proof.
 
 **A hosted run guards the merge, not the semantics.** `ci / python` and
 `roadmap-check / gate` are required status checks on `main` (ruleset 26367047, no bypass
 actors) and have been green on this repository's `main` since 2026-11-02; what they prove is
-that `validate.py` exits 0, 95 tests pass, `ruff` and `mypy` are clean, and the roadmap moved
-with the change. They do not prove the corpus is right about the network: no third party has
+that `validate.py` exits 0, 113 tests pass across the corpus suite and the gate-script suite,
+`ruff` and `mypy` are clean, and the roadmap moved with the change. They do not prove the corpus is right about the network: no third party has
 reviewed it, and a run cannot see a fixture that should exist and does not. The OSSF Scorecard
 run `main` has published since 2026-11-03 (aggregate 5.2, Branch-Protection 4) grades the
 repository around these fixtures, not the claims inside them; `ROADMAP.md` 1.9 records which of
