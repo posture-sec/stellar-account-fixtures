@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "testnet-multisig"
+kind = "captured"
+scenario = "six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator"
+account_id = "GCI76XDVHDGJMZGP5EWQYCZCYIBNBVABLPHWCKEZWJF2K4Z5SD74A4AV"
+network = "testnet"
+source_url = "https://horizon-testnet.stellar.org/accounts/GCI76XDVHDGJMZGP5EWQYCZCYIBNBVABLPHWCKEZWJF2K4Z5SD74A4AV"
+captured_at = "2026-11-03T09:48:40Z"
+ledger = 5535101
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "547fe3f3d484fdec1d6ecc699605597ba7b43e49613648c0b1bca6f2dac6776d"
+shape = ["master_is_signer", "multi_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsored", "not_sponsoring", "thresholds_nonzero"]

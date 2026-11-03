@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "sponsored-trustlines"
+kind = "captured"
+scenario = "num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed"
+account_id = "GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GCPEC2WSEJPAFPLPPDPBU3XI6SXHJUZD2KLUA6BBBPO7WES3W5ZKDE54"
+captured_at = "2026-11-03T09:50:41Z"
+ledger = 65110665
+horizon_version = "30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666"
+sha256 = "20ebd6c8e9552a7cfeae0d348d859c76996f3cf798ca39c0c2b8e0a8151bc97a"
+shape = ["has_home_domain", "many_balances", "master_is_signer", "multi_signer", "no_data", "no_inflation", "not_sponsoring", "sponsored", "thresholds_nonzero"]
