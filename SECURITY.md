@@ -36,10 +36,11 @@ key material, into a corpus that other projects' tests read:
 
 ## What is out of scope
 
-- The configuration of any account in this corpus. These are real mainnet accounts and the
-  point of publishing them is that the chain already does. A report that `issuer-auth-required`
-  has a bad threshold is not a vulnerability here; it is a finding for Gauge.
-- A missing shape. The eight uncovered labels are listed in `README.md` and are roadmap
+- The configuration of any account in this corpus. These are real accounts on mainnet and on
+  testnet, and the point of publishing them is that the chain already does. A report that
+  `issuer-auth-required` has a bad threshold is not a vulnerability here; it is a finding for
+  Gauge.
+- A missing shape. The six uncovered labels are listed in `README.md` and are roadmap
   tasks, not a defect.
 - The public data itself. Horizon responses are ledger state, so there is nothing to redact
   and no privacy claim to make against a fixture.
@@ -67,9 +68,10 @@ repository around these fixtures, not the claims inside them; `ROADMAP.md` 1.9 r
 its checks are load-bearing and which are a one-maintainer repository being measured. See
 `ROADMAP.md` section 4.
 
-**`scenario` is unchecked prose.** It is free text, and one of the six already drifted from
-the bytes it described. Task 0.6 is open on that. A sidecar can therefore be accurate about
-every field the validator checks and still describe the account badly in one sentence.
+**`scenario` is unchecked prose.** It is free text, and one of the six captures taken before
+2026-11-03 drifted from the bytes it described. Task 0.6 is open on that. A sidecar can
+therefore be accurate about every field the validator checks and still describe the account
+badly in one sentence.
 
 **Provenance is a claim about a moment.** A fixture records the account as Horizon served it
 at one ledger. The account may have changed since, and nothing here detects that; a consumer
@@ -78,5 +80,6 @@ comparing a live read to a fixture is comparing two different times.
 ## What this corpus cannot tell you
 
 It records what the chain showed. It does not rate an account, does not say a configuration
-is good or bad, and does not claim any account here is secure or well run. Five of the six
-are ordinary mainnet accounts chosen for their shape, not for their owner's decisions.
+is good or bad, and does not claim any account here is secure or well run. Seven of the nine
+are ordinary mainnet accounts chosen for their shape rather than for anything their owner
+decided; one is an issuer, and one was captured on testnet.
