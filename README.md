@@ -143,7 +143,9 @@ One workflow here reads the chain rather than the tree.
 06:41 UTC against `.posture/gauge.toml`, which declares the account behind
 `fixtures/testnet-multisig` as this corpus captured it. A finding on the issue it maintains
 means the capture no longer describes the live account, which is a thing to re-capture or to
-explain rather than a number to average out. It triggers on `schedule` and
+explain rather than a number to average out. Its first three runs, on 2026-11-05, were a dry
+run, the run that opened issue #29 with no findings at ledger 5568533, and a run that found
+that issue by its state marker and left it alone. It triggers on `schedule` and
 `workflow_dispatch` only, never on a pull request, and its token can write issues in this
 repository and nothing else. The Gauge commit that action builds has no signer or threshold
 rule yet, so what that read can report today is a flag appearing, a home domain appearing, or
