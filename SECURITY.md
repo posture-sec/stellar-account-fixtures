@@ -74,8 +74,16 @@ therefore be accurate about every field the validator checks and still describe 
 badly in one sentence.
 
 **Provenance is a claim about a moment.** A fixture records the account as Horizon served it
-at one ledger. The account may have changed since, and nothing here detects that; a consumer
-comparing a live read to a fixture is comparing two different times.
+at one ledger. The account may have changed since. Until 2026-11-05 nothing here detected that
+at all; `.github/workflows/posture-watch.yml` now reads one of the nine accounts, the testnet
+one, back from the chain every Wednesday against the expectations declared in
+`.posture/gauge.toml`, and a finding lands in a tracking issue when the live account
+disagrees with the shape the capture recorded. Two limits on that sentence. Eight of the nine
+fixtures are mainnet and are not in that policy, so this is one account under watch rather
+than a corpus that stays current. And the comparison is still between two different times:
+the watch reports the difference between a declared expectation and the chain, not a
+re-validation of the recorded bytes, so a drift it cannot see is a drift the policy never
+declared. A consumer comparing a live read to a fixture is comparing two different times.
 
 ## What this corpus cannot tell you
 

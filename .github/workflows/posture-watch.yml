@@ -1,0 +1,110 @@
+# This corpus as a consumer of its sibling action (corpus task 3.4).
+
+# The corpus's problem with a live account is that the capture stops being true. Each
+# fixture is a JSON read beside a sidecar whose `sha256` covers it, so a fixture is honest
+# about the ledger it came from and silent about everything after. `testnet-multisig` was
+# read at ledger 5535101 on 2026-11-03, and a desk read at 5568341 on 2026-11-05 shows the
+# same six signers at 3/3/3 with its sequence number moved: an ordinary transaction is not
+# drift, and a changed signer, flag or home domain is. Nothing in this repository can tell
+# the difference by itself, because it never reads the chain after a capture lands.
+#
+# So this file points the sibling action at one account, the one this corpus captured from
+# testnet, with the expectations in `.posture/gauge.toml` declared from that capture. A
+# finding on it means the file in `fixtures/` no longer describes the chain, which is a
+# thing somebody has to decide about rather than a thing to average out.
+#
+# The narrower claim, and the reason this is worth merging before it produces anything: it
+# is the first call of this action from a repository that is not its own. The pin below is
+# a commit on the action's `main`, read before use, and the run compiles Gauge from the sha
+# named in its `with:` block. Two repositories now depend on the same plumbing, and this one
+# gets a weekly read for it.
+#
+# Only two of the four things a drift could be are detectable at the pinned Gauge commit: it
+# has no signer rule and no threshold rule yet. A flag appearing, a home domain appearing, or
+# the account ceasing to exist are what this reports today, and `.posture/gauge.toml` says so
+# beside the signer set it declares anyway.
+#
+# `schedule` and `workflow_dispatch` only. A workflow whose token can write issues has no
+# business running on somebody else's pull request, and this repository's rules bind `main`
+# through `ci / python` and `roadmap-check / gate` rather than through anything here: a cron
+# that reads a public Horizon endpoint cannot be evidence about a diff. `issues: write` is the
+# whole elevation, with `contents: read` for the checkout.
+#
+# `break-build` stays off for the same reason the action's own watch leaves it off: a finding
+# belongs in the issue, and a red schedule should mean the read failed.
+
+name: posture-watch
+
+on:
+  schedule:
+    # 06:41 UTC on Wednesdays. Not the action's own Tuesday 05:23 slot and not the worked
+    # example's Monday 06:17: two schedules in the same minute is a queue, and a queued audit
+    # reports nothing for a day while looking green.
+    - cron: '41 6 * * 3'
+  # So the first read after a policy change does not wait for Wednesday, and so the run that
+  # opens the tracking issue can be chosen rather than waited for.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        default: false
+        description: >-
+          Render the body and report what would change without opening or editing an issue.
+          Off by default, so the cron takes the writing path: a schedule has no `inputs`
+          context at all, and the expression below resolves that to false. Tick it to check a
+          policy edit before letting it file anything.
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: fixture-posture-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: watch / fixture account
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Read the captured account and update the tracking issue
+        id: watch
+        # The full 40-character commit sha of posture-sec/stellar-posture-watch's main, read
+        # from the API on 2026-11-05 as the merge commit of its pull request #13. A tag name
+        # would let the code that runs change without a diff reaching this repository, which
+        # is the argument the action itself makes about Gauge's sha. It has no release to pin
+        # yet: the action is untagged by design until it carries a version contract.
+        uses: posture-sec/stellar-posture-watch@deaf7dcc482525c4583660643cf8251146afb466
+        with:
+          # The Gauge commit whose rules produce the findings, the same sha the action's own
+          # watch builds. Not a branch name, and not bumped as a refresh.
+          gauge-ref: da656733fff839d5cf20f795460f4365a7254257
+          config: .posture/gauge.toml
+          # warn, so a flag nobody declared reaches the issue rather than a report nobody opens.
+          fail-on: warn
+          break-build: "false"
+          issue-label: fixture-drift
+          title: Fixture account drift
+          update-on-no-change: "false"
+          dry-run: ${{ inputs.dry_run || 'false' }}
+          # The repository-scoped default token, named rather than defaulted, because the whole
+          # point of this file is the write it performs. It cannot reach another repository's
+          # issues, and it reaches `sync_issue.py` through an environment variable so it appears
+          # in no step log and no argument list.
+          github-token: ${{ github.token }}
+
+      # One line, no report text, matching the action's own D-06: the JSON stays in a file
+      # inside the runner. The numbers are here so a reader of this repository's run log can
+      # see which issue the write targeted, and so `changed=false` in a week the issue says
+      # something new is visible as a contradiction rather than invisible.
+      - name: Record what the run saw
+        env:
+          GAUGE_EXIT: ${{ steps.watch.outputs.exit-code }}
+          ISSUE: ${{ steps.watch.outputs.issue-number }}
+          CHANGED: ${{ steps.watch.outputs.changed }}
+        run: |
+          echo "gauge exited $GAUGE_EXIT, tracking issue ${ISSUE:-none}, changed=$CHANGED"

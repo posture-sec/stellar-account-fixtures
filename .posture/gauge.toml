@@ -1,0 +1,40 @@
+# The account this corpus's own testnet capture is pinned to, declared as the capture
+# describes it. This file is the position the weekly watch in
+# `.github/workflows/posture-watch.yml` reads the live account against: a finding on it
+# means `fixtures/testnet-multisig/account.json` no longer describes what the chain says.
+#
+# The expectations below were read from that capture (ledger 5535101, 2026-11-03) and then
+# re-read live with stellar-gauge 0.1.0-dev built from
+# da656733fff839d5cf20f795460f4365a7254257 at ledger 5568341 on 2026-11-05, which is the
+# same six signers at 3/3/3 with every flag off and no home domain.
+#
+# What the watch can actually catch here is narrower than what this file declares. Gauge at
+# the pinned commit has no signer rule and no threshold rule (its 3.1, behind its 0.7), so
+# `expected_signers` and `expected_thresholds` are validated for shape and nothing evaluates
+# them. A flag appearing on the account, a home domain appearing, and the account ceasing to
+# exist are the three drifts this policy reports today. The signer set is declared anyway
+# because the day those rules land the expectation should already be written down.
+
+version = 1
+network = "testnet"
+endpoints = ["https://horizon-testnet.stellar.org"]
+
+[[account]]
+# fixtures/testnet-multisig: six signers, master key at weight 0, all three thresholds at 3,
+# no flags, no home domain, one native balance. The account is live on testnet and its
+# sequence number has moved since the capture, so an ordinary transaction is not drift; a
+# changed signer, flag or domain is.
+id = "GCI76XDVHDGJMZGP5EWQYCZCYIBNBVABLPHWCKEZWJF2K4Z5SD74A4AV"
+name = "testnet-multisig"
+role = "other"
+expected_signers = [
+  { key = "GA5J6K77LKAXSRM4VRKBXAOQXVOVYWARIG7NQURWGBXMQWIXS7R5KHRV", weight = 1 },
+  { key = "GABVD2TOKWRPASQUCSOYD6V5GMFOVTSSLMGBGDHQANZPMCKSLGKQU7JQ", weight = 1 },
+  { key = "GAKECSILEKZCLRPOMPRYTRFCOXWSSJRJ5BCHZ53BMJNL4AAQ3RKOZ5CO", weight = 1 },
+  { key = "GBRTKUSLK55UOXBT34X2LNJ7VXJTSE7T5J5PBV7SV73QL3YAROHK3W22", weight = 1 },
+  { key = "GD2SIZATHHGBMHJEAEGJBQTASQYE3ZW2BCLSOJPD6AJPHFWXIWYO7PN7", weight = 1 },
+  { key = "GCI76XDVHDGJMZGP5EWQYCZCYIBNBVABLPHWCKEZWJF2K4Z5SD74A4AV", weight = 0 },
+]
+expected_thresholds = { low = 3, medium = 3, high = 3 }
+expected_flags = { auth_required = false, auth_revocable = false, auth_immutable = false, clawback = false }
+expect_locked = false
