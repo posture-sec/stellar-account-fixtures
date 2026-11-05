@@ -137,6 +137,18 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md   # the table is derived,
 to `main`; `.github/workflows/roadmap-check.yml` is the roadmap gate. The run that proves
 they passed on GitHub is recorded with its date in `ROADMAP.md`, not here.
 
+One workflow here reads the chain rather than the tree.
+`.github/workflows/posture-watch.yml` runs the sibling action
+[stellar-posture-watch](https://github.com/posture-sec/stellar-posture-watch) on Wednesday
+06:41 UTC against `.posture/gauge.toml`, which declares the account behind
+`fixtures/testnet-multisig` as this corpus captured it. A finding on the issue it maintains
+means the capture no longer describes the live account, which is a thing to re-capture or to
+explain rather than a number to average out. It triggers on `schedule` and
+`workflow_dispatch` only, never on a pull request, and its token can write issues in this
+repository and nothing else. The Gauge commit that action builds has no signer or threshold
+rule yet, so what that read can report today is a flag appearing, a home domain appearing, or
+the account ceasing to exist.
+
 ## Status and licence
 
 Pre-release. No tag, no version to depend on, and the corpus is small enough that the
@@ -150,3 +162,10 @@ and evaluates rules against it, and
 reason this corpus exists, and neither has been pointed at these fixtures yet: that is gate G5, and
 until a consumer names the two or more files it reads in its own test suite the sentence above
 describes intent rather than a run.
+
+The third sibling is the one this corpus points at rather than the other way round:
+[stellar-posture-watch](https://github.com/posture-sec/stellar-posture-watch) is a scheduled
+audit that keeps one tracking issue current, and the Checks section above describes this
+repository using it. That is not G5 either. A watch reads a live account off Horizon and
+compares it to a declared expectation; it consumes none of the files here, while G5 asks for a
+test suite that names them.
