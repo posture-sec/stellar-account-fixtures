@@ -1,0 +1,105 @@
+name: Task
+description: A roadmap row someone can pick up cold, written to the PI-1 contract.
+labels: ["type: task"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Every issue in this organization carries the nine sections below, in this order, defined in
+        `posture-sec/.github`'s `ISSUE_CONTRACT.md`. A heading never disappears: if one has nothing
+        to say, it says why. Fill all nine and keep the body between roughly 2500 and 5000
+        characters. Set the `area:` and `complexity:` labels after opening, and add `Stellar Wave`
+        only when the work is shaped for someone outside this organization. For a shape the corpus
+        lacks, use the fixture request form instead: it asks for the account id and the network.
+  - type: input
+    id: task-id
+    attributes:
+      label: Roadmap task id
+      description: >-
+        The `ROADMAP.md` row this issue carries, for example `2.3`, `G3` or `report`. The roadmap is
+        the source of truth: if a row does not exist yet, add it in the pull request first.
+      placeholder: "2.3"
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Conventional Commits style, the subject a branch and the pull request will carry.
+      placeholder: "feat(fixtures): capture an account with no trustlines"
+    validations:
+      required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: Work order
+      description: >-
+        Fill every section. The marker line on the first row has to name this repository and the task
+        id, and every path cited in section 3 has to be a path that exists.
+      value: |
+        <!-- posture-issue: stellar-account-fixtures/TASK-ID | contract: PI-1 | kind: task -->
+
+        > One sentence of intent: what stops being true, or what starts working, when this is done.
+
+        ## 1 · Why this exists
+
+        Two to five sentences. The problem as it exists outside this file: which consumer is misled,
+        which shape the corpus cannot yet show, why here rather than in a consumer's own test data,
+        and why now. Name the drift or the row that found it.
+
+        ## 2 · Done when
+
+        - [ ] Observable condition, copied from the row's `Done when:` clause
+        - [ ] One box per condition
+        - [ ] `ROADMAP.md` task TASK-ID is ticked in this pull request, with a changelog row stamped
+              from `date -u`, the progress table regenerated and `Last updated` refreshed
+
+        Source of truth: `ROADMAP.md` section SECTION, task TASK-ID. If this issue and that row
+        disagree, the row is right and this issue is stale.
+
+        ## 3 · Where the work lands
+
+        Paths that exist today, each with one line about what changes there, plus any new fixture
+        directory or file with its intended path and why it is new.
+
+        ## 4 · Read before writing
+
+        1. `SCHEMA.md` for the section that governs the change, and the rules table in
+           `CONTRIBUTING.md`.
+        2. Ordered, three to six items, each a document and a section.
+
+        ## 5 · Rules that bind this issue
+
+        The two to five rows from the rules table that this change can break, each with the refusal
+        that enforces it. Always include the rule against weakening a check.
+
+        ## 6 · How to prove it
+
+        ```
+        $ the commands, in the order to run them
+        ```
+
+        **Local half:** what a person at a desk produces, and where to paste it. For a capture that
+        includes the account id, the network and the ledger, because nobody can re-verify a mystery.
+
+        **Hosted half:** the workflow and job whose log carries the rest, who can trigger it, and what
+        to write if you cannot.
+
+        ## 7 · Out of scope
+
+        The adjacent temptations this issue does not authorize. For a fixture row the line that almost
+        always belongs: no hand-edited `account.json`, and no synthetic stand-in for a shape that a
+        search could find.
+
+        ## 8 · Handoff
+
+        The branch to cut from `main`, the pull request template sections this issue fills, the
+        protected paths involved and who reviews them, and the three things a reviewer checks first.
+
+        ## 9 · When to stop and ask
+
+        The blockers specific to this issue, then how to ask: comment here, name the rule or the row
+        that blocks you, and stop.
+      render: markdown
+    validations:
+      required: true

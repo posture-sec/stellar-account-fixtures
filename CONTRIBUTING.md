@@ -99,6 +99,35 @@ One issue per open roadmap task, with the task's `Done when` line as the accepta
 For a shape the corpus lacks, use the fixture request template; it asks for the account id
 and the network, which is the whole difference between a search that ended and a wish.
 
+Every issue follows PI-1, the organization's issue contract, defined in `posture-sec/.github`'s
+`ISSUE_CONTRACT.md` and prefilled by `.github/ISSUE_TEMPLATE/task.yml`: a marker line naming this
+repository and the roadmap row, then nine numbered sections in the order a person picking the work
+cold needs them. Two of its rules are this repository's rules restated. The row is the source of
+truth, so a body quotes it and a disagreement gets corrected in `ROADMAP.md` first, in the same pull
+request. And a claim names the run that produced it or says it is local, which is why section 6 of
+every issue here separates `python3 validate.py`, the two test suites and the pinned lint steps,
+which anyone can run, from a job id in this repository's CI or a consumer's, which usually cannot be
+produced from a fork.
+
+Three things are repository-specific to a PI-1 body here. Section 3 cites fixture directories and
+`SCHEMA.md` sections that exist, so list the tree before you cite it. Section 5 names the two to five
+rows from the rule table above that the change can break, never the whole table, and a fixture row
+always carries the rule that a fixture is written by `tools/capture.py` rather than by hand. Section 7
+says which temptation this row invites, which for a capture is usually a synthetic stand-in for a
+shape a search could still find.
+
+Gates are issues here, unlike in `stellar-posture-watch`, and they carry `kind: gate` in their marker
+line. That is a statement about how one closes: a gate body names the observation that moves it and
+the rows behind it, and nobody closes one with a diff. Every issue carries a `type:` and a
+`complexity:` label plus the `area:` it touches, which are `fixtures`, `schema`, `tools` or
+`consumers`, and the tiers are `trivial` (under a couple of hours), `medium` (about half a day) and
+`high` (one day or more). `Stellar Wave` marks the work shaped for someone outside this
+organization; it says something about the shape of the task, not about a reward.
+
+Issue #29 is exempt from all of this. Its body is written by
+`posture-sec/stellar-posture-watch`'s renderer against a live read of this repository's own policy
+file, so its shape belongs to that renderer and to the state marker inside it.
+
 ## Naming and writing
 
 Fixture ids are kebab-case, are part of the contract, and are never reused: a fixture that
