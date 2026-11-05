@@ -5,3 +5,8 @@ contact_links:
     about: >-
       A false provenance claim, a check that can be fooled, or key material in the corpus
       goes here, privately. Account configuration is public data and is not a report.
+  - name: The PI-1 issue contract
+    url: https://github.com/posture-sec/.github/blob/main/ISSUE_CONTRACT.md
+    about: >-
+      What every issue in this organization carries, section by section, and why the roadmap row
+      rather than the issue is the source of truth. Read it before opening a task.
