@@ -18,7 +18,9 @@ from __future__ import annotations
 import hashlib
 import http.server
 import json
+import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -942,3 +944,83 @@ class SidecarFormat(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+def run_manifest(root: Path) -> tuple[int, str, str]:
+    """The manifest printer, as a consumer would run it."""
+    done = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "manifest.py"), "--root", str(root)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return done.returncode, done.stdout, done.stderr
+
+
+class ManifestOfTheShippedCorpus(unittest.TestCase):
+    """The manifest is a consumer's pin, so it is driven over the real tree."""
+
+    def records(self) -> list[dict]:
+        code, out, err = run_manifest(ROOT)
+        self.assertEqual(code, 0, err)
+        return [json.loads(line) for line in out.splitlines() if line]
+
+    def test_one_line_per_fixture(self) -> None:
+        fixtures = [p for p in (ROOT / "fixtures").iterdir() if p.is_dir()]
+        self.assertEqual(len(self.records()), len(fixtures))
+
+    def test_the_order_is_the_fixture_order_and_does_not_move_between_runs(self) -> None:
+        first, second = run_manifest(ROOT), run_manifest(ROOT)
+        self.assertEqual(first, second)
+        ids = [record["id"] for record in self.records()]
+        self.assertEqual(ids, sorted(ids))
+
+    def test_each_line_carries_the_fields_a_consumer_pins_by(self) -> None:
+        for record in self.records():
+            self.assertEqual(
+                sorted(record), ["account_id", "id", "kind", "ledger", "network", "sha256"]
+            )
+            self.assertRegex(record["sha256"], r"^[0-9a-f]{64}$")
+            self.assertIsInstance(record["ledger"], int)
+            self.assertIn(record["network"], ("public", "testnet"))
+
+    def test_every_digest_is_the_digest_of_the_body_beside_it(self) -> None:
+        for record in self.records():
+            body = ROOT / "fixtures" / record["id"] / "account.json"
+            self.assertEqual(record["sha256"], hashlib.sha256(body.read_bytes()).hexdigest())
+
+
+class ManifestOfASyntheticFixture(Scratch):
+    """A synthetic fixture has no ledger and no digest, and says so with null."""
+
+    def synthetic(self) -> None:
+        self.add_fixture("synth")
+        text = self.manifest_text("synth")
+        text = text.replace('kind = "captured"', 'kind = "synthetic"')
+        for key in ("source_url", "captured_at", "ledger", "horizon_version", "sha256"):
+            text = re.sub(rf"^{key} = .*\n", "", text, flags=re.MULTILINE)
+        self.write_manifest(text, "synth")
+
+    def test_the_provenance_fields_are_null_and_the_rest_survive(self) -> None:
+        self.synthetic()
+        code, out, err = run_manifest(self.root)
+        self.assertEqual(code, 0, err)
+        records = {json.loads(line)["id"]: json.loads(line) for line in out.splitlines()}
+        record = records["synth"]
+        self.assertIsNone(record["ledger"])
+        self.assertIsNone(record["sha256"])
+        self.assertEqual(record["kind"], "synthetic")
+        self.assertTrue(record["account_id"].startswith("G"))
+
+    def test_a_sidecar_that_disagrees_with_its_directory_is_refused(self) -> None:
+        self.synthetic()
+        self.break_manifest('id = "synth"', 'id = "elsewhere"', "synth")
+        code, _, err = run_manifest(self.root)
+        self.assertEqual(code, 2)
+        self.assertIn("not the directory name", err)
+
+    def test_a_missing_fixtures_directory_is_refused(self) -> None:
+        shutil.rmtree(self.root / "fixtures")
+        code, _, err = run_manifest(self.root)
+        self.assertEqual(code, 2)
+        self.assertIn("is not a directory", err)

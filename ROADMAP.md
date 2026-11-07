@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-05 09:19 UTC
+Last updated: 2026-11-06 19:12 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -37,8 +37,8 @@ empty gap list is gate G2.
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 9 | 9 | 100% |
 | 2 | Coverage | 3 | 6 | 50% |
-| 3 | Consumer contract | 1 | 4 | 25% |
-| **All phases** | **Readiness total** | **18** | **25** | **72%** |
+| 3 | Consumer contract | 2 | 4 | 50% |
+| **All phases** | **Readiness total** | **19** | **25** | **76%** |
 | Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
@@ -101,6 +101,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 ```
 
 ## 5. Phases and tasks
+| 2026-11-06 19:12 | 3.1 lands as a tool and a test, not a capture. `tools/manifest.py` prints one JSON object per fixture in sorted id order with `id`, `kind`, `account_id`, `network`, `ledger` and `sha256`, and takes the digest from the sidecar that `validate.py` already checks against the bytes rather than recomputing it, so the manifest and the validator cannot disagree. Reproducibility is the done-when and it is tested by running the printer twice and comparing the streams byte for byte; the order is the id order, never the disk's, and no timestamp is written. `ledger` and `sha256` are null on a synthetic fixture, decided once in the docstring and once in `README.md`, because those were never read from a chain and a zero would look like a measurement. Five cases run over the real `fixtures/` tree with the line count asserted against the directory count, three more drive the refusals through a scratch corpus, and `mypy` covers the new file from `pyproject.toml`. Ticking the task moves Phase 3 to 2 of 4 and the readiness total to 19 of 25, which the regeneration below records. | 3.1 |
 
 ### Phase 0: Ground truth (blocks everything)
 
@@ -134,7 +135,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 ### Phase 3: Consumer contract
 
-- [ ] **3.1** `tools/manifest.py`: print one JSON line per fixture with id, account id, network, ledger and `sha256`, so a consumer can pin the corpus by content instead of by commit. M. Deps: 0.4. Done when: its output is reproducible from a clean checkout and a test asserts the line count equals the fixture count. **Issue:** #17.
+- [x] **3.1** `tools/manifest.py`: print one JSON line per fixture with id, account id, network, ledger and `sha256`, so a consumer can pin the corpus by content instead of by commit. M. Deps: 0.4. Done when: its output is reproducible from a clean checkout and a test asserts the line count equals the fixture count. **Issue:** #17. (done 2026-11-06: `tools/manifest.py`, stdlib only, one `json.dumps` line per fixture in sorted id order with no timestamp, and the digest read from the sidecar `validate.py` already checked rather than recomputed. `ledger` and `sha256` are `null` on a synthetic fixture, which is stated in the module docstring and in `README.md`. Five cases assert the shape over the real tree, including one line per fixture, byte-identical output across two runs, sorted ids and every digest equal to the `account.json` beside it; three more drive the refusals through a scratch corpus. `mypy` type-checks the new file from `pyproject.toml`.)
 - [ ] **3.2** Gauge's rule tests read fixtures from here rather than carrying their own copies, which needs D-03 decided first. M. Deps: 3.1, D-03. Done when: a Gauge test names the fixture id it used. **Issue:** #18.
 - [ ] **3.3** Airlock's Stellar-side detectors use at least one fixture from here. S. Deps: 3.1. Done when: G5 is ticked with the two repository names. **Issue:** #19.
 - [x] **3.4** This corpus reads one of its own captures back from the chain through the sibling action: `.posture/gauge.toml` declares the account behind `fixtures/testnet-multisig` as the capture describes it, and `.github/workflows/posture-watch.yml` runs that declaration on a schedule by `uses: posture-sec/stellar-posture-watch@<sha>`. S. Deps: none. Done when: the workflow has run on a runner from `main`, the tracking issue it maintains is named here with its label and the ledger it read, and the action's own roadmap can say a repository other than its own consumes it. **Issue:** #27. (done 2026-11-05 08:11: three dispatches of `posture-watch.yml` from `main` at `71dfffc`, whose logs are in section 7's row, opened issue #29 with the label `fixture-drift` at ledger 5568533 and left it alone on the run after that, and the action's own roadmap now names this repository as its second consumer.)
