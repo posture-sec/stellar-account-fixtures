@@ -87,6 +87,18 @@ account = json.loads(fixture.read_text())
 `shape` in the sidecar is the label set to select by. The ids are part of the contract and
 do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies.
 
+To pin by content rather than by commit, read the manifest instead of the tree:
+
+```
+python3 tools/manifest.py
+```
+
+One JSON object per line, in fixture order, carrying `id`, `kind`, `account_id`, `network`,
+`ledger` and `sha256`, where the digest is the SHA-256 of that fixture's `account.json`. The
+output has no timestamp, so two runs over one tree are identical and the manifest can itself
+be pinned. `ledger` and `sha256` are `null` on a synthetic fixture: those were never read
+from a chain, and `null` says so rather than carrying a zero that looks like a measurement.
+
 ## Adding a fixture
 
 Only `G...` account ids, only through the tool, and never by hand:
