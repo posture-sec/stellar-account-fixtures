@@ -1,6 +1,19 @@
+<p align="center">
+  <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/ci.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/roadmap-check.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/roadmap-check.yml/badge.svg" alt="Roadmap check" /></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/posture-sec/stellar-account-fixtures"><img src="https://api.scorecard.dev/projects/github.com/posture-sec/stellar-account-fixtures/badge" alt="OpenSSF Scorecard" /></a>
+  <a href="https://posture-sec.github.io/stellar-account-fixtures/"><img src="https://img.shields.io/badge/docs-live-06b6d4" alt="Documentation Site" /></a>
+  <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/posture-watch.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/posture-watch.yml/badge.svg" alt="Posture Watch" /></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+" />
+  <img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="Apache-2.0" />
+  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/status-active%20corpus-emerald" alt="Active Corpus" /></a>
+</p>
+
 # Stellar account fixtures
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
+
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -53,6 +66,10 @@ fixture changes, the block is stale and the command is not: regenerate rather th
 This corpus says nothing about whether an account is well configured. No expectations, no
 severities, no rule ids: that is Gauge's job. Nothing here holds a secret key, and a
 seed-shaped string (`S...`) is refused by both the capture tool and the validator.
+
+## Documentation site & Specimen Vault
+
+A cryptographic specimen vault and ledger matrix is published at **[https://posture-sec.github.io/stellar-account-fixtures/](https://posture-sec.github.io/stellar-account-fixtures/)**. It provides interactive search, network filtering (Public vs Testnet), instant SHA-256 fingerprint copying, and visual specimen cards for each fixture in the corpus.
 
 ## The nine accounts
 
