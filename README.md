@@ -2,6 +2,8 @@
   <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/ci.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/roadmap-check.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/roadmap-check.yml/badge.svg" alt="Roadmap check" /></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/posture-sec/stellar-account-fixtures"><img src="https://api.scorecard.dev/projects/github.com/posture-sec/stellar-account-fixtures/badge" alt="OpenSSF Scorecard" /></a>
+  <a href="https://github.com/posture-sec/stellar-account-fixtures/actions"><img src="https://img.shields.io/endpoint?url=https://posture-sec.github.io/stellar-account-fixtures/data/badge-tests.json" alt="Tests" /></a>
+  <a href="#the-nine-accounts"><img src="https://img.shields.io/endpoint?url=https://posture-sec.github.io/stellar-account-fixtures/data/badge-fixtures.json" alt="Fixtures" /></a>
   <a href="https://posture-sec.github.io/stellar-account-fixtures/"><img src="https://img.shields.io/badge/docs-live-06b6d4" alt="Documentation Site" /></a>
   <a href="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/posture-watch.yml"><img src="https://github.com/posture-sec/stellar-account-fixtures/actions/workflows/posture-watch.yml/badge.svg" alt="Posture Watch" /></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+" />
@@ -66,6 +68,17 @@ fixture changes, the block is stale and the command is not: regenerate rather th
 This corpus says nothing about whether an account is well configured. No expectations, no
 severities, no rule ids: that is Gauge's job. Nothing here holds a secret key, and a
 seed-shaped string (`S...`) is refused by both the capture tool and the validator.
+
+## Status
+
+<!-- METRICS:START -->
+| Indicator | Value | Source |
+|---|---|---|
+| Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
+| Test Suite | **115 passing** | `python -m unittest` |
+| Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
+| Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
+<!-- METRICS:END -->
 
 ## Documentation site & Specimen Vault
 
