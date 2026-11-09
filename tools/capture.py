@@ -76,6 +76,13 @@ def fetch(url: str, cap: int) -> bytes:
         try:
             with OPENER.open(request, timeout=15) as response:
                 body = response.read(cap + 1)
+        except urllib.error.HTTPError as exc:
+            exc.close()
+            if 400 <= exc.code < 500:
+                raise Refused(f"{url} returned HTTP {exc.code}") from exc
+            last = exc
+            time.sleep(1.5 * (attempt + 1))
+            continue
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             last = exc
             time.sleep(1.5 * (attempt + 1))

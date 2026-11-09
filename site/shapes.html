@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shape labels: the vocabulary that picks a fixture</title>
+  <meta name="description" content="Twenty-four shape labels, each with the rule validate.py applies to derive it from an account read, the fixtures that carry it, and the six that no capture in the corpus has yet.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Shape labels">
+  <meta property="og:description" content="The 24-label vocabulary of the Stellar account fixture corpus, derived from the bytes rather than declared.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/shapes.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="shapes">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html">Overview <span>start</span></a>
+        <a href="shapes.html" aria-current="page">Shapes <span>24</span></a>
+        <a href="schema.html">Schema <span>toml</span></a>
+        <a href="capture.html">Capture <span>tool</span></a>
+        <a href="consumers.html">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>Docs built 2026-11-05<br>Nine captures, no release</p>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures">Repository</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SCHEMA.md">Schema contract</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/README.md">README</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/4">Gate G2: full coverage</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="page-head">
+          <p class="eyebrow">SCHEMA.md 5 / derived from bytes</p>
+          <h1>Twenty-four labels. <em>Eighteen have a capture.</em></h1>
+          <p class="lede">A label is not a tag somebody typed into a sidecar. It is a rule <code>validate.py</code> applies to <code>account.json</code>, and the sidecar has to agree with the bytes or the corpus fails. So this page is two views of one derived set: the grid, for seeing a fixture across the vocabulary, and the list, for picking the fixture that has the shape a rule needs.</p>
+          <div class="hero-actions">
+            <a class="button" href="#picker">Every label</a>
+            <a class="button button--ghost" href="#gaps">The six gaps</a>
+          </div>
+        </section>
+
+        <section id="grid">
+          <div class="section-head">
+            <h2>The grid</h2>
+            <p>Nine fixture rows, twenty-four label columns, in the order the schema lists them.</p>
+          </div>
+          <div class="matrix-wrap">
+            <table class="matrix">
+              <caption class="sr-only">Which of the 24 shape labels each of the 9 captured accounts carries</caption>
+              <thead>
+                <tr>
+                  <th scope="col" class="corner">Fixture</th>
+                  <th scope="col" class="v"><span>no_signers</span></th>
+                  <th scope="col" class="v"><span>single_signer</span></th>
+                  <th scope="col" class="v"><span>multi_signer</span></th>
+                  <th scope="col" class="v"><span>master_is_signer</span></th>
+                  <th scope="col" class="v"><span>master_absent</span></th>
+                  <th scope="col" class="v"><span>thresholds_zero</span></th>
+                  <th scope="col" class="v"><span>thresholds_nonzero</span></th>
+                  <th scope="col" class="v"><span>auth_required</span></th>
+                  <th scope="col" class="v"><span>auth_revocable</span></th>
+                  <th scope="col" class="v"><span>auth_immutable</span></th>
+                  <th scope="col" class="v"><span>auth_clawback_enabled</span></th>
+                  <th scope="col" class="v"><span>no_home_domain</span></th>
+                  <th scope="col" class="v"><span>blank_home_domain</span></th>
+                  <th scope="col" class="v"><span>has_home_domain</span></th>
+                  <th scope="col" class="v"><span>has_inflation</span></th>
+                  <th scope="col" class="v"><span>no_inflation</span></th>
+                  <th scope="col" class="v"><span>has_data</span></th>
+                  <th scope="col" class="v"><span>no_data</span></th>
+                  <th scope="col" class="v"><span>sponsored</span></th>
+                  <th scope="col" class="v"><span>not_sponsored</span></th>
+                  <th scope="col" class="v"><span>sponsoring</span></th>
+                  <th scope="col" class="v"><span>not_sponsoring</span></th>
+                  <th scope="col" class="v"><span>no_balances</span></th>
+                  <th scope="col" class="v"><span>many_balances</span></th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr data-fixture="asset-heavy-exchange">
+                <th scope="row">asset-heavy-exchange</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+              </tr>
+              <tr data-fixture="coordinator-data-entry">
+                <th scope="row">coordinator-data-entry</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="default-plain">
+                <th scope="row">default-plain</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="domain-and-inflation">
+                <th scope="row">domain-and-inflation</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="issuer-auth-required">
+                <th scope="row">issuer-auth-required</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="multisig-custody">
+                <th scope="row">multisig-custody</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="sponsored-trustlines">
+                <th scope="row">sponsored-trustlines</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+              </tr>
+              <tr data-fixture="testnet-multisig">
+                <th scope="row">testnet-multisig</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              <tr data-fixture="whitespace-home-domain">
+                <th scope="row">whitespace-home-domain</th>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="on" aria-label="carried"><span class="cell cell--on"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+                <td class="off" aria-label="not carried"><span class="cell cell--off"></span></td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <th scope="row">Carried by</th>
+                <td class="tally tally--gap">0</td>
+                <td class="tally">4</td>
+                <td class="tally">5</td>
+                <td class="tally">9</td>
+                <td class="tally tally--gap">0</td>
+                <td class="tally">4</td>
+                <td class="tally">5</td>
+                <td class="tally">1</td>
+                <td class="tally tally--gap">0</td>
+                <td class="tally tally--gap">0</td>
+                <td class="tally tally--gap">0</td>
+                <td class="tally">5</td>
+                <td class="tally">1</td>
+                <td class="tally">3</td>
+                <td class="tally">3</td>
+                <td class="tally">6</td>
+                <td class="tally">1</td>
+                <td class="tally">8</td>
+                <td class="tally">1</td>
+                <td class="tally">8</td>
+                <td class="tally">5</td>
+                <td class="tally">4</td>
+                <td class="tally tally--gap">0</td>
+                <td class="tally">2</td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+          <p class="matrix-note">A filled square means the derived set for that fixture carries the label; a dashed outline means it does not. The bottom row counts how many of the nine carry each label, and a count in the gap colour is a label with no capture at all. <a href="index.html#coverage">The same vocabulary as a single strip</a> is on the overview.</p>
+        </section>
+
+        <section id="picker">
+          <div class="section-head">
+            <h2>Every label</h2>
+            <p>The rule, then the fixtures that carry it. Each chip jumps to that record on the overview.</p>
+          </div>
+          <div class="vocab">
+          <div class="entry entry--gap" id="no_signers" data-rule="signers is empty or absent">
+            <h3 class="entry-name">no_signers<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">signers is empty or absent</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.4</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/14">#14</a>.</p>
+          </div>
+          <div class="entry" id="single_signer" data-rule="exactly one signer">
+            <h3 class="entry-name">single_signer<span class="entry-count">4 of 9</span></h3>
+            <p class="entry-rule">exactly one signer</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="multi_signer" data-rule="two or more signers">
+            <h3 class="entry-name">multi_signer<span class="entry-count">5 of 9</span></h3>
+            <p class="entry-rule">two or more signers</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="master_is_signer" data-rule="a signer key equals account_id">
+            <h3 class="entry-name">master_is_signer<span class="entry-count">9 of 9</span></h3>
+            <p class="entry-rule">a signer key equals account_id</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry entry--gap" id="master_absent" data-rule="no signer key equals account_id">
+            <h3 class="entry-name">master_absent<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">no signer key equals account_id</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.4</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/14">#14</a>.</p>
+          </div>
+          <div class="entry" id="thresholds_zero" data-rule="all three thresholds are 0">
+            <h3 class="entry-name">thresholds_zero<span class="entry-count">4 of 9</span></h3>
+            <p class="entry-rule">all three thresholds are 0</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="thresholds_nonzero" data-rule="any threshold is nonzero">
+            <h3 class="entry-name">thresholds_nonzero<span class="entry-count">5 of 9</span></h3>
+            <p class="entry-rule">any threshold is nonzero</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="auth_required" data-rule="flags.auth_required is true">
+            <h3 class="entry-name">auth_required<span class="entry-count">1 of 9</span></h3>
+            <p class="entry-rule">flags.auth_required is true</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry entry--gap" id="auth_revocable" data-rule="flags.auth_revocable is true">
+            <h3 class="entry-name">auth_revocable<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">flags.auth_revocable is true</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.5</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/15">#15</a>.</p>
+          </div>
+          <div class="entry entry--gap" id="auth_immutable" data-rule="flags.auth_immutable is true">
+            <h3 class="entry-name">auth_immutable<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">flags.auth_immutable is true</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.5</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/15">#15</a>.</p>
+          </div>
+          <div class="entry entry--gap" id="auth_clawback_enabled" data-rule="flags.auth_clawback_enabled is true">
+            <h3 class="entry-name">auth_clawback_enabled<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">flags.auth_clawback_enabled is true</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.5</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/15">#15</a>.</p>
+          </div>
+          <div class="entry" id="no_home_domain" data-rule="home_domain is absent or null">
+            <h3 class="entry-name">no_home_domain<span class="entry-count">5 of 9</span></h3>
+            <p class="entry-rule">home_domain is absent or null</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="blank_home_domain" data-rule="home_domain is a string that trims to empty">
+            <h3 class="entry-name">blank_home_domain<span class="entry-count">1 of 9</span></h3>
+            <p class="entry-rule">home_domain is a string that trims to empty</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="has_home_domain" data-rule="home_domain is a non-blank string">
+            <h3 class="entry-name">has_home_domain<span class="entry-count">3 of 9</span></h3>
+            <p class="entry-rule">home_domain is a non-blank string</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="has_inflation" data-rule="inflation_destination is set">
+            <h3 class="entry-name">has_inflation<span class="entry-count">3 of 9</span></h3>
+            <p class="entry-rule">inflation_destination is set</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="no_inflation" data-rule="inflation_destination is absent or null">
+            <h3 class="entry-name">no_inflation<span class="entry-count">6 of 9</span></h3>
+            <p class="entry-rule">inflation_destination is absent or null</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="has_data" data-rule="the data object is non-empty">
+            <h3 class="entry-name">has_data<span class="entry-count">1 of 9</span></h3>
+            <p class="entry-rule">the data object is non-empty</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="no_data" data-rule="the data object is empty or absent">
+            <h3 class="entry-name">no_data<span class="entry-count">8 of 9</span></h3>
+            <p class="entry-rule">the data object is empty or absent</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="sponsored" data-rule="num_sponsored is greater than 0">
+            <h3 class="entry-name">sponsored<span class="entry-count">1 of 9</span></h3>
+            <p class="entry-rule">num_sponsored is greater than 0</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="not_sponsored" data-rule="num_sponsored is 0">
+            <h3 class="entry-name">not_sponsored<span class="entry-count">8 of 9</span></h3>
+            <p class="entry-rule">num_sponsored is 0</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="sponsoring" data-rule="num_sponsoring is greater than 0">
+            <h3 class="entry-name">sponsoring<span class="entry-count">5 of 9</span></h3>
+            <p class="entry-rule">num_sponsoring is greater than 0</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-coordinator-data-entry">coordinator-data-entry<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-domain-and-inflation">domain-and-inflation<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-issuer-auth-required">issuer-auth-required<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-whitespace-home-domain">whitespace-home-domain<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          <div class="entry" id="not_sponsoring" data-rule="num_sponsoring is 0">
+            <h3 class="entry-name">not_sponsoring<span class="entry-count">4 of 9</span></h3>
+            <p class="entry-rule">num_sponsoring is 0</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-default-plain">default-plain<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-multisig-custody">multisig-custody<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-testnet-multisig">testnet-multisig<span class="chip-net net net--testnet">testnet</span></a></li>
+            </ul>
+          </div>
+          <div class="entry entry--gap" id="no_balances" data-rule="balances is an empty list">
+            <h3 class="entry-name">no_balances<span class="entry-count">0 of 9</span></h3>
+            <p class="entry-rule">balances is an empty list</p>
+            <p class="entry-gap">No capture in this tree carries it. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">2.3</a> is the task hunting it, tracked as issue <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/13">#13</a>.</p>
+          </div>
+          <div class="entry" id="many_balances" data-rule="balances has 10 or more entries">
+            <h3 class="entry-name">many_balances<span class="entry-count">2 of 9</span></h3>
+            <p class="entry-rule">balances has 10 or more entries</p>
+            <ul class="entry-carriers">
+              <li><a class="chip" href="index.html#record-asset-heavy-exchange">asset-heavy-exchange<span class="chip-net net net--public">public</span></a></li>
+              <li><a class="chip" href="index.html#record-sponsored-trustlines">sponsored-trustlines<span class="chip-net net net--public">public</span></a></li>
+            </ul>
+          </div>
+          </div>
+        </section>
+
+        <section id="gaps">
+          <div class="section-head">
+            <h2>Six labels, no capture</h2>
+            <p>What the search saw, and the task that owns each hole.</p>
+          </div>
+          <table>
+            <caption>The uncovered vocabulary</caption>
+            <thead>
+              <tr>
+                <th scope="col">Label</th>
+                <th scope="col">What it takes</th>
+                <th scope="col">Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="#no_signers">no_signers</a></td>
+                <td>An account resource whose <code>signers</code> array is empty. The only reads that would show it here are ones nobody has found yet, and a shape this thin is exactly where a hand-typed fixture would hide a wrong assumption.</td>
+                <td class="need">roadmap 2.4, issue #14</td>
+              </tr>
+              <tr>
+                <td><a href="#master_absent">master_absent</a></td>
+                <td>Horizon omitting the master key from <code>signers</code>, which is what a revoked master looks like on the account resource. Rare, and one of the accounts known to have this shape is unrecoverable, so it may not be invented.</td>
+                <td class="need">roadmap 2.4, issue #14</td>
+              </tr>
+              <tr>
+                <td><a href="#auth_revocable">auth_revocable</a></td>
+                <td rowspan="3">Three issuer accounts, one flag set each. The issuers found while looking carried <code>auth_revocable</code> and <code>auth_clawback_enabled</code> on the same account, and one issuer with all three flags would test one account rather than three labels.</td>
+                <td class="need">roadmap 2.5, issue #15</td>
+              </tr>
+              <tr>
+                <td><a href="#auth_immutable">auth_immutable</a></td>
+                <td class="need">roadmap 2.5, issue #15</td>
+              </tr>
+              <tr>
+                <td><a href="#auth_clawback_enabled">auth_clawback_enabled</a></td>
+                <td class="need">roadmap 2.5, issue #15</td>
+              </tr>
+              <tr>
+                <td><a href="#no_balances">no_balances</a></td>
+                <td>An account that has never held a trustline. No account read for this corpus, on either network, has shown an empty <code>balances</code> array: every one carries at least its native line. This row may end in a decision that the label stays uncovered and a reason recorded, rather than in a capture.</td>
+                <td class="need">roadmap 2.3, issue #13</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout--hard">
+            <h4>Synthetic is allowed and unused</h4>
+            <p>The schema permits a fixture authored rather than read, on two conditions: it carries none of the five provenance keys, because it has no URL, no ledger and no digest to name, and its <code>scenario</code> starts with <code>synthetic:</code>. No synthetic fixture is shipped here, so every number on this page and on the overview describes a real read. Closing a gap with a synthetic capture is a decision to record in <code>README.md</code> and the roadmap, not a way to make the list above shorter.</p>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. A test in <code>tests/test_site.py</code> rebuilds this grid from <code>validate.py</code> and the sidecars and fails the build when the page and the corpus disagree.</p>
+          <div class="footer-links">
+            <a href="index.html">Overview</a>
+            <a href="schema.html">Schema</a>
+            <a href="capture.html">Capture</a>
+            <a href="consumers.html">Consumers</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

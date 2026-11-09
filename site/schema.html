@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The fixture schema: two files, twelve keys, one contract</title>
+  <meta name="description" content="SCHEMA.md version 1 read as a page: what a fixture directory holds, the byte rules for account.json, the twelve sidecar keys and which five a synthetic fixture may not carry, the root documents, and what the schema refuses to say.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The fixture schema">
+  <meta property="og:description" content="Two files per fixture, twelve sidecar keys, and a validator that recomputes every claim they make.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/schema.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="schema">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html">Overview <span>start</span></a>
+        <a href="shapes.html">Shapes <span>24</span></a>
+        <a href="schema.html" aria-current="page">Schema <span>toml</span></a>
+        <a href="capture.html">Capture <span>tool</span></a>
+        <a href="consumers.html">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>SCHEMA.md, version 1<br>Read it there, not here</p>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SCHEMA.md">Schema contract</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/validate.py">validate.py</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/CONTRIBUTING.md">Contributing</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="page-head">
+          <p class="eyebrow">The contract / version 1</p>
+          <h1>Two files per fixture. <em>Neither one takes my word for it.</em></h1>
+          <p class="lede">This page mirrors <code>SCHEMA.md</code>, which is the contract; the file beats the page wherever they disagree, and <code>validate.py</code> beats both. What the schema defines is a shape for data, not a judgement: it says what a fixture has to look like so that a claim inside it can be checked.</p>
+          <div class="hero-actions">
+            <a class="button" href="#sidecar">The twelve keys</a>
+            <a class="button button--ghost" href="#synthetic">Synthetic rules</a>
+          </div>
+        </section>
+
+        <section id="layout">
+          <div class="section-head">
+            <h2>Layout</h2>
+            <p>SCHEMA.md 1. A third file in a fixture directory is a validator problem.</p>
+          </div>
+          <div class="code" data-copy>
+            <p class="code-label">what the tree looks like</p>
+            <pre>fixtures/&lt;fixture-id&gt;/
+  <b>account.json</b>      the account resource, verbatim from Horizon
+  <b>fixture.toml</b>      the sidecar: what this is, where it came from, what shape it has
+corpus/
+  root-&lt;network&gt;.json  the Horizon root document captured alongside the fixture
+tools/
+  capture.py        writes a new captured fixture and its root document
+validate.py         checks the whole tree against this schema
+test_validate.py    the tests for both
+tests/
+  test_roadmap_gate.py  the two roadmap gate scripts, run as subprocesses</pre>
+          </div>
+          <p>A fixture id is kebab-case, matches <code>^[a-z0-9]+(-[a-z0-9]+)*$</code>, and equals its directory name. Ids are part of the contract and are never reused: a fixture that leaves the tree takes its id with it. A directory holding anything beside those two files reports <code>unexpected file(s)</code>, and one missing either reports <code>missing file(s)</code>, because the schema does not know what a third file is for.</p>
+        </section>
+
+        <section id="bytes">
+          <div class="section-head">
+            <h2>account.json</h2>
+            <p>SCHEMA.md 2. The byte rules, and the three consequences of them.</p>
+          </div>
+          <p>The bytes are what Horizon returned for <code>GET /accounts/&lt;account-id&gt;</code>, re-serialised with <code>json.dumps(payload, indent=2, sort_keys=True)</code> plus a trailing newline. Nothing is stripped and nothing is added: an account resource is public ledger state, and a fixture that has been edited is a fixture whose provenance claim is a lie. LF line endings only, and a file that does not end with a newline is reported.</p>
+          <dl class="keys">
+            <div>
+              <dt>Fields follow Horizon</dt>
+              <dd>Which means they can change when Horizon changes. A <a href="capture.html">re-capture with <code>--update</code></a> is how a fixture is refreshed, and the ledger number in the sidecar is what tells you how old the bytes are.</dd>
+            </div>
+            <div>
+              <dt>The read is point-in-time</dt>
+              <dd>An account that was multisig at ledger 65266865 can be single-signer tomorrow. <code>last_modified_ledger</code> is not decoration: it is the date on the claim.</dd>
+            </div>
+            <div>
+              <dt>Empty is a fact</dt>
+              <dd><code>data</code> is present in some captures and empty in others. Empty means the account has no data entries, not that somebody dropped the field.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="sidecar">
+          <div class="section-head">
+            <h2>fixture.toml</h2>
+            <p>SCHEMA.md 3. Flat TOML, one section, no tables. Unknown keys are refused.</p>
+          </div>
+          <p>Twelve keys, and the two columns that matter are the middle pair: five of them are provenance, and a fixture that was authored rather than read cannot have them. <code>validate.py</code> reports <code>unknown key(s) in sidecar: ...</code> for anything the schema does not define, on the reasoning that a key nobody defines is a key nobody reads.</p>
+          <table>
+            <caption>The key table, as SCHEMA.md 3 states it</caption>
+            <thead>
+              <tr>
+                <th scope="col">Key</th>
+                <th scope="col">Captured</th>
+                <th scope="col">Synthetic</th>
+                <th scope="col">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>schema_version</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td>Integer. This corpus is <code>1</code>; <a href="#versioning">see versioning</a>.</td>
+              </tr>
+              <tr>
+                <td><code>id</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td>Kebab-case, equal to the directory name.</td>
+              </tr>
+              <tr>
+                <td><code>kind</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td><code>captured</code> or <code>synthetic</code>.</td>
+              </tr>
+              <tr>
+                <td><code>scenario</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td>One sentence on what the shape is for, in plain words.</td>
+              </tr>
+              <tr>
+                <td><code>account_id</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td><code>G...</code> ed25519 account id, checksum included.</td>
+              </tr>
+              <tr>
+                <td><code>network</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td><code>public</code> or <code>testnet</code>.</td>
+              </tr>
+              <tr>
+                <td><code>shape</code></td>
+                <td class="need">required</td>
+                <td class="need">required</td>
+                <td>Sorted list of the labels in <a href="shapes.html">section 5</a>.</td>
+              </tr>
+              <tr>
+                <td><code>source_url</code></td>
+                <td class="need">required</td>
+                <td class="forbid">forbidden</td>
+                <td>The exact URL that was read.</td>
+              </tr>
+              <tr>
+                <td><code>captured_at</code></td>
+                <td class="need">required</td>
+                <td class="forbid">forbidden</td>
+                <td><code>YYYY-MM-DDTHH:MM:SSZ</code>, UTC, not in the future.</td>
+              </tr>
+              <tr>
+                <td><code>ledger</code></td>
+                <td class="need">required</td>
+                <td class="forbid">forbidden</td>
+                <td><code>last_modified_ledger</code> of the resource, positive.</td>
+              </tr>
+              <tr>
+                <td><code>horizon_version</code></td>
+                <td class="need">required</td>
+                <td class="forbid">forbidden</td>
+                <td>Version string from the endpoint that served it.</td>
+              </tr>
+              <tr>
+                <td><code>sha256</code></td>
+                <td class="need">required</td>
+                <td class="forbid">forbidden</td>
+                <td>SHA-256 of <code>account.json</code> as it sits on disk.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="small muted">One row is worth more attention than the rest. <code>shape</code> is the only field in the sidecar checked against content rather than form: the validator re-derives the same labels from <code>account.json</code> and reports <code>declared shape 'x' is not what account.json shows</code> for a label the bytes do not support.</p>
+        </section>
+
+        <section id="synthetic">
+          <div class="section-head">
+            <h2>The synthetic kind</h2>
+            <p>Allowed for a shape a search could not find, and stripped of every claim it cannot make.</p>
+          </div>
+          <div class="pair">
+            <div class="card card--proof">
+              <h3>What it may say</h3>
+              <p>The seven keys every fixture carries. Its <code>account_id</code> still has to be a valid <code>G...</code> strkey with a checksum that verifies, so a consumer's tests can treat both kinds exactly the same way.</p>
+              <span class="card-note">Its <code>scenario</code> must start with <code>synthetic:</code>.</span>
+            </div>
+            <div class="card card--gap">
+              <h3>What it may not say</h3>
+              <p>Any of the five provenance keys. A fixture that was never read from anywhere has no URL, no capture second, no ledger, no Horizon version and no digest to record, and carrying one of them would be the specific lie this schema exists to refuse.</p>
+              <span class="card-note">Reported as <code>synthetic fixture carries provenance it cannot have: ...</code>.</span>
+            </div>
+          </div>
+          <div class="callout">
+            <h4>Shipped today: none</h4>
+            <p>All nine fixtures in the corpus are captures. The synthetic branch exists so a rare shape is not unreachable, and D-01 in the roadmap says a shape is fabricated only after the search for a real account failed. Two Phase 2 tasks permit something other than a capture in their <code>Done when</code>: 2.2 allows a synthetic fixture with the reason recorded, and 2.4 allows a written decision that the shape stays uncovered and why. 2.2 found a real account on the first pass that mattered, and 2.4 stays open rather than closed with a fabrication.</p>
+          </div>
+        </section>
+
+        <section id="accountid">
+          <div class="section-head">
+            <h2>What an account id has to satisfy</h2>
+            <p>SCHEMA.md 4. Checked by checksum, not by shape.</p>
+          </div>
+          <p>Only <code>G...</code>: an ed25519 public key, version byte 48, 56 base32 characters decoding to one version byte, 32 bytes of key material and a CRC16-XMODEM checksum over the first 33 bytes, appended little-endian. <code>M...</code>, <code>C...</code>, <code>T...</code> and <code>X...</code> are not account resources, and <code>tools/capture.py</code> refuses them before it makes a request. The checksum is what stops a typo or an invented address entering the corpus: <code>validate.py</code> recomputes it, and one flipped character returns nothing.</p>
+          <div class="callout callout--hard">
+            <h4>Seed strings are refused at three points</h4>
+            <p>The capture tool will not write a response body containing a seed-shaped string. The validator scans both files of every fixture for one. And the test suite builds its seed-shaped samples from thirty-two zero bytes at run time, so a real key cannot appear in this repository by accident. A decodable seed and a shape-only fake produce distinct problem lines, the first saying &ldquo;and its checksum verifies&rdquo; and the second not.</p>
+          </div>
+        </section>
+
+        <section id="roots">
+          <div class="section-head">
+            <h2>Root documents</h2>
+            <p>SCHEMA.md 6. Why a fixture cannot quietly be from somewhere else.</p>
+          </div>
+          <table>
+            <caption>Every network used by any fixture</caption>
+            <thead>
+              <tr>
+                <th scope="col">Network</th>
+                <th scope="col">Passphrase that must appear in the root document</th>
+                <th scope="col">Captures</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>public</code></td>
+                <td><code>Public Global Stellar Network ; September 2015</code></td>
+                <td><a href="index.html#records">eight</a></td>
+              </tr>
+              <tr>
+                <td><code>testnet</code></td>
+                <td><code>Test SDF Network ; September 2015</code></td>
+                <td><a href="index.html#record-testnet-multisig">one</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <p><code>corpus/root-&lt;network&gt;.json</code> is the document the endpoint served at <code>GET /</code> while the capture ran, and a missing one reports <code>missing; every network used must have its root document</code>. <code>mainnet</code> and <code>public</code> are the same network with different names in different tools; this corpus says <code>public</code> because that is what Horizon and the passphrase both say. The name is the one a reader can check against a root document.</p>
+        </section>
+
+        <section id="versioning">
+          <div class="section-head">
+            <h2>Versioning</h2>
+            <p>SCHEMA.md 7. What makes this version 2 rather than a new key.</p>
+          </div>
+          <dl class="keys">
+            <div>
+              <dt>Still version 1</dt>
+              <dd>A key is added by adding it to <code>SCHEMA.md</code>, making <code>validate.py</code> accept it, and shipping fixtures that use it. Nothing is a version 2 candidate today.</dd>
+            </div>
+            <div>
+              <dt>Version 2</dt>
+              <dd>A key renamed, a shape label that changes meaning, or <code>account.json</code> stopping being verbatim bytes. The validator then has to read both for a release cycle so consumers are not broken mid-flight.</dd>
+            </div>
+            <div>
+              <dt>No tag either</dt>
+              <dd>D-04 keeps the corpus untagged until a consumer pins a version: a tag on a nine-fixture corpus invites the reading that the shape set is stable, and it is not. Pin a fixture by its <code>sha256</code> instead, which is <a href="consumers.html#pinning">described here</a>.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="not">
+          <div class="section-head">
+            <h2>What the schema does not do</h2>
+            <p>SCHEMA.md 8, and the reason the corpus stays small enough to read.</p>
+          </div>
+          <p>It does not say whether an account is well configured. It holds no expectations, no severities, no rule ids and no policy: those belong to Gauge, which reads a real account and evaluates rules, and to Airlock, which reads repositories. A fixture here is an input, and the only claim it makes is that these bytes came from that URL on that date at that ledger, or that a human wrote them and said so.</p>
+          <p>Two limits follow from the same choice. One account resource per fixture, so no transactions, offers, effects or operations in version 1 (D-05). And no re-read of the chain after a capture lands, except the one account the sibling action watches weekly, which is <a href="consumers.html#drift">described on the consumers page</a>.</p>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. <code>SCHEMA.md</code> is the contract; this page is a reading of it, and <code>tests/test_site.py</code> checks the reading against the file.</p>
+          <div class="footer-links">
+            <a href="index.html">Overview</a>
+            <a href="shapes.html">Shapes</a>
+            <a href="capture.html">Capture</a>
+            <a href="consumers.html">Consumers</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
