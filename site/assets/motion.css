@@ -1,0 +1,298 @@
+/* Scroll-driven motion layer. Loaded after site.css.
+   Inspired by land-book.com reveal patterns: gentle upward drift on scroll,
+   staggered siblings, staged hero entrance, hover micro-interactions.
+   Everything here is gated behind prefers-reduced-motion: no-preference. */
+
+/* Accent and track resolve per site: Gauge and the corpus define --amber and
+   --deck; Airlock defines --red and --bg. No per-repo overrides needed. */
+:root {
+  --motion-accent: var(--amber, var(--red, #f2b33d));
+  --motion-track: var(--deck, var(--bg, #0d131a));
+}
+
+/* Scrollbars carry the site palette. Static CSS, not JS-injected, so this
+   holds under Airlock's style-src 'self' Content-Security-Policy. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong, #3a4c5e) var(--motion-track);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--motion-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong, #3a4c5e);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--motion-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* --- Scroll reveals --- */
+  /* html[data-motion] outranks the hover-transition rules below, so the
+     reveal owns the transition until JS removes .reveal on transitionend. */
+
+  html[data-motion] .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--reveal-i, 0) * 70ms);
+    will-change: opacity, transform;
+  }
+
+  html[data-motion] .reveal--visible {
+    opacity: 1;
+    transform: translateY(0);
+    will-change: auto;
+  }
+
+  /* --- Hero entrance --- */
+
+  .hero-enter {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--enter-i, 0) * 90ms + 100ms);
+  }
+
+  @keyframes hero-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* The hero visual object gets a slightly longer, more dramatic entrance. */
+  .hero-enter.report,
+  .hero-enter.term,
+  .hero-enter.hero-side {
+    animation-name: hero-visual-in;
+    animation-duration: 0.9s;
+    transform: translateY(24px) scale(0.98);
+  }
+
+  @keyframes hero-visual-in {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* --- Hover micro-interactions --- */
+
+  .card,
+  .linkcard,
+  .flow-card,
+  .record,
+  .entry {
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .card:hover,
+  .linkcard:hover,
+  .flow-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--motion-accent);
+    box-shadow: 0 6px 24px -8px rgba(0, 0, 0, 0.4);
+  }
+
+  .record:hover {
+    transform: translateX(4px);
+  }
+
+  .entry:hover {
+    transform: translateX(3px);
+    border-color: var(--line-strong, #3a4c5e);
+  }
+
+  /* Buttons: subtle lift and glow on hover. */
+  .button,
+  .btn {
+    transition:
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .button:hover,
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px -4px color-mix(in srgb, var(--motion-accent) 30%, transparent);
+  }
+
+  .button:active,
+  .btn:active {
+    transform: translateY(0);
+    transition-duration: 0.08s;
+  }
+
+  /* Nav links: underline slide-in. */
+  .side-nav a,
+  .nav a {
+    position: relative;
+  }
+
+  .side-nav a::after,
+  .nav a::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 1px;
+    background: var(--motion-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .side-nav a:hover::after,
+  .nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .side-nav a[aria-current="page"]::after,
+  .nav a[aria-current="page"]::after {
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+
+  /* Chips and tokens: gentle scale on hover. */
+  .chip,
+  .tick,
+  .net {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .chip:hover,
+  .tick:hover {
+    transform: scale(1.05);
+  }
+
+  /* Code blocks: border glow on hover. */
+  .code,
+  .term {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .code:hover,
+  .term:hover {
+    border-color: var(--line-strong, #3a4c5e);
+    box-shadow: 0 0 0 1px var(--line-strong, #3a4c5e);
+  }
+
+  /* Tables: row highlight slide. */
+  tbody tr {
+    transition: background-color 0.2s ease;
+  }
+
+  /* --- Topbar entrance --- */
+
+  .topbar,
+  .bar {
+    animation: bar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes bar-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* --- Sidebar entrance --- */
+
+  .sidebar {
+    animation: side-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+
+  @keyframes side-in {
+    from {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* --- Section head rule draw --- */
+  /* The amber line sweeps over the existing border, not beside it. */
+
+  .section-head {
+    position: relative;
+  }
+
+  .section-head::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 1px;
+    background: var(--motion-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+  }
+
+  .section-head.reveal--visible::after,
+  .reveal--visible .section-head::after {
+    transform: scaleX(1);
+  }
+
+  /* --- Staggered list items inside entered containers --- */
+
+  .reveal--visible .record-shapes li {
+    animation: chip-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--chip-i, 0) * 40ms + 200ms);
+  }
+
+  .hero--enter .hero-meta li {
+    animation: chip-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--chip-i, 0) * 40ms + 600ms);
+  }
+
+  @keyframes chip-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/* Reduced motion: everything is visible immediately, no transforms. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-enter {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

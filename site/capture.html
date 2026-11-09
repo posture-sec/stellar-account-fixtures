@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tools/capture.py: the only way a fixture enters the corpus</title>
+  <meta name="description" content="What the capture tool does in order, the twelve refusals it makes before writing a byte, the caps and timeouts behind them, and what --update means for a fixture already on disk.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Capturing a fixture">
+  <meta property="og:description" content="One stdlib script writes every captured fixture in this corpus, and refuses twelve things before it touches the disk.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/capture.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="capture">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html">Overview <span>start</span></a>
+        <a href="shapes.html">Shapes <span>24</span></a>
+        <a href="schema.html">Schema <span>toml</span></a>
+        <a href="capture.html" aria-current="page">Capture <span>tool</span></a>
+        <a href="consumers.html">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>tools/capture.py<br>244 lines, stdlib only</p>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/tools/capture.py">The source</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/validate.py">validate.py</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/CONTRIBUTING.md">Contributing</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="page-head">
+          <p class="eyebrow">tools/capture.py / exit 0, 1 or 2</p>
+          <h1>One tool writes a fixture. <em>Twelve refusals before the disk.</em></h1>
+          <p class="lede">A fixture that was edited rather than read is a fixture whose provenance claim is a lie, so nothing enters this corpus by hand. The tool computes the digest over the exact bytes it writes, labels the capture with the same function the validator uses, and refuses an input it can see is wrong before it spends a request on it.</p>
+          <div class="hero-actions">
+            <a class="button" href="#refusals">The refusals</a>
+            <a class="button button--ghost" href="#order">What it does, in order</a>
+          </div>
+        </section>
+
+        <section id="command">
+          <div class="section-head">
+            <h2>The invocation</h2>
+            <p>Four required arguments, one account per run.</p>
+          </div>
+          <div class="code" data-copy>
+            <p class="code-label">capture one account</p>
+            <pre>python3 tools/capture.py --network public --account G... \
+  --id my-new-shape --scenario "one sentence on why this shape is missing"
+python3 validate.py</pre>
+          </div>
+          <table>
+            <caption>Flags, as the parser defines them</caption>
+            <thead>
+              <tr>
+                <th scope="col">Flag</th>
+                <th scope="col">Required</th>
+                <th scope="col">What it does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--network</code></td>
+                <td class="need">yes</td>
+                <td>One of <code>public</code> or <code>testnet</code>. There is no default, because an implicit network is the mistake this whole repository is built around: a <code>G</code> address is valid on both.</td>
+              </tr>
+              <tr>
+                <td><code>--account</code></td>
+                <td class="need">yes</td>
+                <td>The account id, matched against <code>^G[A-Z2-7]{55}$</code> and then against its own checksum.</td>
+              </tr>
+              <tr>
+                <td><code>--id</code></td>
+                <td class="need">yes</td>
+                <td>The fixture id: kebab-case, becomes the directory name, and is part of the contract once shipped.</td>
+              </tr>
+              <tr>
+                <td><code>--scenario</code></td>
+                <td class="need">yes</td>
+                <td>One sentence on why the shape is worth having. This is prose the validator cannot check, so keep counts out of it; <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">roadmap 0.6</a> is the open task deciding what to do about that.</td>
+              </tr>
+              <tr>
+                <td><code>--root</code></td>
+                <td class="forbid">no</td>
+                <td>Corpus directory, default <code>.</code>. The tests point it at a temporary directory, which is how a capture path is exercised without writing into the corpus.</td>
+              </tr>
+              <tr>
+                <td><code>--update</code></td>
+                <td class="forbid">no</td>
+                <td>Replace a fixture that already exists. Without it an existing directory is refused. See <a href="#update">what a re-capture means</a>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="order">
+          <div class="section-head">
+            <h2>What it does, in order</h2>
+            <p>Two requests, one pair of files, one root document rewritten.</p>
+          </div>
+          <dl class="keys">
+            <div>
+              <dt>1. Refuse locally</dt>
+              <dd>Before any request: the fixture id is kebab-case, the account is <code>G...</code> by shape, the checksum of that account verifies, the network is known, and the target directory either does not exist or was named with <code>--update</code>. A typo costs no round trip.</dd>
+            </div>
+            <div>
+              <dt>2. Verify the network</dt>
+              <dd><code>GET &lt;endpoint&gt;/</code>, capped at 128000 bytes, parsed as JSON, and its <code>network_passphrase</code> compared with the passphrase that network carries. A mismatch is refused, which is the only thing standing between a capture and the reading that a mainnet account is a testnet one.</dd>
+            </div>
+            <div>
+              <dt>3. Read the version</dt>
+              <dd>From <code>coreversion</code> or <code>horizon_version</code> on that same root document, and <code>unknown</code> if neither is there; Horizon 30 stopped reporting <code>coreversion</code> on the root. All nine fixtures here record <code>30.0.0-b3ff4119cc99ebcc8048334f5ec64e78c16d1666</code>.</dd>
+            </div>
+            <div>
+              <dt>4. Fetch the account</dt>
+              <dd><code>GET &lt;endpoint&gt;/accounts/&lt;id&gt;</code>, capped at 512000 bytes, 15 second timeout, three attempts with 1.5s, 3.0s and 4.5s waits after each failure, through an opener that refuses a 3xx instead of following it. A read that never succeeds costs nine seconds and no file.</dd>
+            </div>
+            <div>
+              <dt>5. Refuse the body</dt>
+              <dd>If it contains a seed-shaped string, if it is not an object, or if the <code>account_id</code> inside it is not the one requested. The last of those is why a response cannot be renamed into a fixture for a different account.</dd>
+            </div>
+            <div>
+              <dt>6. Write the bytes</dt>
+              <dd><code>json.dumps(payload, indent=2, sort_keys=True)</code> plus a newline, and the SHA-256 computed over exactly those bytes. Pretty-printing changes the digest from whatever Horizon happened to emit, which is why the digest is of the file and not of the wire.</dd>
+            </div>
+            <div>
+              <dt>7. Write the sidecar</dt>
+              <dd><code>kind = "captured"</code>, the URL, the UTC second, <code>last_modified_ledger</code>, the version string, the digest, and <code>shape</code> labelled by <code>shapes_of()</code> imported from the validator. One definition of a label, so a capture cannot invent one nothing checks.</dd>
+            </div>
+            <div>
+              <dt>8. Rewrite the root document</dt>
+              <dd>A second <code>GET /</code> replaces <code>corpus/root-&lt;network&gt;.json</code>. This is why that file moved when 2.1 and 2.2 landed: its ledger counters changed while the passphrase did not. It is also why two captures cannot run at once against one checkout.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="refusals">
+          <div class="section-head">
+            <h2>Every refusal, in its words</h2>
+            <p>Exit 2 is a refusal, 1 is a failed fetch, 0 wrote a fixture.</p>
+          </div>
+          <table>
+            <caption>A refusal prints <code>capture refused:</code> and exits 2; a failed fetch prints <code>capture failed:</code> and exits 1</caption>
+            <thead>
+              <tr>
+                <th scope="col">Message</th>
+                <th scope="col">Code</th>
+                <th scope="col">What it is stopping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>fixture id 'My_Shape' is not kebab-case</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A directory name that would not survive the id rule in <code>SCHEMA.md</code> 1.</td>
+              </tr>
+              <tr>
+                <td><code>account 'M...' is not a G... ed25519 account id; M... and C... addresses are not captured here</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A muxed or contract address, which is not an account resource and has no <code>GET /accounts/</code> read.</td>
+              </tr>
+              <tr>
+                <td><code>account 'G...' is G-shaped but its checksum does not verify; a typo is refused here rather than 404ing at Horizon</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>An invented address. This is the refusal that keeps a fabricated account out of a corpus other people write tests against.</td>
+              </tr>
+              <tr>
+                <td><code>unknown network 'futurenet'; expected one of ['public', 'testnet']</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A network with no endpoint and no passphrase to check.</td>
+              </tr>
+              <tr>
+                <td><code>fixtures/default-plain already exists; pass --update to replace it</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>Silently overwriting a capture somebody else pinned by digest.</td>
+              </tr>
+              <tr>
+                <td><code>https://horizon.stellar.org reports network_passphrase 'Test SDF Network ; September 2015', expected 'Public Global Stellar Network ; September 2015'</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>Bytes from the wrong network filed under the right name.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;endpoint&gt;/ did not return a JSON root document: ...</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>An HTML error page or a captive portal, which would otherwise raise instead of refusing.</td>
+              </tr>
+              <tr>
+                <td><code>response from &lt;url&gt; exceeds the 512000 byte cap</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A body large enough to be something other than one account.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;url&gt; answered 302 with a redirect to &lt;other&gt;; the corpus does not follow redirects</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>Writing bytes served from somewhere else under the URL the sidecar records as its source. The <code>Loopback</code> cases in <code>test_validate.py</code> run this against a server the test starts itself.</td>
+              </tr>
+              <tr>
+                <td><code>captured body contains a seed-shaped string; refusing to write it</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A key in the tree. This is a guard against a mistake, not a claim about Horizon: an account resource has no reason to carry one.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;url&gt; returned list, expected an account object</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A page envelope or an error array read as a resource.</td>
+              </tr>
+              <tr>
+                <td><code>response describes '&lt;other-id&gt;', not the requested '&lt;id&gt;'</code></td>
+                <td class="exit exit--refused">2</td>
+                <td>A fixture whose sidecar would name an account its bytes do not describe.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;url&gt; unreachable after 3 attempts: URLError</code></td>
+                <td class="exit exit--failed">1</td>
+                <td>Nothing being written from a read that did not happen. No file, no sidecar, and the exit code says the endpoint was the problem.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;url&gt; unreachable after 3 attempts: HTTPError</code></td>
+                <td class="exit exit--failed">1</td>
+                <td>An account that does not exist, a 429 or a 5xx. <code>urllib</code> raises for those, so they arrive through the same path as a socket failure and burn all three attempts; the <code>answered &lt;status&gt;</code> branch below it only fires on a response that was not an exception.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="small muted">Quoted from <code>tools/capture.py</code> and the messages it builds. <code>FakeHorizon</code> replaces one seam, <code>capture.fetch</code>, and records every URL it is asked for, so each local refusal is asserted together with the fact that the account was never requested; <code>Loopback</code> covers the two fetch behaviours a provenance claim depends on, an over-sized body and a redirect. A 404 is not among the tested paths: read from the code and confirmed against a loopback server, it comes back as the HTTPError row above.</p>
+          <div class="callout">
+            <h4>Exit 0 is the only write</h4>
+            <p>A run that prints <code>wrote fixtures/&lt;id&gt;</code> has replaced the directory's two files and the network's root document. Anything that exits 1 or 2 has written nothing, which is why pointing the tool at a real account is a decision you can take back: a refusal leaves the corpus exactly as it found it.</p>
+          </div>
+        </section>
+
+        <section id="checksum">
+          <div class="section-head">
+            <h2>The checksum, and how its byte order was found</h2>
+            <p>56 characters, 35 bytes, one comparison.</p>
+          </div>
+          <p>A strkey is base32 over <code>ABCDEFGHIJKLMNOPQRSTUVWXYZ234567</code>: 56 characters decoding to 35 bytes, a version byte, 32 bytes of key material, and a CRC16-XMODEM over the first 33 bytes appended little-endian. <code>G</code> is version byte 48, <code>S</code> is 144, and the same decoder tells them apart, which is how a shape-only seed and a decodable one get different messages.</p>
+          <div class="callout">
+            <h4>The version that failed first</h4>
+            <p>The first implementation of this check compared the checksum big-endian and marked all six real captures invalid. That is how the byte order was found: not by reading a specification, but by a validator refusing six accounts that Horizon had just served. Roadmap 0.2 records it, and <code>test_encoder_and_decoder_are_inverses</code> covers versions 48, 96 and 144 so the order cannot silently flip back.</p>
+          </div>
+        </section>
+
+        <section id="update">
+          <div class="section-head">
+            <h2>What --update means</h2>
+            <p>A re-capture is a new fact about the same account.</p>
+          </div>
+          <p>It is the only way a captured fixture changes after it is on disk. The bytes are replaced, the digest is recomputed, and <code>ledger</code> and <code>captured_at</code> move with them, so the sidecar describes the read that is now in the directory rather than the one that started it. The changelog row has to say which ledger it replaced.</p>
+          <div class="pair">
+            <div class="card card--proof">
+              <h3>What stays true</h3>
+              <p>The fixture id, the directory name, the two files, and the claim that these bytes came from that URL. A consumer pinning the id still gets an account resource for the same address.</p>
+              <span class="card-note">Nothing but the ledger moves the identity of a fixture.</span>
+            </div>
+            <div class="card card--gap">
+              <h3>What breaks</h3>
+              <p>Anything that pinned the old <code>sha256</code>. That is the point of a digest pin rather than a commit pin, and it is why roadmap 3.1 asks for <code>tools/manifest.py</code>: a consumer that cannot see the digest list cannot see a re-capture coming.</p>
+              <span class="card-note">D-04 keeps the corpus untagged, so there is no version that promises stability.</span>
+            </div>
+          </div>
+          <p>Two related refusals are the validator's rather than the tool's: an id reused by a second fixture reports <code>id 'x' already used by ...</code>, and a second capture of the same account reports <code>account G... already captured as ...</code>. One account, one fixture.</p>
+        </section>
+
+        <section id="limits">
+          <div class="section-head">
+            <h2>What the tool does not do</h2>
+            <p>The refusals it does not make, stated plainly.</p>
+          </div>
+          <ul>
+            <li>It captures one account per run. There is no <code>--all</code>, no directory of ids, and no re-read of the corpus; refreshing eight fixtures is eight runs and one changelog row saying which ledgers moved.</li>
+            <li>It does not judge anything. No threshold is compared with a signer weight, no flag is called good or bad; that is Gauge's job and this corpus holds no opinions.</li>
+            <li>It does not install. D-02: <code>validate.py</code> and <code>tools/capture.py</code> import nothing outside the standard library, so a capture is <code>python3</code> and a network, nothing else.</li>
+            <li>It does not write a synthetic fixture. That kind exists for shapes a search could not find, and it is authored by hand in a directory the tool will not touch, under the rules in <a href="schema.html#synthetic">the schema</a>.</li>
+            <li>It does not prove the capture is still true. A sidecar is a claim about one ledger, and only <a href="consumers.html#drift">the watched account</a> is read back from the chain after it lands.</li>
+          </ul>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. Every message quoted on this page is in <code>tools/capture.py</code>, and <code>tests/test_site.py</code> checks the page against the source beside it.</p>
+          <div class="footer-links">
+            <a href="index.html">Overview</a>
+            <a href="shapes.html">Shapes</a>
+            <a href="schema.html">Schema</a>
+            <a href="consumers.html">Consumers</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

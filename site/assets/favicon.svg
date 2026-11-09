@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#0b1120"/>
+  <rect x="0.5" y="0.5" width="63" height="63" rx="13.5" stroke="#38bdf8" stroke-opacity="0.3"/>
+  <!-- Isometric Cryptographic Ledger Block -->
+  <path d="M32 10L52 21.5V42.5L32 54L12 42.5V21.5L32 10Z" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 10L52 21.5L32 33L12 21.5L32 10Z" fill="url(#topGlow)" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 33V54" stroke="#38bdf8" stroke-width="2"/>
+  <path d="M12 21.5L32 33L52 21.5" stroke="#38bdf8" stroke-width="2"/>
+  <!-- Verification Core Center Dot -->
+  <circle cx="32" cy="33" r="3.5" fill="#00e5ff"/>
+  <circle cx="32" cy="21.5" r="2" fill="#38bdf8"/>
+  <circle cx="22" cy="27" r="1.8" fill="#818cf8"/>
+  <circle cx="42" cy="27" r="1.8" fill="#818cf8"/>
+  <defs>
+    <linearGradient id="topGlow" x1="12" y1="10" x2="52" y2="33" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+</svg>

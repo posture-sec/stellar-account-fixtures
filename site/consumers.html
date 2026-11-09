@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Using the corpus: picking a fixture by shape and pinning it by digest</title>
+  <meta name="description" content="How another project consumes these nine account reads: point a test at a directory, select by the sidecar's shape list, pin by sha256, what D-03 and gate G5 still leave undecided, and the one fixture that is read back from the chain.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Using the corpus">
+  <meta property="og:description" content="Select a fixture by shape, pin it by digest, and know what the corpus does not claim.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/consumers.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="consumers">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html">Overview <span>start</span></a>
+        <a href="shapes.html">Shapes <span>24</span></a>
+        <a href="schema.html">Schema <span>toml</span></a>
+        <a href="capture.html">Capture <span>tool</span></a>
+        <a href="consumers.html" aria-current="page">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>Nothing to install<br>Gate G5 still open</p>
+        <a href="https://github.com/posture-sec/guage">Gauge</a>
+        <a href="https://github.com/posture-sec/airlock">Airlock</a>
+        <a href="https://github.com/posture-sec/stellar-posture-watch">stellar-posture-watch</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/6">Issue #6: a consumer names two files</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="page-head">
+          <p class="eyebrow">Consumer contract / roadmap Phase 3</p>
+          <h1>Point a test at a directory. <em>Pin it by digest.</em></h1>
+          <p class="lede">There is no package here and no tag to depend on. A fixture is two files in a directory, and the useful thing about that is a consumer can check the claim instead of trusting it: recompute the digest, compare the declared shape with the bytes, and the corpus either agrees or your test says so.</p>
+          <div class="hero-actions">
+            <a class="button" href="#selecting">Select by shape</a>
+            <a class="button button--ghost" href="#drift">The watched account</a>
+          </div>
+        </section>
+
+        <section id="taking">
+          <div class="section-head">
+            <h2>Taking one</h2>
+            <p>Two ways, and the difference is who sees a re-capture.</p>
+          </div>
+          <div class="code" data-copy>
+            <p class="code-label">read a fixture from a checkout beside yours</p>
+            <pre>import json
+from pathlib import Path
+
+fixture = Path("stellar-account-fixtures/fixtures/multisig-custody/account.json")
+account = json.loads(fixture.read_text())</pre>
+          </div>
+          <div class="code" data-copy>
+            <p class="code-label">vendor one and prove it is still the capture</p>
+            <pre>import hashlib, json, tomllib
+from pathlib import Path
+
+local = Path("testdata/multisig-custody")           # you copied two files
+digest = hashlib.sha256((local / "account.json").read_bytes()).hexdigest()
+sidecar = tomllib.loads((local / "fixture.toml").read_text(encoding="utf-8"))
+
+assert digest == sidecar["sha256"], "the vendored bytes are not the capture the sidecar describes"
+account = json.loads((local / "account.json").read_text())
+assert set(sidecar["shape"]) <= shapes_of(account)   # your own re-derivation, or the tool's</pre>
+          </div>
+          <p>The assert is the point. A vendored copy keeps the provenance in the same directory, so the test that reads it can check it, and a fixture whose bytes were edited afterwards fails loudly instead of passing against a shape nobody re-derived. Ids are part of the contract and are never reused or renamed; if a fixture has to go, <code>SCHEMA.md</code> 7 is the discussion.</p>
+        </section>
+
+        <section id="selecting">
+          <div class="section-head">
+            <h2>Selecting by shape</h2>
+            <p>The sidecar's <code>shape</code> list exists so a test does not re-parse Horizon.</p>
+          </div>
+          <div class="code" data-copy>
+            <p class="code-label">every fixture with these labels</p>
+            <pre>import tomllib
+from pathlib import Path
+
+CORPUS = Path("stellar-account-fixtures/fixtures")
+WANT = {"multi_signer", "thresholds_nonzero"}
+
+for sidecar in sorted(CORPUS.glob("*/fixture.toml")):
+    data = tomllib.loads(sidecar.read_text(encoding="utf-8"))
+    if WANT &lt;= set(data["shape"]):
+        print(sidecar.parent.name, data["account_id"], data["ledger"])</pre>
+          </div>
+          <p>Select with <code>&lt;=</code> against the set, not equality: a fixture that is <code>multi_signer</code> is also <code>master_is_signer</code> and <code>not_sponsored</code>, and a test that demands the whole label set will find nothing when a capture is refreshed and one field moves.</p>
+          <table>
+            <caption>The ten shapes a test is most likely to ask for, and how many of the nine carry each</caption>
+            <thead>
+              <tr>
+                <th scope="col">A rule that needs</th>
+                <th scope="col">Label</th>
+                <th scope="col">Fixtures</th>
+                <th scope="col">Which</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>the one-signer case</td>
+                <td><a href="shapes.html#single_signer">single_signer</a></td>
+                <td>4</td>
+                <td><a href="index.html#record-asset-heavy-exchange">asset-heavy-exchange</a>, <a href="index.html#record-default-plain">default-plain</a>, <a href="index.html#record-domain-and-inflation">domain-and-inflation</a>, <a href="index.html#record-whitespace-home-domain">whitespace-home-domain</a></td>
+              </tr>
+              <tr>
+                <td>the multi-signer case</td>
+                <td><a href="shapes.html#multi_signer">multi_signer</a></td>
+                <td>5</td>
+                <td>four on mainnet, <a href="index.html#record-testnet-multisig">testnet-multisig</a> on testnet</td>
+              </tr>
+              <tr>
+                <td>a revoked master key</td>
+                <td><a href="shapes.html#master_absent">master_absent</a></td>
+                <td class="forbid">0</td>
+                <td>No input for this rule yet, and roadmap 2.4 forbids inventing one.</td>
+              </tr>
+              <tr>
+                <td>all thresholds at zero</td>
+                <td><a href="shapes.html#thresholds_zero">thresholds_zero</a></td>
+                <td>4</td>
+                <td>the four single-signer captures, which is the shape Horizon gives an account nobody has configured</td>
+              </tr>
+              <tr>
+                <td>a home domain, a blank one, and none</td>
+                <td><a href="shapes.html#has_home_domain">has_home_domain</a> / <a href="shapes.html#blank_home_domain">blank_home_domain</a> / <a href="shapes.html#no_home_domain">no_home_domain</a></td>
+                <td>3 / 1 / 5</td>
+                <td><code>stellarterm.com</code>, <code>lobstr.co</code>, <code>sl8.online</code>; one single space; five with the field absent</td>
+              </tr>
+              <tr>
+                <td>an issuer flag</td>
+                <td><a href="shapes.html#auth_required">auth_required</a></td>
+                <td>1</td>
+                <td><a href="index.html#record-issuer-auth-required">issuer-auth-required</a>. The other three flags have no capture: <a href="shapes.html#auth_revocable">auth_revocable</a>, <a href="shapes.html#auth_immutable">auth_immutable</a>, <a href="shapes.html#auth_clawback_enabled">auth_clawback_enabled</a>.</td>
+              </tr>
+              <tr>
+                <td>a data entry</td>
+                <td><a href="shapes.html#has_data">has_data</a></td>
+                <td>1</td>
+                <td><a href="index.html#record-coordinator-data-entry">coordinator-data-entry</a>, whose one key is <code>config.multisig.coordinator</code></td>
+              </tr>
+              <tr>
+                <td>a big response body</td>
+                <td><a href="shapes.html#many_balances">many_balances</a></td>
+                <td>2</td>
+                <td>37 balances and 17; <a href="shapes.html#no_balances">no_balances</a> is uncovered, so the empty-array branch has no input</td>
+              </tr>
+              <tr>
+                <td>sponsored and sponsoring counts</td>
+                <td><a href="shapes.html#sponsored">sponsored</a> / <a href="shapes.html#sponsoring">sponsoring</a></td>
+                <td>1 / 5</td>
+                <td><a href="index.html#record-sponsored-trustlines">sponsored-trustlines</a> is the only account whose own entries are paid for by someone else</td>
+              </tr>
+              <tr>
+                <td>an inflation destination</td>
+                <td><a href="shapes.html#has_inflation">has_inflation</a></td>
+                <td>3</td>
+                <td><a href="index.html#record-domain-and-inflation">domain-and-inflation</a>, <a href="index.html#record-multisig-custody">multisig-custody</a>, <a href="index.html#record-whitespace-home-domain">whitespace-home-domain</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="small muted">Counts are the derived sets, recomputed from <code>account.json</code> by the same function <code>validate.py</code> uses, and <code>tests/test_site.py</code> fails the build if this table and the corpus disagree.</p>
+        </section>
+
+        <section id="pinning">
+          <div class="section-head">
+            <h2>Pinning</h2>
+            <p>A commit pin freezes files. A digest pin freezes facts.</p>
+          </div>
+          <p>Each captured fixture carries <code>sha256</code> over the exact bytes beside it, so a consumer can record the eight characters it depends on and notice the day they stop matching. That is the difference between a test that breaks when somebody re-captures an account and a test that tells you the account changed and the ledger it changed at.</p>
+          <div class="callout callout--hard">
+            <h4>What is not settled</h4>
+            <p>There is no machine-readable manifest of those digests yet. Roadmap <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">3.1</a> asks for <code>tools/manifest.py</code> to print one JSON line per fixture with id, account id, network, ledger and digest, and it is open, tracked as issue #17. Until it lands, pinning means reading twelve sidecars or copying a table.</p>
+            <p><b>D-03 is open too</b>, and it decides 3.2: how a consumer takes the corpus at all. The three options and what each costs, in the roadmap's own words: a submodule breaks a contributor who has never used one, vendoring duplicates the bytes, and a download needs somewhere to host them. Nothing in Gauge's <code>testdata/</code> came from here, and that is the honest state of Phase 3.</p>
+          </div>
+          <table>
+            <caption>Phase 3, as the roadmap has it today</caption>
+            <thead>
+              <tr>
+                <th scope="col">Task</th>
+                <th scope="col">Status</th>
+                <th scope="col">What it means for you</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">3.1</a> <code>tools/manifest.py</code></td>
+                <td class="forbid">open, #17</td>
+                <td>The pin-by-content tool. Its <code>Done when</code> is a reproducible line count equal to the fixture count.</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">3.2</a> Gauge's rule tests read from here</td>
+                <td class="forbid">open, #18</td>
+                <td>Blocked behind D-03, so it has an issue and no decision under it.</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">3.3</a> Airlock's detectors use one</td>
+                <td class="forbid">open, #19</td>
+                <td>Ticked by gate G5 naming the two repositories, not by an intention.</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">3.4</a> This corpus watches one capture</td>
+                <td class="need">done 2026-11-05</td>
+                <td>Described under <a href="#drift">the watched account</a>; it makes the corpus a consumer of its sibling, not a consumer of these files.</td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/posture-sec/stellar-account-fixtures/issues/6">Gate G5</a></td>
+                <td class="forbid">open</td>
+                <td>At least one consumer uses two or more fixtures in its own test suite and says which ones in its own repository. Until then this page describes a way to consume, not a consumer.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="drift">
+          <div class="section-head">
+            <h2>The one account read back from the chain</h2>
+            <p>Roadmap 3.4, done on a runner rather than at a desk.</p>
+          </div>
+          <p><code>.posture/gauge.toml</code> declares the account behind <a href="index.html#record-testnet-multisig">fixtures/testnet-multisig</a> exactly as the sidecar captured it: six signers, the master key at weight 0, thresholds 3/3/3, every flag off, no home domain. <code>.github/workflows/posture-watch.yml</code> reads that declaration back from live testnet on Wednesday 06:41 UTC by pinning the sibling action <a href="https://github.com/posture-sec/stellar-posture-watch">stellar-posture-watch</a> at <code>deaf7dcc</code> and asking it to build Gauge at <code>da656733</code>.</p>
+          <div class="pair">
+            <div class="card card--proof">
+              <h3>What a finding means</h3>
+              <p>The tracking issue is <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/29">#29</a>, labelled <code>fixture-drift</code>, opened by the second run at ledger 5568533 with no findings. A finding on it says the capture no longer describes the live account: re-capture with <code>--update</code> and say which ledger it replaced, or explain on the issue why the capture stays as it is.</p>
+              <span class="card-note">The third run found the issue by its state marker and printed <code>issue #29 needs no change, left alone</code>.</span>
+            </div>
+            <div class="card card--gap">
+              <h3>What it cannot see</h3>
+              <p>The Gauge commit that action builds has no signer rule and no threshold rule, so the drifts this read can report are a flag appearing, a home domain appearing, or the account ceasing to exist. A seventh signer added to a testnet account is invisible to it, and the other eight fixtures are mainnet and outside the policy.</p>
+              <span class="card-note">This is not gate G5: a watch consumes none of the files in this repository.</span>
+            </div>
+          </div>
+          <p>The workflow triggers on <code>schedule</code> and <code>workflow_dispatch</code> only, never on a pull request, because its token can write issues in this repository and nothing else. A <code>dry_run</code> input, defaulting off, lets a policy edit be checked before it files anything.</p>
+        </section>
+
+        <section id="giving">
+          <div class="section-head">
+            <h2>Giving a fixture back</h2>
+            <p>The corpus grows by search, not by request, but a request is how a search starts.</p>
+          </div>
+          <p>If a rule you are writing needs a shape that <a href="shapes.html#gaps">the gap list</a> says is uncovered, file it with the fixture request template and name the account id and the network if you know one: that is the whole difference between a search that ended and a wish. A capture needs a real account, so the accepted answer to most requests is a ledger number and a URL, or a written decision that the shape stays uncovered and why.</p>
+          <p>Two rules shape what a contribution can be. A fixture is written by <code>tools/capture.py</code> and never by hand (<a href="capture.html">the refusals are in the open</a>), and the corpus holds public ledger state only: no secret seed, in any file, ever. <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> is the pull-request contract, and every change moves <code>ROADMAP.md</code> in the same branch as the code.</p>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. Nothing on this page calls an account well configured; the corpus holds inputs, and judging them belongs to the tools that read them.</p>
+          <div class="footer-links">
+            <a href="index.html">Overview</a>
+            <a href="shapes.html">Shapes</a>
+            <a href="schema.html">Schema</a>
+            <a href="capture.html">Capture</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

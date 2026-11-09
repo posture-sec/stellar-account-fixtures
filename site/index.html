@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stellar account fixtures: captured Horizon reads with their provenance</title>
+  <meta name="description" content="Nine verbatim Horizon account reads, eight on mainnet and one on testnet, each beside a sidecar that names the URL, the ledger, the UTC second and the SHA-256 of the bytes. A validator recomputes every claim.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stellar account fixtures">
+  <meta property="og:description" content="Captured Stellar account reads, kept honest by a validator that recomputes every provenance claim.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="overview">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html" aria-current="page">Overview <span>start</span></a>
+        <a href="shapes.html">Shapes <span>24</span></a>
+        <a href="schema.html">Schema <span>toml</span></a>
+        <a href="capture.html">Capture <span>tool</span></a>
+        <a href="consumers.html">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>Docs built 2026-11-05<br>Nine captures, no release</p>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures">Repository</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">Roadmap</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SCHEMA.md">Schema contract</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SECURITY.md">Security</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Verbatim Horizon reads / validator-checked</p>
+            <h1>Nine accounts the chain wrote. <em>Not one invented field.</em></h1>
+            <p class="lede">A rule written against a hand-typed fixture passes until the first real account disagrees with the invention. This corpus is the alternative: account resources copied out of Horizon with nothing stripped, each beside the provenance that lets you check the claim, and a validator that recomputes all of it and exits non-zero when a sidecar no longer describes the bytes next to it.</p>
+            <div class="hero-actions">
+              <a class="button" href="shapes.html">Pick a fixture by shape</a>
+              <a class="button button--ghost" href="schema.html">Read the contract</a>
+            </div>
+            <ul class="hero-meta">
+              <li><b data-count="fixtures">9</b><span>Captured accounts</span></li>
+              <li><b><span data-count="covered">18</span> / <span data-count="labels">24</span></b><span>Vocabulary covered</span></li>
+              <li><b data-count="networks">2</b><span>Networks, both rooted</span></li>
+              <li><b data-count="seeds">0</b><span>Seed-shaped bytes in the tree</span></li>
+            </ul>
+          </div>
+          <div class="term" data-copy>
+            <p class="term-head">python3 validate.py --report</p>
+            <pre><b>fixtures/</b>asset-heavy-exchange: has_home_domain, many_balances, master_is_signer, no_data, no_inflation, not_sponsored, single_signer, sponsoring, thresholds_zero
+<b>fixtures/</b>coordinator-data-entry: has_data, master_is_signer, multi_signer, no_home_domain, no_inflation, not_sponsored, sponsoring, thresholds_nonzero
+<b>fixtures/</b>default-plain: master_is_signer, no_data, no_home_domain, no_inflation, not_sponsored, not_sponsoring, single_signer, thresholds_zero
+<b>fixtures/</b>domain-and-inflation: has_home_domain, has_inflation, master_is_signer, no_data, not_sponsored, single_signer, sponsoring, thresholds_zero
+<b>fixtures/</b>issuer-auth-required: auth_required, master_is_signer, multi_signer, no_data, no_home_domain, no_inflation, not_sponsored, sponsoring, thresholds_nonzero
+<b>fixtures/</b>multisig-custody: has_inflation, master_is_signer, multi_signer, no_data, no_home_domain, no_inflation, not_sponsored, not_sponsoring, thresholds_nonzero
+<b>fixtures/</b>sponsored-trustlines: has_home_domain, many_balances, master_is_signer, multi_signer, no_data, no_inflation, not_sponsoring, sponsored, thresholds_nonzero
+<b>fixtures/</b>testnet-multisig: master_is_signer, multi_signer, no_data, no_home_domain, no_inflation, not_sponsored, not_sponsoring, thresholds_nonzero
+<b>fixtures/</b>whitespace-home-domain: blank_home_domain, has_inflation, master_is_signer, no_data, not_sponsored, single_signer, sponsoring, thresholds_zero
+<i>validate: corpus agrees with itself</i></pre>
+            <p class="term-foot">Run in the checkout on 2026-11-05, exit 0. <a href="schema.html">What each column means</a></p>
+          </div>
+        </section>
+
+        <section id="records">
+          <div class="section-head">
+            <h2>The nine records</h2>
+            <p>Claim on the left, proof on the right, derived labels underneath. Sorted by fixture id, which is also the directory name.</p>
+          </div>
+          <div class="records-filter-bar">
+            <div class="filter-pills" role="tablist" aria-label="Filter fixtures by network">
+              <button class="filter-pill is-active" type="button" data-filter="all">All Captures <span class="pill-count">9</span></button>
+              <button class="filter-pill" type="button" data-filter="public">Public / Mainnet <span class="pill-count">8</span></button>
+              <button class="filter-pill" type="button" data-filter="testnet">Testnet <span class="pill-count">1</span></button>
+            </div>
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input type="search" id="record-search" placeholder="Filter by fixture, ledger, or shape..." aria-label="Filter fixtures">
+            </div>
+          </div>
+          <div id="records-empty">No fixtures match your search criteria.</div>
+          <div class="ledger">
+            <article class="record" id="record-asset-heavy-exchange" data-fixture="asset-heavy-exchange">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/asset-heavy-exchange">fixtures/asset-heavy-exchange</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why">37 trustlines and a home domain, the account shape that makes a naive response body large.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266866">65266866</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:48:55Z">2026-11-02T11:48:55Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="dc7ccffebd29f079e61482a764013a418fc496e150c6129ec10d82d11fa3f9bc">dc7ccff&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="1">1 at weight 1</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#has_home_domain">has_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#many_balances">many_balances</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#single_signer">single_signer</a></li>
+                <li><a class="chip" href="shapes.html#sponsoring">sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_zero">thresholds_zero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-coordinator-data-entry" data-fixture="coordinator-data-entry">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/coordinator-data-entry">fixtures/coordinator-data-entry</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why">One data entry named <code>config.multisig.coordinator</code>, nine signers with the master key at weight 0 and all three thresholds at 2, the shape a hosted multisig coordinator leaves on chain.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65282653">65282653</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-03T09:48:29Z">2026-11-03T09:48:29Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="6c794f8716fb0754605344923e37d6ef417fbb680db274f7e27ba0a12a917659">6c794f8&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="9">9, weights 1 2 1 2 1 1 1 1 0</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#has_data">has_data</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#multi_signer">multi_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_home_domain">no_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#sponsoring">sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_nonzero">thresholds_nonzero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-default-plain" data-fixture="default-plain">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/default-plain">fixtures/default-plain</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why">One signer, which is the master key at weight 1, all thresholds zero and no optional field set. The account a rule has to leave alone.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266813">65266813</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:48:46Z">2026-11-02T11:48:46Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="d14f1f7bbcf10f9e1d7e162b59db1481ecd1ea542a7f21766a53fafdebdb4cdb">d14f1f7&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="1">1 at weight 1</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_home_domain">no_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsoring">not_sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#single_signer">single_signer</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_zero">thresholds_zero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-domain-and-inflation" data-fixture="domain-and-inflation">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/domain-and-inflation">fixtures/domain-and-inflation</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why"><code>lobstr.co</code> plus an inflation destination: a well-formed SEP-1 candidate to check the positive path against.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266813">65266813</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:49:02Z">2026-11-02T11:49:02Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="b33a885e520b9cfcd5cc515a3b678e5413d7880b7185cbcdcbe8de863757de76">b33a885&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="1">1 at weight 1</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#has_home_domain">has_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#has_inflation">has_inflation</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#single_signer">single_signer</a></li>
+                <li><a class="chip" href="shapes.html#sponsoring">sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_zero">thresholds_zero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-issuer-auth-required" data-fixture="issuer-auth-required">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/issuer-auth-required">fixtures/issuer-auth-required</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why">An issuer with <code>auth_required</code> set, two signers at weight 1, thresholds 1/1/1, and 150 entries it sponsors for other accounts.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266862">65266862</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:48:52Z">2026-11-02T11:48:52Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="701981c0c40d4d6a109274df6a6bb735f876b2c7204ffa86eb79071a2654f7de">701981c&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="2">2 at weights 1 1</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#auth_required">auth_required</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#multi_signer">multi_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_home_domain">no_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#sponsoring">sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_nonzero">thresholds_nonzero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-multisig-custody" data-fixture="multisig-custody">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/multisig-custody">fixtures/multisig-custody</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why">Two signers, master weight 2, thresholds 2/3/4. The shape a shared custody account leaves on chain.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266865">65266865</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:48:49Z">2026-11-02T11:48:49Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="c960f2f7f2b9573493d0f4a78bcc02fe11e0c5c829b7dea3b30938b196470711">c960f2f&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="2">2 at weights 2 4</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#has_inflation">has_inflation</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#multi_signer">multi_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_home_domain">no_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsoring">not_sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_nonzero">thresholds_nonzero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-sponsored-trustlines" data-fixture="sponsored-trustlines">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/sponsored-trustlines">fixtures/sponsored-trustlines</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why"><code>num_sponsored</code> 17 against <code>num_sponsoring</code> 0: seventeen balances, two signers and a home domain of <code>sl8.online</code>, an account whose own entries are paid for by someone else.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65110665">65110665</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-03T09:50:41Z">2026-11-03T09:50:41Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="20ebd6c8e9552a7cfeae0d348d859c76996f3cf798ca39c0c2b8e0a8151bc97a">20ebd6c&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="2">2 at weights 2 0</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#has_home_domain">has_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#many_balances">many_balances</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#multi_signer">multi_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsoring">not_sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#sponsored">sponsored</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_nonzero">thresholds_nonzero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-testnet-multisig" data-fixture="testnet-multisig">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/testnet-multisig">fixtures/testnet-multisig</a><span class="net net--testnet" data-network="testnet">testnet</span></h3>
+              <p class="record-why">The first testnet capture: six signers, master weight 0 and all three thresholds at 3, read from <code>horizon-testnet.stellar.org</code>. It is what makes <code>corpus/root-testnet.json</code> a real root document rather than one the tests write.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="5535101">5535101</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-03T09:48:40Z">2026-11-03T09:48:40Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="547fe3f3d484fdec1d6ecc699605597ba7b43e49613648c0b1bca6f2dac6776d">547fe3f&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="6">6, weights 1 1 1 1 1 0</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#multi_signer">multi_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#no_home_domain">no_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#no_inflation">no_inflation</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsoring">not_sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_nonzero">thresholds_nonzero</a></li>
+              </ul>
+            </article>
+            <article class="record" id="record-whitespace-home-domain" data-fixture="whitespace-home-domain">
+              <h3 class="record-id"><a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures/whitespace-home-domain">fixtures/whitespace-home-domain</a><span class="net net--public" data-network="public">public</span></h3>
+              <p class="record-why"><code>home_domain</code> is a single space, which a tool that trims before validating reads as absent. The whole fixture is one character.</p>
+              <dl class="record-proof">
+                <dt>Ledger</dt><dd data-ledger="65266813">65266813</dd>
+                <dt>Captured</dt><dd data-captured="2026-11-02T11:48:58Z">2026-11-02T11:48:58Z</dd>
+                <dt>SHA-256</dt><dd data-sha256="768c86e8393955ec943eb951e4ec25bf9cba83a3c8bb8a5b25ca04fca2093b0e">768c86e&hellip;</dd>
+                <dt>Signers</dt><dd data-signers="1">1 at weight 1</dd>
+              </dl>
+              <ul class="record-shapes">
+                <li><a class="chip" href="shapes.html#blank_home_domain">blank_home_domain</a></li>
+                <li><a class="chip" href="shapes.html#has_inflation">has_inflation</a></li>
+                <li><a class="chip" href="shapes.html#master_is_signer">master_is_signer</a></li>
+                <li><a class="chip" href="shapes.html#no_data">no_data</a></li>
+                <li><a class="chip" href="shapes.html#not_sponsored">not_sponsored</a></li>
+                <li><a class="chip" href="shapes.html#single_signer">single_signer</a></li>
+                <li><a class="chip" href="shapes.html#sponsoring">sponsoring</a></li>
+                <li><a class="chip" href="shapes.html#thresholds_zero">thresholds_zero</a></li>
+              </ul>
+            </article>
+          </div>
+          <p class="small muted">Every number in the right column came off the wire with the bytes beside it. <code>tools/capture.py</code> computes the digest over the exact file it writes, so an edited <code>account.json</code> stops being a fixture and becomes a validator problem.</p>
+        </section>
+
+        <section id="coverage">
+          <div class="section-head">
+            <h2>Coverage, stated</h2>
+            <p>The vocabulary in <code>SCHEMA.md</code> 5, in the order the schema lists it. A hollow tick is a label no capture in this tree carries.</p>
+          </div>
+          <ul class="strip" aria-label="Shape label coverage across the corpus">
+            <li><span class="tick tick--gap" data-gap="no_signers">no_signers</span></li>
+            <li><span class="tick" data-label="single_signer">single_signer</span></li>
+            <li><span class="tick" data-label="multi_signer">multi_signer</span></li>
+            <li><span class="tick" data-label="master_is_signer">master_is_signer</span></li>
+            <li><span class="tick tick--gap" data-gap="master_absent">master_absent</span></li>
+            <li><span class="tick" data-label="thresholds_zero">thresholds_zero</span></li>
+            <li><span class="tick" data-label="thresholds_nonzero">thresholds_nonzero</span></li>
+            <li><span class="tick" data-label="auth_required">auth_required</span></li>
+            <li><span class="tick tick--gap" data-gap="auth_revocable">auth_revocable</span></li>
+            <li><span class="tick tick--gap" data-gap="auth_immutable">auth_immutable</span></li>
+            <li><span class="tick tick--gap" data-gap="auth_clawback_enabled">auth_clawback_enabled</span></li>
+            <li><span class="tick" data-label="no_home_domain">no_home_domain</span></li>
+            <li><span class="tick" data-label="blank_home_domain">blank_home_domain</span></li>
+            <li><span class="tick" data-label="has_home_domain">has_home_domain</span></li>
+            <li><span class="tick" data-label="has_inflation">has_inflation</span></li>
+            <li><span class="tick" data-label="no_inflation">no_inflation</span></li>
+            <li><span class="tick" data-label="has_data">has_data</span></li>
+            <li><span class="tick" data-label="no_data">no_data</span></li>
+            <li><span class="tick" data-label="sponsored">sponsored</span></li>
+            <li><span class="tick" data-label="not_sponsored">not_sponsored</span></li>
+            <li><span class="tick" data-label="sponsoring">sponsoring</span></li>
+            <li><span class="tick" data-label="not_sponsoring">not_sponsoring</span></li>
+            <li><span class="tick tick--gap" data-gap="no_balances">no_balances</span></li>
+            <li><span class="tick" data-label="many_balances">many_balances</span></li>
+          </ul>
+          <div class="callout callout--hard">
+            <h4>Six labels have no fixture</h4>
+            <p><code>master_absent</code> and <code>no_signers</code> need an account whose master key was revoked, which is rare and must not be manufactured (roadmap 2.4). <code>auth_revocable</code>, <code>auth_immutable</code> and <code>auth_clawback_enabled</code> need three issuer accounts carrying one flag each, not one issuer with all three (roadmap 2.5). <code>no_balances</code> has not appeared in any read taken for this corpus: every account fetched while hunting these shapes, on both networks, carries at least its native balance, so 2.3 may end in a decision that the label stays uncovered rather than in a capture (roadmap 2.3).</p>
+            <p>A synthetic fixture is allowed by the schema and none is shipped, so every number on this page describes a real read. That is a decision, not an accident: see <a href="schema.html#synthetic">the synthetic rules</a>.</p>
+          </div>
+        </section>
+
+        <section id="promise">
+          <div class="section-head">
+            <h2>What a captured fixture promises</h2>
+            <p>Five keys a synthetic fixture is forbidden to carry, because it was never read from anywhere.</p>
+          </div>
+          <dl class="keys">
+            <div>
+              <dt>source_url</dt>
+              <dd>The exact URL that was read, account id included. <a href="https://horizon.stellar.org">Horizon</a> or <a href="https://horizon-testnet.stellar.org">its testnet sibling</a>, never a mirror, because a mirror can serve different bytes.</dd>
+            </div>
+            <div>
+              <dt>captured_at</dt>
+              <dd>UTC to the second, and the validator refuses a timestamp in the future. The chain moved on; this is when it was looked at.</dd>
+            </div>
+            <div>
+              <dt>ledger</dt>
+              <dd><code>last_modified_ledger</code> of the resource, not of the network. An account that was multisig at ledger 65266865 can be single-signer tomorrow, which is why <b>provenance is a claim about one ledger</b> and not a permanent property of an address.</dd>
+            </div>
+            <div>
+              <dt>horizon_version</dt>
+              <dd>Version string from the endpoint that served it, build hash included. Field shapes follow Horizon, so this is what tells you whether a response can still be produced today.</dd>
+            </div>
+            <div>
+              <dt>sha256</dt>
+              <dd>Digest of <code>account.json</code> as it sits on disk, computed by the tool over the bytes it wrote. Recomputing it is the difference between a corpus and a folder of JSON.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="not">
+          <div class="section-head">
+            <h2>What this is not</h2>
+            <p>Three sentences worth reading before you point a test at the tree.</p>
+          </div>
+          <div class="pair">
+            <div class="card card--gap">
+              <h3>Not an opinion about an account</h3>
+              <p>No expectations, no severities, no rule ids, no policy. This corpus says nothing about whether <code>multisig-custody</code> is well configured; it says these bytes came from that URL on that date at that ledger.</p>
+              <span class="card-note">Judging an account is <a href="https://github.com/posture-sec/guage">Gauge</a>'s job.</span>
+            </div>
+            <div class="card card--gap">
+              <h3>Not a place a key can appear</h3>
+              <p>Seed strings are refused at three points: the capture tool will not write a response containing one, the validator scans both files of every fixture for one, and the test suite builds its seed-shaped samples from thirty-two zero bytes at run time.</p>
+              <span class="card-note">Only <code>G...</code> addresses enter; <code>M...</code> and <code>C...</code> are not account resources.</span>
+            </div>
+            <div class="card">
+              <h3>Not installed</h3>
+              <p>There is no package, no tag and no version to depend on. D-04 in the roadmap keeps the corpus untagged until a consumer pins one, because a version on a nine-fixture corpus invites the reading that the shape set is stable.</p>
+              <span class="card-note">Point a test at a directory, or vendor one: <a href="consumers.html">how to consume it</a>.</span>
+            </div>
+            <div class="card">
+              <h3>Not a live view</h3>
+              <p>Nothing here re-reads the chain after a capture lands, except one account: <code>fixtures/testnet-multisig</code> is audited weekly against its own sidecar by the sibling action, and drift opens an issue in this repository.</p>
+              <span class="card-note">That is roadmap 3.4, described in <a href="consumers.html#drift">Consumers</a>.</span>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. This site states coverage and gaps from the same files <code>validate.py</code> checks, and a test in <code>tests/test_site.py</code> fails the build when the page and the sidecars disagree.</p>
+          <div class="footer-links">
+            <a href="shapes.html">Shapes</a>
+            <a href="schema.html">Schema</a>
+            <a href="capture.html">Capture</a>
+            <a href="consumers.html">Consumers</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

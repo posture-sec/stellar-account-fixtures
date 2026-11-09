@@ -1,0 +1,48 @@
+# Publish `site/` to GitHub Pages (task 1.10).
+#
+# There is no build step: the site is six static files that read nothing at runtime except
+# the reader's own `localStorage`, so the artifact is the directory as it sits in the
+# commit. That is deliberate. A documentation site that needs a builder is a site that can
+# be built into a claim the repository does not make.
+#
+# The four actions are pinned to the same commits the sibling repositories already run, so
+# no third-party commit that this organization has not already executed enters here.
+#
+# Pages is a hosted setting, not a file: this workflow only deploys once the repository's
+# Pages source is set to "GitHub Actions". The URL of a live site belongs in `ROADMAP.md`
+# 1.10's done note, read from the deployment, not in this comment.
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: pages / deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

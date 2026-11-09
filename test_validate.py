@@ -864,6 +864,28 @@ class Loopback(unittest.TestCase):
         def log_message(self, *args) -> None:
             """Silence: the assertion is the output."""
 
+    class NotFound(http.server.BaseHTTPRequestHandler):
+        request_count = 0
+
+        def do_GET(self) -> None:
+            type(self).request_count += 1
+            self.send_response(404)
+            self.end_headers()
+
+        def log_message(self, *args) -> None:
+            """Silence: the assertion is the output."""
+
+    class BadRequest(http.server.BaseHTTPRequestHandler):
+        request_count = 0
+
+        def do_GET(self) -> None:
+            type(self).request_count += 1
+            self.send_response(400)
+            self.end_headers()
+
+        def log_message(self, *args) -> None:
+            """Silence: the assertion is the output."""
+
     def url(self, handler: type[http.server.BaseHTTPRequestHandler]) -> str:
         try:
             server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
@@ -883,6 +905,20 @@ class Loopback(unittest.TestCase):
         with self.assertRaises(capture.Refused) as caught:
             capture.fetch(self.url(self.Redirecting), 512)
         self.assertIn("does not follow redirects", str(caught.exception))
+
+    def test_a_404_is_refused_without_retrying(self) -> None:
+        self.NotFound.request_count = 0
+        with self.assertRaises(capture.Refused) as caught:
+            capture.fetch(self.url(self.NotFound), 512)
+        self.assertIn("returned HTTP 404", str(caught.exception))
+        self.assertEqual(self.NotFound.request_count, 1)
+
+    def test_client_error_4xx_is_refused_without_retrying(self) -> None:
+        self.BadRequest.request_count = 0
+        with self.assertRaises(capture.Refused) as caught:
+            capture.fetch(self.url(self.BadRequest), 512)
+        self.assertIn("returned HTTP 400", str(caught.exception))
+        self.assertEqual(self.BadRequest.request_count, 1)
 
 
 class SidecarFormat(unittest.TestCase):

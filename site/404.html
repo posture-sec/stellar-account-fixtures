@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not in the corpus: 404</title>
+  <meta name="description" content="There is no page at this path. The site is five pages: the overview, the twenty-four shape labels, the schema, the capture tool and how to consume a fixture.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Not in the corpus">
+  <meta property="og:description" content="404: no page at this path. The site is five pages, all listed here.">
+  <meta property="og:url" content="https://posture-sec.github.io/stellar-account-fixtures/404.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060913">
+  <script>
+    // Choose the theme before first paint so neither mode flashes the other.
+    (() => {
+      let stored = null;
+      try { stored = localStorage.getItem("corpus-theme"); } catch {}
+      const light = stored ? stored === "light" : matchMedia("(prefers-color-scheme: light)").matches;
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      document.documentElement.dataset.themeReady = "";
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+</head>
+<body data-page="not-found">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark"></span>Corpus<span class="brand-sub">fixtures</span></a>
+      <div class="topbar-right">
+        <span class="status-pill">Nine captures</span>
+        <span class="version-pill">Untagged</span>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M19.6 4.4l-2.1 2.1M6.5 17.5l-2.1 2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+          <span>Light</span>
+        </button>
+        <a class="icon-link" href="https://github.com/posture-sec/stellar-account-fixtures">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C17.1 4.2 18.1 4.5 18.1 4.5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <p class="side-label">Documentation</p>
+      <nav class="side-nav" aria-label="Documentation">
+        <a href="index.html">Overview <span>start</span></a>
+        <a href="shapes.html">Shapes <span>24</span></a>
+        <a href="schema.html">Schema <span>toml</span></a>
+        <a href="capture.html">Capture <span>tool</span></a>
+        <a href="consumers.html">Consumers <span>use</span></a>
+      </nav>
+      <div class="side-meta">
+        <p>This path is not in the corpus<br>Nothing here was moved</p>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures">Repository</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/ROADMAP.md">Roadmap</a>
+        <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SCHEMA.md">Schema contract</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">404 / no page at this path</p>
+            <h1>Nothing is filed here. <em>And no fixture was moved.</em></h1>
+            <p class="lede">GitHub Pages looked for a file at this URL and did not find one. That is a wrong link or a mistyped path, not a validator problem: <code>validate.py</code> has run against this corpus and exited 0, and every fixture it checked is still where its sidecar says it is.</p>
+            <div class="hero-actions">
+              <a class="button" href="index.html">Start at the overview</a>
+              <a class="button button--ghost" href="shapes.html">Look up a shape label</a>
+            </div>
+          </div>
+          <div class="term">
+            <p class="term-head">validate.py, the run behind these docs</p>
+<pre><b>$ python3 validate.py</b>
+validate: corpus agrees with itself
+<b>exit 0</b></pre>
+            <p class="term-foot">Recorded 2026-11-05, the output on a checkout of this repository with no network access. The corpus is nine fixture directories and the site is five pages plus this one: a link pointing anywhere else is a bug in the site, and <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/new">an issue</a> is how to say so.</p>
+          </div>
+        </section>
+
+        <section id="pages">
+          <div class="section-head">
+            <h2>The whole site</h2>
+            <p>Five pages, in the order the sidebar lists them.</p>
+          </div>
+          <table>
+            <caption>Every page this site has</caption>
+            <thead>
+              <tr>
+                <th scope="col">Page</th>
+                <th scope="col">What it answers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="index.html">Overview</a></td>
+                <td>Nine capture records: the claim on the left, the provenance on the right, the derived labels underneath.</td>
+              </tr>
+              <tr>
+                <td><a href="shapes.html">Shapes</a></td>
+                <td>All twenty-four labels, which fixtures carry each one, and the six that no capture carries yet.</td>
+              </tr>
+              <tr>
+                <td><a href="schema.html">Schema</a></td>
+                <td>The two files per fixture, the twelve sidecar keys, and what is required versus forbidden for a capture.</td>
+              </tr>
+              <tr>
+                <td><a href="capture.html">Capture</a></td>
+                <td>How <code>tools/capture.py</code> writes a fixture, the order its checks run in, and every message it refuses with.</td>
+              </tr>
+              <tr>
+                <td><a href="consumers.html">Consumers</a></td>
+                <td>How another project picks a fixture by shape, pins it by digest, and knows what the corpus does not claim.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="small muted">If you came here from a link in the repository, the corpus itself, or a roadmap row: the files live under <a href="https://github.com/posture-sec/stellar-account-fixtures/tree/main/fixtures">fixtures/</a> and <a href="https://github.com/posture-sec/stellar-account-fixtures/blob/main/SCHEMA.md">SCHEMA.md</a>, and <a href="https://github.com/posture-sec/stellar-account-fixtures/issues/new">an issue</a> is the right place to say which link broke.</p>
+        </section>
+
+        <footer class="footer">
+          <p>Pre-release corpus, Apache License 2.0. The account data is public ledger state: what is licensed here is the compilation, the sidecars and the tooling. Nothing on this page calls an account well configured; the corpus holds inputs, and judging them belongs to the tools that read them.</p>
+          <div class="footer-links">
+            <a href="index.html">Overview</a>
+            <a href="shapes.html">Shapes</a>
+            <a href="schema.html">Schema</a>
+            <a href="capture.html">Capture</a>
+            <a href="https://github.com/posture-sec/stellar-account-fixtures">GitHub</a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
