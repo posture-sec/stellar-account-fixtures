@@ -152,11 +152,15 @@ consumer can pick fixtures by what they contain without re-implementing Horizon 
 | `not_sponsored` | `num_sponsored` is 0 |
 | `sponsoring` | `num_sponsoring` is greater than 0 |
 | `not_sponsoring` | `num_sponsoring` is 0 |
-| `no_balances` | `balances` is an empty list |
+| `no_balances` | `balances` is an empty list (synthetic only: unreachable on live ledgers due to protocol native balance requirements) |
 | `many_balances` | `balances` has 10 or more entries |
 
-Two reading notes:
+Three reading notes:
 
+- **`no_balances` applies strictly to synthetic fixtures.** On active Stellar ledgers, every valid
+  account resource returned by Horizon carries at least one balance entry: the native XLM balance
+  required by base reserve consensus rules. An account with zero balances cannot exist on chain;
+  see `corpus/label-reachability.md` for the protocol constraints.
 - **`master_absent` means Horizon omitted the master key from `signers`, which is what a
   revoked master key looks like on the account resource.** The ledger does not carry a
   `master_key_revoked` boolean. A consumer that needs the difference between "revoked" and
@@ -221,13 +225,26 @@ Failure to satisfy the contract results in specific validator error conditions:
 4. **Passphrase Mismatch**: If `network_passphrase` does not match the hardcoded network constant:
    `network_passphrase '<observed>' is not the <network> passphrase`
 
-## 7. Versioning
+## 7. Versioning and Re-captures
 
 `schema_version` is 1. A key is added by adding it here, making `validate.py` accept it,
 and shipping fixtures that use it. A key is renamed, a shape label changes meaning, or
 `account.json` stops being verbatim bytes: that is version 2, and the validator has to
 read both for a release cycle so consumers are not broken mid-flight. Nothing is a version
 2 candidate today.
+
+### Re-capture and Replacement Criteria
+
+Existing fixtures may be re-captured using `tools/capture.py --update` only when refreshing
+byte freshness without altering the specimen's canonical shape labels or scenario properties.
+If an account state change on chain would add, remove, or mutate any derived shape label emitted
+by `validate.py shapes_of`, re-capturing the existing fixture is forbidden: a new fixture with
+a distinct fixture ID must be created instead to preserve consumer test reproducibility.
+
+Every re-capture must be documented in `ROADMAP.md` Section 7 (Changelog) recording the before
+and after ledger sequence numbers, before and after SHA-256 digests, and explicit confirmation
+that derived shape labels remained invariant across the update. For a worked example of this
+workflow, see `corpus/recapture-example.md`.
 
 ## 8. What this schema does not do
 

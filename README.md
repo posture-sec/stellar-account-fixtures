@@ -15,12 +15,12 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Field Coverage](corpus/field-coverage.md) · [Balance Types](corpus/balance-types.md) · [Label Reachability](corpus/label-reachability.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
 a hand-typed fixture passes until the first real account disagrees with the invention.
-This corpus is the alternative. Nine accounts, eight on mainnet and one on testnet, stored
+This corpus is the alternative. Ten accounts, nine on mainnet and one on testnet, stored
 verbatim, each with the provenance that lets you check the claim.
 
 ```
@@ -30,12 +30,17 @@ fixtures/
   default-plain/           account.json  fixture.toml
   domain-and-inflation/    account.json  fixture.toml
   issuer-auth-required/    account.json  fixture.toml
+  liquidity-pool-share/    account.json  fixture.toml
   multisig-custody/        account.json  fixture.toml
   sponsored-trustlines/    account.json  fixture.toml
   testnet-multisig/        account.json  fixture.toml
   whitespace-home-domain/  account.json  fixture.toml
 corpus/
+  balance-types.md
   data-entries.md
+  field-coverage.md
+  label-reachability.md
+  recapture-example.md
   root-diff.md
   root-public.json
   root-testnet.json
@@ -76,8 +81,8 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 <!-- METRICS:START -->
 | Indicator | Value | Source |
 |---|---|---|
-| Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **198 passing** | `python -m unittest` |
+| Verified Captures | **10 accounts** (9 Mainnet, 1 Test) | `fixtures/` |
+| Test Suite | **201 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -96,6 +101,7 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 | `default-plain` | one signer which is the master key at weight 1, all thresholds zero and no optional fields, the account a rule has to leave alone |
 | `domain-and-inflation` | home_domain lobstr.co with an inflation destination and two sponsorships, a well-formed SEP-1 candidate |
 | `issuer-auth-required` | an issuer account with auth_required set, two signers at weight 1 and 150 sponsored entries |
+| `liquidity-pool-share` | one liquidity pool share balance alongside native and credit_alphanum4 assets, exercising liquidity_pool_id in consumer parsers |
 | `multisig-custody` | two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain |
 | `sponsored-trustlines` | num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed |
 | `testnet-multisig` | six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator |
@@ -126,7 +132,9 @@ python3 tools/manifest.py
 ```
 
 `shape` in the sidecar is the label set to select by. The ids are part of the contract and
-do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies.
+do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies (see [Recapture Example](corpus/recapture-example.md)).
+Optional account keys and their coverage across the corpus are mapped in [Field Coverage](corpus/field-coverage.md).
+Observed balance types, including liquidity pool share balances, are documented in [Balance Types](corpus/balance-types.md).
 
 ## Adding a fixture
 
@@ -150,18 +158,18 @@ seed-shaped string. Existing fixtures are not overwritten without `--update`.
 
 - `master_absent`, `no_signers`
 - `auth_revocable`, `auth_immutable`, `auth_clawback_enabled`
-- `no_balances`
+- `no_balances` (synthetic only; see [Label Reachability](corpus/label-reachability.md))
 
 `master_absent` and `no_signers` need an account whose master key was revoked, which is rare
 and must not be manufactured. The three remaining auth flags need issuer accounts, and
 roadmap 2.5 asks for one flag per account rather than one issuer carrying all three;
 `auth_required` has had a fixture since 2026-11-02. `no_balances` has not appeared in any
 read taken for this corpus: every account fetched while hunting these shapes, on both
-networks, carries at least its native balance, so 2.3 may end in a decision that the label
-stays uncovered rather than in a capture. `has_data`, `sponsored` and the first testnet
-capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6. None of the remaining six is
-quietly worked around with synthetic data: a synthetic fixture is allowed by the schema and
-none is shipped, so every number in this section describes a real read.
+networks, carries at least its native balance, so `no_balances` is qualified strictly as a
+synthetic-only label (see [Label Reachability](corpus/label-reachability.md)). `has_data`,
+`sponsored` and the first testnet capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6.
+None of the remaining six is quietly worked around with synthetic data: a synthetic fixture
+is allowed by the schema and none is shipped, so every number in this section describes a real read.
 
 ## Checks
 

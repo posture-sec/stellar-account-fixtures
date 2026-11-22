@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "liquidity-pool-share"
+kind = "captured"
+scenario = "one liquidity pool share balance alongside native and credit_alphanum4 assets, exercising liquidity_pool_id in consumer parsers"
+account_id = "GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55"
+captured_at = "2026-11-22T20:04:33Z"
+ledger = 63378367
+horizon_version = "30.0.1-6f7cff3903be1df4fb980a12910a1313c5d7d8dd"
+sha256 = "43763b8b3f8497d9edf8248118c7baf5f52fb01186e119fc78f6a7765c5dba7c"
+shape = ["has_home_domain", "master_is_signer", "no_data", "no_inflation", "not_sponsored", "not_sponsoring", "single_signer", "thresholds_zero"]

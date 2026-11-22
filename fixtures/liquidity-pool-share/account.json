@@ -1,0 +1,95 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55",
+  "balances": [
+    {
+      "asset_type": "liquidity_pool_shares",
+      "balance": "205288.9366234",
+      "is_authorized": false,
+      "is_authorized_to_maintain_liabilities": false,
+      "last_modified_ledger": 57850755,
+      "limit": "922337203685.4775807",
+      "liquidity_pool_id": "00465688fe1e1ac17d6a03e639bfeb5072ce2cc74c74cb876c4a1f46bb369aa0"
+    },
+    {
+      "asset_code": "KIDZ",
+      "asset_issuer": "GBYSV66RMRVTWVDKF2N36JGTMHJ2PDIJVBOH6JXSGVYBZOYVND5G34OK",
+      "asset_type": "credit_alphanum4",
+      "balance": "0.0000000",
+      "buying_liabilities": "0.0000000",
+      "is_authorized": true,
+      "is_authorized_to_maintain_liabilities": true,
+      "last_modified_ledger": 57850755,
+      "limit": "922337203685.4775807",
+      "selling_liabilities": "0.0000000"
+    },
+    {
+      "asset_type": "native",
+      "balance": "3.6419828",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": "lu.meme",
+  "id": "GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55",
+  "last_modified_ledger": 63378367,
+  "last_modified_time": "2026-07-08T03:19:18Z",
+  "num_sponsored": 0,
+  "num_sponsoring": 0,
+  "paging_token": "GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55",
+  "sequence": "248467083594039298",
+  "sequence_ledger": 57850755,
+  "sequence_time": "1751651098",
+  "signers": [
+    {
+      "key": "GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55",
+      "type": "ed25519_public_key",
+      "weight": 0
+    }
+  ],
+  "subentry_count": 3,
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

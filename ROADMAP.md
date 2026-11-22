@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-21 07:46 UTC
+Last updated: 2026-11-22 20:10 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -36,9 +36,9 @@ empty gap list is gate G2.
 |---|---|---|---|---|
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
-| 2 | Coverage | 18 | 21 | 86% |
+| 2 | Coverage | 22 | 25 | 88% |
 | 3 | Consumer contract | 3 | 4 | 75% |
-| **All phases** | **Readiness total** | **36** | **41** | **88%** |
+| **All phases** | **Readiness total** | **40** | **45** | **89%** |
 | Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
@@ -147,6 +147,10 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 - [x] **2.19** Prove a seed-shaped response leaves no fixture directory in `tests/test_capture_seed_no_dir.py`. S. Deps: 0.4. Done when: a response containing an `S...` seed pattern raises `Refused` with the seed refusal text, exits 2 through `main`, and creates no fixture or corpus directory on disk. **Issue:** #93. (done 2026-11-20 19:24: added `tests/test_capture_seed_no_dir.py`, which feeds `capture()` a seed-shaped body built at run time and asserts the refusal and an untouched root directory.)
 - [x] **2.20** Assert `tools/capture.py` imports only the standard library in `tests/test_capture_stdlib_imports.py`. S. Deps: 0.4. Done when: `ast` analysis of every import in `tools/capture.py` resolves each top-level name against `sys.stdlib_module_names` and the local modules, and a specimen with an external import is reported. **Issue:** #94. (done 2026-11-20 19:24: added `tests/test_capture_stdlib_imports.py`, which reads `tools/capture.py` with `ast` without importing it and names any non-standard dependency (D-02).)
 - [x] **2.21** Report the offending line when a sidecar fails to parse, covered in `tests/test_schema_parse_line.py`. S. Deps: 0.4. Done when: `load_manifest` reports `line N, column M` after the `sidecar is not valid TOML` prefix, and the new tests cover several parse failures. **Issue:** #96. (done 2026-11-20 19:24: added `describe_toml_error` in `validate.py`, which reads the position from the `tomllib` message so it reads the same on every supported Python, and `tests/test_schema_parse_line.py`.)
+- [x] **2.22** Add a field coverage table for optional account keys in `corpus/field-coverage.md`. S. Deps: 0.4. Done when: `corpus/field-coverage.md` maps `sponsor`, `num_sponsored`, `num_sponsoring`, `home_domain`, `inflation_destination`, and `data` across all captures, referencing `SCHEMA.md:27` and `validate.py:171`, with zero em dashes. **Issue:** #51. (done 2026-11-22: created `corpus/field-coverage.md` mapping all optional keys across fixtures with direct on-disk verification, linked in `README.md`; issue #51.)
+- [x] **2.23** Qualify the `no_balances` shape label as synthetic only in `SCHEMA.md` Section 5 and `corpus/label-reachability.md`. S. Deps: 0.5. Done when: `SCHEMA.md` Section 5 documents `no_balances` as synthetic fixtures only due to Stellar consensus base reserve requirements, `corpus/label-reachability.md` details protocol constraints, validation behavior in `validate.py:184` is preserved, and `tests/test_label_reachability.py` asserts qualification. **Issue:** #52. (done 2026-11-22: qualified `no_balances` in `SCHEMA.md` Section 5, created `corpus/label-reachability.md` documenting Stellar consensus rules, and verified with `tests/test_label_reachability.py`; issue #52.)
+- [x] **2.24** Specify re-capture and replacement rules in `SCHEMA.md` Section 7 and `corpus/recapture-example.md`. S. Deps: 0.1. Done when: `SCHEMA.md` Section 7 defines criteria for fixture re-capture versus new fixture creation, specifies `ROADMAP.md` changelog requirements, and `corpus/recapture-example.md` provides a worked workflow example for `fixtures/sponsored-trustlines`. **Issue:** #53. (done 2026-11-22: expanded `SCHEMA.md` Section 7 with explicit re-capture and replacement decision criteria, and added worked workflow example in `corpus/recapture-example.md`; issue #53.)
+- [x] **2.25** Capture an account holding a liquidity pool share into `fixtures/liquidity-pool-share/`. M. Deps: 0.4. Done when: a live public account holding `liquidity_pool_shares` is captured with valid provenance using `tools/capture.py`, `corpus/balance-types.md` documents observed balance schemas and `liquidity_pool_id` parsing, and `validate.py` passes cleanly. **Issue:** #54. (done 2026-11-22: captured public account `GDPKIUTOHVQ3IWMSJ4H2J7AHLMTT5SD54XM3AT6WPWISU6J2E7RTWA55` with `liquidity_pool_shares` balance into `fixtures/liquidity-pool-share/`, documented schema in `corpus/balance-types.md`, and verified full validator pass; issue #54.)
 
 ### Phase 3: Consumer contract
 
@@ -169,6 +173,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 | When | What | Tasks |
 |---|---|---|
+| 2026-11-22 20:10 | Tasks 2.22 to 2.25 (closing #51, #52, #53, #54): field coverage table for optional keys in `corpus/field-coverage.md` (#51), qualify `no_balances` as synthetic only with tests and `corpus/label-reachability.md` (#52), re-capture and replacement rules in `SCHEMA.md` Section 7 and `corpus/recapture-example.md` (#53), and capture account holding liquidity pool share balance in `fixtures/liquidity-pool-share/` with `corpus/balance-types.md` (#54). | 2.22, 2.23, 2.24, 2.25 |
 | 2026-11-20 19:24 | Tasks 2.18 to 2.21 (closing #92, #93, #94, #96): prove ACCOUNT_CAP boundary in tests/test_capture_cap_boundary.py, prove seed-shaped response leaves no fixture directory in tests/test_capture_seed_no_dir.py, assert tools/capture.py imports only stdlib in tests/test_capture_stdlib_imports.py, and report offending line when sidecar fails to parse in tests/test_schema_parse_line.py. | 2.18, 2.19, 2.20, 2.21 |
 | 2026-11-20 17:32 | Tasks 2.14 to 2.17 (closing #95, #97, #98, #99): `validate.py` now reports each repeated shape label by name for captured and synthetic fixtures, `scenario` is one printable line of at most 200 characters enforced by both the capture tool and the validator and documented in `SCHEMA.md` 3, the schema version gate has exact-diagnostic tests for strings, floats, booleans and other integers, and source host agreement has tests for both endpoints and the shipped corpus. Four new suites land in `tests/`; README metrics and the Shields.io test badge were regenerated from the new count. | 2.14, 2.15, 2.16, 2.17 |
 | 2026-11-20 02:56 | Tasks 2.11 to 2.13 and 3.1 to 3.2 (closing #18, #39, #100, #101): worked sidecar examples in SCHEMA.md Section 3 with tests (#39), dynamic network split derivation (#100) and automated accounts table generation (#101) in scripts/sync_readme.py, and tools/manifest.py with D-03 decision recorded for consumer content pinning (#18). Verified by test suites with zero em dashes. | 2.11, 2.12, 2.13, 3.1, 3.2 |
