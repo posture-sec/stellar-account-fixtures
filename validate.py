@@ -322,6 +322,16 @@ def check_captured(corpus: Corpus, where: str, data: dict, body: Path, account: 
     ledger = data.get("ledger")
     if not isinstance(ledger, int) or isinstance(ledger, bool) or ledger <= 0:
         corpus.error(where, f"ledger {ledger!r} must be a positive integer")
+    else:
+        # An account resource is its state as of last_modified_ledger, so a capture
+        # cannot have been read at a height below the height it is a picture of.
+        body_ledger = account.get("last_modified_ledger")
+        body_ledger_is_int = isinstance(body_ledger, int) and not isinstance(body_ledger, bool)
+        if body_ledger_is_int and ledger < body_ledger:
+            corpus.error(
+                where,
+                f"sidecar ledger {ledger} predates last_modified_ledger {body_ledger}",
+            )
     captured = data.get("captured_at")
     if not isinstance(captured, str) or not TIMESTAMP_SHAPE.match(captured):
         corpus.error(where, f"captured_at {captured!r} must look like 2026-01-02T03:04:05Z")
