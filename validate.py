@@ -325,9 +325,8 @@ def check_captured(corpus: Corpus, where: str, data: dict, body: Path, account: 
     else:
         # An account resource is its state as of last_modified_ledger, so a capture
         # cannot have been read at a height below the height it is a picture of.
-        body_ledger = account.get("last_modified_ledger")
-        body_ledger_is_int = isinstance(body_ledger, int) and not isinstance(body_ledger, bool)
-        if body_ledger_is_int and ledger < body_ledger:
+        body_ledger = as_int(account.get("last_modified_ledger"))
+        if body_ledger > 0 and ledger < body_ledger:
             corpus.error(
                 where,
                 f"sidecar ledger {ledger} predates last_modified_ledger {body_ledger}",

@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-23 17:18 UTC
+Last updated: 2026-11-23 17:31 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -36,9 +36,9 @@ empty gap list is gate G2.
 |---|---|---|---|---|
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
-| 2 | Coverage | 27 | 30 | 90% |
+| 2 | Coverage | 31 | 34 | 91% |
 | 3 | Consumer contract | 3 | 4 | 75% |
-| **All phases** | **Readiness total** | **45** | **50** | **90%** |
+| **All phases** | **Readiness total** | **49** | **54** | **91%** |
 | Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
@@ -156,6 +156,10 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 - [x] **2.28** Compile a consolidated provenance table in `corpus/provenance.md`. S. Deps: 0.4. Done when: `corpus/provenance.md` contains a markdown table detailing all nine captured fixtures with account ID, network, ledger height, capture timestamp, Horizon version, and SHA-256 digest, explains validation in `validate.py`, with zero em dashes and verified by tests. **Issue:** #42. (done 2026-11-23 11:14: added `corpus/provenance.md`, linked in `README.md`, and added `tests/test_corpus_provenance.py`.)
 - [x] **2.29** Document signer counts, master key weights, and master presence in `corpus/signers.md`. S. Deps: 0.5. Done when: `corpus/signers.md` details signer structures across all nine fixtures, clarifies that `master_is_signer` checks key presence rather than nonzero authority, references `validate.py:158` and `SCHEMA.md:94`, with zero em dashes and verified by tests. **Issue:** #43. (done 2026-11-23 11:14: added `corpus/signers.md`, linked in `README.md`, and added `tests/test_corpus_signers.py`.)
 - [x] **2.30** Create a threshold combination matrix in `corpus/thresholds.md`. S. Deps: 0.5. Done when: `corpus/thresholds.md` tabulates exact low, medium, and high threshold triples across all nine fixtures, explains `thresholds_zero` vs `thresholds_nonzero` derivation in `validate.py:162`, with zero em dashes and verified by tests. **Issue:** #44. (done 2026-11-23 11:14: added `corpus/thresholds.md`, linked in `README.md`, and added `tests/test_corpus_thresholds.py`.)
+- [x] **2.31** Pin that a nested directory inside a fixture is invisible to the layout check, and that a real extra file is not. S. Deps: 0.1. Done when: `tests/test_validate_nested_directory.py` stages a fixture with `backup/2026/older/` and `__pycache__/` inside it, asserts the validator reports no unexpected file, and asserts `notes.txt` beside `account.json` is still refused. **Issue:** #79. (done 2026-11-23 17:31: `validate_fixture` builds its file set with `p.is_file()`, so a directory of any depth is ignored; the suite pins that in both directions rather than leaving it implied, and covers the case where a nested `fixture.toml` does not satisfy the missing-file check)
+- [x] **2.32** Cover duplicate keys in `fixture.toml` and pin the structured problem they produce. S. Deps: 0.1. Done when: `tests/test_validate_duplicate_toml_keys.py` writes a sidecar with two `network` keys, asserts `tomllib` itself raises, and asserts `load_manifest` records `sidecar is not valid TOML: ...` naming the fixture instead of letting the decode error escape. **Issue:** #82. (done 2026-11-23 17:31: three cases: the parse refusal, the single structured problem from `load_manifest`, and a whole-corpus run where the problem is reported with no traceback in either stream)
+- [x] **2.33** Reject a sidecar ledger below the account's `last_modified_ledger`. M. Deps: 0.4. Done when: `check_captured` reports `sidecar ledger {ledger} predates last_modified_ledger {body_ledger}`, `tests/test_validate_ledger_order.py` covers below, equal and above, and all nine shipped fixtures still validate. **Issue:** #83. (done 2026-11-23 17:31: the rule is one-sided on purpose, a query height may sit above the modification it captures and never below it; an account carrying no `last_modified_ledger` is left as it was, and the shipped corpus is re-validated inside the suite)
+- [x] **2.34** Hold `validate.py` to a stdout, stderr and exit-code contract across failure classes. S. Deps: 1.3. Done when: `tests/test_validate_cli_contract.py` runs the real CLI as a subprocess, asserts reports and the success sentence stay on stdout, problems and the summary count stay on stderr, exit codes 0/1/2 are each driven, and no traceback reaches either stream. **Issue:** #85. (done 2026-11-23 17:31: eight subprocess cases over staged corpora, including `--report` beside a failing fixture, where the report line and the problem line are asserted to stay on their own stream)
 
 ### Phase 3: Consumer contract
 
@@ -178,6 +182,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 | When | What | Tasks |
 |---|---|---|
+| 2026-11-23 17:31 | Four validator suites and one rule (closing #79, #82, #83, #85): the nested-directory blind spot is pinned in both directions, duplicate `fixture.toml` keys are shown to arrive as `sidecar is not valid TOML` rather than a traceback, `check_captured` now refuses a sidecar ledger below the account's `last_modified_ledger` and the nine shipped fixtures still pass, and the CLI's stdout/stderr/exit split is driven as a subprocess over success, report, problem and unreadable-root corpora. | 2.31, 2.32, 2.33, 2.34 |
 | 2026-11-23 17:18 | Two suites pinned rather than described (pull request #146): `tests/test_validate_duplicate_json_keys.py` records that `json.loads` keeps the last of two duplicate `home_domain` keys in `account.json`, that shape derivation reads that surviving value, and that `validate.py` still hashes the original bytes, so the behaviour is pinned without claiming key uniqueness is enforced; `tests/test_validate_corpus_identity.py` audits all nine shipped captures, tying each `fixture.toml` id to its directory, its network to the root document for that network, and its `account_id` to the bytes beside it. No validator, tool or fixture changed and no task is ticked. | none ticked |
 | 2026-11-23 11:14 | Tasks 2.27 to 2.30 (closing #41, #42, #43, #44): add fixture by shape label matrix in corpus/shape-matrix.md (#41), compile consolidated provenance table in corpus/provenance.md (#42), document signer structures and master key presence in corpus/signers.md (#43), and create threshold combination matrix in corpus/thresholds.md (#44). Verified by new test suites with zero em dashes. | 2.27, 2.28, 2.29, 2.30 |
 | 2026-11-23 05:15 | Task 2.26 (closing #69): confirm every sidecar account id decodes at version 48 in tests/test_validate_account_id_version.py. | 2.26 |
