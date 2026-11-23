@@ -106,7 +106,17 @@ kind = "synthetic"
 scenario = "synthetic: fabricated zero-threshold shape to exercise offline validator logic without live network capture"
 account_id = "GA7DTK7GPOEQGXHI7MLA2OAIEL4365VG6PXUAVREMDVLC4MJIJ62KR75"
 network = "testnet"
-shape = ["single_signer", "thresholds_zero"]
+shape = [
+  "master_is_signer",
+  "no_balances",
+  "no_data",
+  "no_home_domain",
+  "no_inflation",
+  "not_sponsored",
+  "not_sponsoring",
+  "single_signer",
+  "thresholds_zero",
+]
 ```
 
 ## 4. What `account_id` has to satisfy
