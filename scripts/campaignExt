@@ -1,0 +1,170 @@
+/**
+ * Validation for the `===POH_EXT===` description suffix.
+ *
+ * The contract's `Campaign` has no fields for tags, a cover image or
+ * milestones, so the app appends them to the description as JSON
+ * (`createCampaign`) and reads them back in `decodeCampaign`. The description
+ * is creator-controlled text that can be rewritten on-chain at any time, so
+ * whatever follows the marker is *untrusted input*, never trusted metadata:
+ * a creator can append a marker and a payload of their choosing to any
+ * campaign, including one that has already been verified.
+ *
+ * Everything read from the blob therefore goes through the schemas below:
+ *
+ *  - `coverImageUrl` must be an https URL on the campaign-media allow-list
+ *    (`campaignMedia.ts`, the same list that gates the Open Graph fetch and
+ *    `next.config.ts` image hosts), with no credentials and no custom port.
+ *    A URL that fails is dropped, so the campaign renders without a cover
+ *    rather than pointing a visitor's browser at an arbitrary host
+ *    (tracking pixels, hotlinked content).
+ *  - `tags` are short plain-text labels; anything else in the array is
+ *    dropped individually, and the list is capped and de-duplicated.
+ *  - `milestones` are an all-or-nothing plan: one malformed entry drops the
+ *    whole list, because a plan with a missing step is worse than no plan.
+ *  - Unknown keys are ignored, and an oversized, non-JSON or non-object blob
+ *    yields nothing.
+ *
+ * Fields are validated independently, so one bad field never discards a good
+ * one. Rejected field names are returned so the caller can log them (the
+ * payload itself is never logged).
+ *
+ * Note this is a floor, not a trust model: an allow-listed host can still
+ * serve a different image tomorrow, and the blob is still unsigned. Binding
+ * cover/tags to the verified record (on-chain fields or a signed off-chain
+ * record) needs a contract or backend change; see docs/CONTRACT_INTEGRATION.md.
+ */
+
+import { z } from "zod";
+import { normalizeCampaignImageUrl } from "./campaignMedia";
+import type { Milestone } from "../types";
+
+/** Marker that separates the description from the JSON extension. */
+export const POH_EXT_MARKER = "\n\n===POH_EXT===\n";
+
+export const MAX_EXT_BYTES = 16 * 1024;
+export const MAX_COVER_URL_LENGTH = 2048;
+export const MAX_EXT_TAGS = 20;
+export const MAX_TAG_LENGTH = 32;
+export const MAX_EXT_MILESTONES = 20;
+export const MAX_MILESTONE_DESCRIPTION = 500;
+
+/**
+ * Letters and digits (any script) to start, then letters, digits, spaces and
+ * `_ - . & +`. No markup characters, control characters or newlines.
+ */
+const TAG_PATTERN = /^[\p{L}\p{N}][\p{L}\p{N} _.&+-]*$/u;
+
+export const coverImageUrlSchema = z
+  .string()
+  .max(MAX_COVER_URL_LENGTH)
+  .transform((value, ctx) => {
+    const normalized = normalizeCampaignImageUrl(value.trim());
+    if (normalized === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Cover image URL is not on the campaign media allow-list.",
+      });
+      return z.NEVER;
+    }
+    return normalized;
+  });
+
+export const tagSchema = z.string().trim().min(1).max(MAX_TAG_LENGTH).regex(TAG_PATTERN);
+
+const milestoneSchema = z.object({
+  targetAmount: z
+    .union([z.string().regex(/^\d{1,30}$/), z.number().int().nonnegative().safe()])
+    .transform((value) => BigInt(value)),
+  description: z.string().trim().min(1).max(MAX_MILESTONE_DESCRIPTION),
+});
+
+const milestonesSchema = z.array(milestoneSchema).max(MAX_EXT_MILESTONES);
+
+export interface CampaignExt {
+  coverImageUrl?: string;
+  tags?: string[];
+  milestones?: Milestone[];
+}
+
+export interface ParsedCampaignExt {
+  ext: CampaignExt;
+  /** Names of fields that were present but failed validation (never their values). */
+  rejected: string[];
+}
+
+function parseTags(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+  const seen = new Set<string>();
+  const tags: string[] = [];
+  for (const item of value) {
+    const parsed = tagSchema.safeParse(item);
+    if (!parsed.success) continue;
+    const key = parsed.data.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    tags.push(parsed.data);
+    if (tags.length === MAX_EXT_TAGS) break;
+  }
+  return tags;
+}
+
+/**
+ * Parses and validates the JSON text that follows the marker. Never throws:
+ * anything unusable simply contributes no fields.
+ */
+export function parseCampaignExt(json: string): ParsedCampaignExt {
+  const ext: CampaignExt = {};
+  const rejected: string[] = [];
+
+  if (json.length > MAX_EXT_BYTES) return { ext, rejected: ["ext"] };
+
+  let raw: unknown;
+  try {
+    raw = JSON.parse(json);
+  } catch {
+    return { ext, rejected: ["ext"] };
+  }
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+    return { ext, rejected: ["ext"] };
+  }
+  const fields = raw as Record<string, unknown>;
+
+  if (fields.coverImageUrl !== undefined && fields.coverImageUrl !== null) {
+    const cover = coverImageUrlSchema.safeParse(fields.coverImageUrl);
+    if (cover.success) ext.coverImageUrl = cover.data;
+    else rejected.push("coverImageUrl");
+  }
+
+  if (fields.tags !== undefined && fields.tags !== null) {
+    const tags = parseTags(fields.tags);
+    if (tags === null) rejected.push("tags");
+    else {
+      ext.tags = tags;
+      if (tags.length < (fields.tags as unknown[]).length) rejected.push("tags");
+    }
+  }
+
+  if (fields.milestones !== undefined && fields.milestones !== null) {
+    const milestones = milestonesSchema.safeParse(fields.milestones);
+    if (milestones.success) ext.milestones = milestones.data;
+    else rejected.push("milestones");
+  }
+
+  return { ext, rejected };
+}
+
+/**
+ * Splits a raw on-chain description into the human description and the
+ * validated extension. The description is always cut at the first marker,
+ * even when the payload is unusable, so marker text never shows as prose.
+ */
+export function splitDescription(rawDescription: string): {
+  description: string;
+  ext: CampaignExt;
+  rejected: string[];
+} {
+  const index = rawDescription.indexOf(POH_EXT_MARKER);
+  if (index === -1) return { description: rawDescription, ext: {}, rejected: [] };
+  const { ext, rejected } = parseCampaignExt(rawDescription.slice(index + POH_EXT_MARKER.length));
+  return { description: rawDescription.slice(0, index), ext, rejected };
+}
