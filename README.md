@@ -15,7 +15,7 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -36,9 +36,13 @@ fixtures/
   whitespace-home-domain/  account.json  fixture.toml
 corpus/
   data-entries.md
+  provenance.md
   root-diff.md
   root-public.json
   root-testnet.json
+  shape-matrix.md
+  signers.md
+  thresholds.md
 ```
 
 ## What is here, and what it is not
@@ -66,6 +70,10 @@ validate: corpus agrees with itself
 
 That block is the output of the command above, run in this checkout on 2026-11-03. If a
 fixture changes, the block is stale and the command is not: regenerate rather than trust it.
+A static cross-reference matrix across all nine fixtures and all 24 labels is documented in
+[Shape Label Matrix](corpus/shape-matrix.md). Consolidated account digests, ledger heights, and
+Horizon versions are tabulated in [Corpus Provenance](corpus/provenance.md). Specific multi-signature
+threshold triples (low, medium, high) are detailed in [Threshold Combinations Matrix](corpus/thresholds.md).
 
 This corpus says nothing about whether an account is well configured. No expectations, no
 severities, no rule ids: that is Gauge's job. Nothing here holds a secret key, and a
@@ -77,7 +85,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **209 passing** | `python -m unittest` |
+| Test Suite | **222 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -104,7 +112,10 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 
 Account ids are in each sidecar. Eight are mainnet (`network = "public"`) and one is testnet
 (`network = "testnet"`), and the root document for each network is the one the capture tool
-fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md).
+fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md). For signer structure
+comparisons, master key presence, and authority analysis across all nine accounts, see
+[Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
+[Threshold Combinations Matrix](corpus/thresholds.md).
 
 ## Using it from another project
 
@@ -146,14 +157,16 @@ seed-shaped string. Existing fixtures are not overwritten without `--update`.
 
 ## Coverage gaps, stated
 
-24 shape labels exist in `SCHEMA.md` section 5. Eighteen have a fixture. These 6 do not:
+24 shape labels exist in `SCHEMA.md` section 5; see [Shape Label Matrix](corpus/shape-matrix.md)
+for the complete 9x24 cross-reference grid. Eighteen have a fixture. These 6 do not:
 
 - `master_absent`, `no_signers`
 - `auth_revocable`, `auth_immutable`, `auth_clawback_enabled`
 - `no_balances`
 
 `master_absent` and `no_signers` need an account whose master key was revoked, which is rare
-and must not be manufactured. The three remaining auth flags need issuer accounts, and
+and must not be manufactured (see [Signer Structures](corpus/signers.md) for how `master_is_signer`
+checks key presence rather than signing authority). The three remaining auth flags need issuer accounts, and
 roadmap 2.5 asks for one flag per account rather than one issuer carrying all three;
 `auth_required` has had a fixture since 2026-11-02. `no_balances` has not appeared in any
 read taken for this corpus: every account fetched while hunting these shapes, on both

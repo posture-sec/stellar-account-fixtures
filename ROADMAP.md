@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-23 05:15 UTC
+Last updated: 2026-11-23 11:14 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -36,9 +36,9 @@ empty gap list is gate G2.
 |---|---|---|---|---|
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
-| 2 | Coverage | 23 | 26 | 88% |
+| 2 | Coverage | 27 | 30 | 90% |
 | 3 | Consumer contract | 3 | 4 | 75% |
-| **All phases** | **Readiness total** | **41** | **46** | **89%** |
+| **All phases** | **Readiness total** | **45** | **50** | **90%** |
 | Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
@@ -152,6 +152,10 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 - [x] **2.24** Report under-declared shape labels in `validate.py` so sidecars cannot silently omit labels present in account bytes. M. Deps: 0.5. Done when: `check_captured` and `check_synthetic` verify derived - declared and report missing shape labels, covered by `tests/test_validate_shape_underside.py`. **Issue:** #72. (done 2026-11-23 04:55: added derived - declared checks to `check_captured` and `check_synthetic` with exact reporting format, and added `tests/test_validate_shape_underside.py`.)
 - [x] **2.25** Pin set-based shape comparison semantics in `tests/test_validate_shape_set_semantics.py` to document that list order and duplicates do not fail validation. M. Deps: 0.5. Done when: `tests/test_validate_shape_set_semantics.py` is created testing shape comparison set semantics against unsorted and duplicate labels. **Issue:** #73. (done 2026-11-23 04:55: added `tests/test_validate_shape_set_semantics.py` pinning set comparison semantics for unsorted lists and duplicate shape tokens.)
 - [x] **2.26** Confirm every sidecar account id decodes at version 48 in `tests/test_validate_account_id_version.py`. S. Deps: 0.4. Done when: `tests/test_validate_account_id_version.py` audits all nine fixtures, verifies `account_id` presence, and asserts `strkey_version(account_id) == 48`. **Issue:** #69. (done 2026-11-23 05:15: added `tests/test_validate_account_id_version.py` iterating all nine fixtures and asserting strkey version 48.)
+- [x] **2.27** Provide a static matrix mapping fixtures to shape labels in `corpus/shape-matrix.md`. S. Deps: 2.10. Done when: `corpus/shape-matrix.md` contains a complete markdown table cross-referencing all nine fixtures with the 24 shape labels from `SCHEMA.md` Section 5, matching `python3 validate.py --report`, with zero em dashes and verified by tests. **Issue:** #41. (done 2026-11-23 11:14: added `corpus/shape-matrix.md`, linked in `README.md`, and added `tests/test_corpus_shape_matrix.py`.)
+- [x] **2.28** Compile a consolidated provenance table in `corpus/provenance.md`. S. Deps: 0.4. Done when: `corpus/provenance.md` contains a markdown table detailing all nine captured fixtures with account ID, network, ledger height, capture timestamp, Horizon version, and SHA-256 digest, explains validation in `validate.py`, with zero em dashes and verified by tests. **Issue:** #42. (done 2026-11-23 11:14: added `corpus/provenance.md`, linked in `README.md`, and added `tests/test_corpus_provenance.py`.)
+- [x] **2.29** Document signer counts, master key weights, and master presence in `corpus/signers.md`. S. Deps: 0.5. Done when: `corpus/signers.md` details signer structures across all nine fixtures, clarifies that `master_is_signer` checks key presence rather than nonzero authority, references `validate.py:158` and `SCHEMA.md:94`, with zero em dashes and verified by tests. **Issue:** #43. (done 2026-11-23 11:14: added `corpus/signers.md`, linked in `README.md`, and added `tests/test_corpus_signers.py`.)
+- [x] **2.30** Create a threshold combination matrix in `corpus/thresholds.md`. S. Deps: 0.5. Done when: `corpus/thresholds.md` tabulates exact low, medium, and high threshold triples across all nine fixtures, explains `thresholds_zero` vs `thresholds_nonzero` derivation in `validate.py:162`, with zero em dashes and verified by tests. **Issue:** #44. (done 2026-11-23 11:14: added `corpus/thresholds.md`, linked in `README.md`, and added `tests/test_corpus_thresholds.py`.)
 
 ### Phase 3: Consumer contract
 
@@ -163,7 +167,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 ## 6. Decision log
 
 | ID | Decision | Status | Notes |
-|---|---|---|---|
+|---|---|---|---|---|
 | D-01 | Captured beats synthetic. A shape is fabricated only after the search for a real account failed, and the sidecar has to say `synthetic` and start its `scenario` with `synthetic:`. | Accepted | The schema still allows synthetic fixtures because `master_absent` may be genuinely hard to find; what is not allowed is a synthetic fixture pretending to be a capture. |
 | D-02 | Standard library only. `validate.py` and `tools/capture.py` import nothing outside it, and there is no package to install. | Accepted | Python 3.11 or newer for `tomllib`. A dependency would have to earn its place against a corpus that is read by tests in another language too. |
 | D-03 | How a consumer takes the corpus: vendored copy, git submodule, or a download pinned by `tools/manifest.py`. | Accepted | Decided in 3.1 and 3.2: consumers vendor a subtree or point to local repository paths, pinning fixtures offline by content SHA against `tools/manifest.py`. Tests never touch the network. |
@@ -174,6 +178,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 | When | What | Tasks |
 |---|---|---|
+| 2026-11-23 11:14 | Tasks 2.27 to 2.30 (closing #41, #42, #43, #44): add fixture by shape label matrix in corpus/shape-matrix.md (#41), compile consolidated provenance table in corpus/provenance.md (#42), document signer structures and master key presence in corpus/signers.md (#43), and create threshold combination matrix in corpus/thresholds.md (#44). Verified by new test suites with zero em dashes. | 2.27, 2.28, 2.29, 2.30 |
 | 2026-11-23 05:15 | Task 2.26 (closing #69): confirm every sidecar account id decodes at version 48 in tests/test_validate_account_id_version.py. | 2.26 |
 | 2026-11-23 04:55 | Tasks 2.22 to 2.25 (closing #70, #71, #72, #73): pin sha256 digest prefix formatting in tests/test_validate_hash_message.py (#70), restrict flags derivation to AUTH_FLAGS in validate.py with tests/test_validate_flag_vocabulary.py (#71), report under-declared shape labels in validate.py with tests/test_validate_shape_underside.py (#72), and pin shape set comparison semantics in tests/test_validate_shape_set_semantics.py (#73). | 2.22, 2.23, 2.24, 2.25 |
 | 2026-11-20 19:24 | Tasks 2.18 to 2.21 (closing #92, #93, #94, #96): prove ACCOUNT_CAP boundary in tests/test_capture_cap_boundary.py, prove seed-shaped response leaves no fixture directory in tests/test_capture_seed_no_dir.py, assert tools/capture.py imports only stdlib in tests/test_capture_stdlib_imports.py, and report offending line when sidecar fails to parse in tests/test_schema_parse_line.py. | 2.18, 2.19, 2.20, 2.21 |
