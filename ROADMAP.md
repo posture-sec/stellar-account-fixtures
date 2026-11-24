@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-23 05:15 UTC
+Last updated: 2026-11-23 15:29 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -36,9 +36,9 @@ empty gap list is gate G2.
 |---|---|---|---|---|
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
-| 2 | Coverage | 23 | 26 | 88% |
+| 2 | Coverage | 27 | 30 | 90% |
 | 3 | Consumer contract | 3 | 4 | 75% |
-| **All phases** | **Readiness total** | **41** | **46** | **89%** |
+| **All phases** | **Readiness total** | **45** | **50** | **90%** |
 | Gates | G1 to G5 | 2 | 5 | 40% |
 <!-- PROGRESS:END -->
 
@@ -152,6 +152,10 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 - [x] **2.24** Report under-declared shape labels in `validate.py` so sidecars cannot silently omit labels present in account bytes. M. Deps: 0.5. Done when: `check_captured` and `check_synthetic` verify derived - declared and report missing shape labels, covered by `tests/test_validate_shape_underside.py`. **Issue:** #72. (done 2026-11-23 04:55: added derived - declared checks to `check_captured` and `check_synthetic` with exact reporting format, and added `tests/test_validate_shape_underside.py`.)
 - [x] **2.25** Pin set-based shape comparison semantics in `tests/test_validate_shape_set_semantics.py` to document that list order and duplicates do not fail validation. M. Deps: 0.5. Done when: `tests/test_validate_shape_set_semantics.py` is created testing shape comparison set semantics against unsorted and duplicate labels. **Issue:** #73. (done 2026-11-23 04:55: added `tests/test_validate_shape_set_semantics.py` pinning set comparison semantics for unsorted lists and duplicate shape tokens.)
 - [x] **2.26** Confirm every sidecar account id decodes at version 48 in `tests/test_validate_account_id_version.py`. S. Deps: 0.4. Done when: `tests/test_validate_account_id_version.py` audits all nine fixtures, verifies `account_id` presence, and asserts `strkey_version(account_id) == 48`. **Issue:** #69. (done 2026-11-23 05:15: added `tests/test_validate_account_id_version.py` iterating all nine fixtures and asserting strkey version 48.)
+- [x] **2.27** Document explicit network-to-root conformance proofs in `corpus/network-conformance.md`. S. Deps: 0.4. Done when: `corpus/network-conformance.md` is created auditing network conformance across captured fixtures, each row documents fixture ID, network, source URL, verified root file, and network passphrase string, explains `validate.py:370` `check_root`, passphrases verified against `corpus/root-public.json:103` and `corpus/root-testnet.json:107`, with zero em dashes and verified by tests. **Issue:** #55. (done 2026-11-23 15:29: added `corpus/network-conformance.md`, linked in `README.md`, and added `tests/test_corpus_network_conformance.py`.)
+- [x] **2.28** Add the ten balance boundary for many_balances in `fixtures/ten-balances-boundary`. M. Deps: 0.5. Done when: a live public Stellar account with exactly ten balances is captured using `tools/capture.py`, `fixtures/ten-balances-boundary/account.json` and `fixture.toml` are created and validated, `validate.py --report` confirms inclusion of `many_balances`, and the sidecar scenario explicitly notes the ten-balance boundary test. **Issue:** #56. (done 2026-11-23 15:29: captured public account with ten balances into `fixtures/ten-balances-boundary` exercising the many_balances boundary condition.)
+- [x] **2.29** Capture a testnet account with sponsored entries in `fixtures/testnet-sponsored`. M. Deps: 0.5. Done when: a live testnet account with `num_sponsored > 0` is captured using `tools/capture.py`, `fixtures/testnet-sponsored/account.json` and `fixture.toml` are created and validated, pairs correctly with `corpus/root-testnet.json`, and `validate.py --report` includes `sponsored`. **Issue:** #57. (done 2026-11-23 15:29: captured live testnet account with sponsored entries into `fixtures/testnet-sponsored` exercising sponsorship tracking on testnet.)
+- [x] **2.30** Add a synthetic fixture with a null home domain in `fixtures/null-home-domain`. M. Deps: 0.5. Done when: `fixtures/null-home-domain/` is created with synthetic `account.json` explicitly containing `home_domain: null` and `fixture.toml` having `kind = 'synthetic'`, `scenario` starting with `synthetic:`, no provenance fields, and confirms `no_home_domain` derivation in `validate.py`. **Issue:** #58. (done 2026-11-23 15:29: created synthetic fixture `fixtures/null-home-domain` testing parser null home domain defenses without live network side effects.)
 
 ### Phase 3: Consumer contract
 
@@ -174,6 +178,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 | When | What | Tasks |
 |---|---|---|
+| 2026-11-23 15:29 | Tasks 2.27 to 2.30 (closing #55, #56, #57, #58): document network-to-root conformance audit in corpus/network-conformance.md (#55), capture ten-balance boundary in fixtures/ten-balances-boundary (#56), capture testnet sponsored account in fixtures/testnet-sponsored (#57), and add synthetic null home domain in fixtures/null-home-domain (#58). | 2.27, 2.28, 2.29, 2.30 |
 | 2026-11-23 05:15 | Task 2.26 (closing #69): confirm every sidecar account id decodes at version 48 in tests/test_validate_account_id_version.py. | 2.26 |
 | 2026-11-23 04:55 | Tasks 2.22 to 2.25 (closing #70, #71, #72, #73): pin sha256 digest prefix formatting in tests/test_validate_hash_message.py (#70), restrict flags derivation to AUTH_FLAGS in validate.py with tests/test_validate_flag_vocabulary.py (#71), report under-declared shape labels in validate.py with tests/test_validate_shape_underside.py (#72), and pin shape set comparison semantics in tests/test_validate_shape_set_semantics.py (#73). | 2.22, 2.23, 2.24, 2.25 |
 | 2026-11-20 19:24 | Tasks 2.18 to 2.21 (closing #92, #93, #94, #96): prove ACCOUNT_CAP boundary in tests/test_capture_cap_boundary.py, prove seed-shaped response leaves no fixture directory in tests/test_capture_seed_no_dir.py, assert tools/capture.py imports only stdlib in tests/test_capture_stdlib_imports.py, and report offending line when sidecar fails to parse in tests/test_schema_parse_line.py. | 2.18, 2.19, 2.20, 2.21 |
