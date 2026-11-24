@@ -15,6 +15,7 @@ files = [
     "tools/capture.py",
     "test_validate.py",
     "tests/test_corpus_provenance.py",
+    "tests/test_corpus_revoked_master.py",
     "tests/test_corpus_shape_matrix.py",
     "tests/test_corpus_signers.py",
     "tests/test_corpus_thresholds.py",

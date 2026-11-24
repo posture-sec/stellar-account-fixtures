@@ -85,7 +85,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **274 passing** | `python -m unittest` |
+| Test Suite | **279 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -164,9 +164,7 @@ for the complete 9x24 cross-reference grid. Eighteen have a fixture. These 6 do 
 - `auth_revocable`, `auth_immutable`, `auth_clawback_enabled`
 - `no_balances`
 
-`master_absent` and `no_signers` need an account whose master key was revoked, which is rare
-and must not be manufactured (see [Signer Structures](corpus/signers.md) for how `master_is_signer`
-checks key presence rather than signing authority). The three remaining auth flags need issuer accounts, and
+`master_absent` and `no_signers` stay uncovered because Horizon retains revoked master keys at weight 0 rather than omitting the signer object from account payloads, and synthetic generation is disallowed under D-01 (see [Signer Structures](corpus/signers.md) for how `master_is_signer` checks key presence rather than signing authority). The three remaining auth flags need issuer accounts, and
 roadmap 2.5 asks for one flag per account rather than one issuer carrying all three;
 `auth_required` has had a fixture since 2026-11-02. `no_balances` has not appeared in any
 read taken for this corpus: every account fetched while hunting these shapes, on both
