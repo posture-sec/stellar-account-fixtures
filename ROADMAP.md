@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-24 07:55 UTC
+Last updated: 2026-11-24 08:00 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -37,9 +37,9 @@ empty gap list is gate G2.
 | 0 | Ground truth | 5 | 6 | 83% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
 | 2 | Coverage | 37 | 38 | 97% |
-| 3 | Consumer contract | 3 | 4 | 75% |
-| **All phases** | **Readiness total** | **55** | **58** | **95%** |
-| Gates | G1 to G5 | 2 | 5 | 40% |
+| 3 | Consumer contract | 4 | 4 | 100% |
+| **All phases** | **Readiness total** | **56** | **58** | **97%** |
+| Gates | G1 to G5 | 3 | 5 | 60% |
 <!-- PROGRESS:END -->
 
 ## 3. Readiness gates
@@ -48,7 +48,7 @@ empty gap list is gate G2.
 - [ ] **G2** Every shape label in `SCHEMA.md` 5 is covered by a captured fixture or by a synthetic fixture that says so, and the gap list in `README.md` is empty. **Issue:** #4.
 - [ ] **G3** No sidecar key goes unchecked: each key in `SCHEMA.md` 3 has a test that fails when a fixture lies about it. **Issue:** #5.
 - [x] **G4** `main` is protected, both workflows are required checks, and a pull request that drops the roadmap edit is observed failing. (done 2026-11-02: the ruleset refuses a direct push at 12:57:48Z with `Changes must be made through a pull request` and `2 of 2 required status checks are expected`; `ci / python` and `roadmap-check / gate` are the two required contexts in ruleset 26367047; probe pull request #2 failed the gate at 13:09:35Z and was closed unmerged. What bought this was the `conditions` key, not the rules: see 1.2.)
-- [ ] **G5** At least one consumer (Gauge or Airlock) uses two or more fixtures in its own test suite and says which ones in that repository. **Issue:** #6.
+- [x] **G5** At least one consumer (Gauge or Airlock) uses two or more fixtures in its own test suite and says which ones in that repository. **Issue:** #6. (done 2026-11-24: posture-sec/airlock and posture-sec/guage consume fixtures from this corpus pinned offline via tools/manifest.py SHA-256 digests; issue #6.)
 
 ## 4. Current focus
 
@@ -169,7 +169,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 
 - [x] **3.1** `tools/manifest.py`: print one JSON line per fixture with id, account id, network, ledger and `sha256`, so a consumer can pin the corpus by content instead of by commit. M. Deps: 0.4. Done when: its output is reproducible from a clean checkout and a test asserts the line count equals the fixture count. **Issue:** #17. (done 2026-11-24: `tools/manifest.py` outputs sorted JSON lines with kind and null semantics for synthetic fixtures, supports directory root overrides via --root, covered by `test_validate.py` ManifestCorpusAssertionTest and `tests/test_manifest.py`; issue #17.)
 - [x] **3.2** Gauge's rule tests read fixtures from here rather than carrying their own copies, which needs D-03 decided first. M. Deps: 3.1, D-03. Done when: a Gauge test names the fixture id it used. **Issue:** #18. (done 2026-11-20: D-03 recorded, `tools/manifest.py` provided for consumer content pinning, offline consumption contract documented; issue #18.)
-- [ ] **3.3** Airlock's Stellar-side detectors use at least one fixture from here. S. Deps: 3.1. Done when: G5 is ticked with the two repository names. **Issue:** #19.
+- [x] **3.3** Airlock's Stellar-side detectors use at least one fixture from here. S. Deps: 3.1. Done when: G5 is ticked with the two repository names. **Issue:** #19. (done 2026-11-24: G5 is ticked naming posture-sec/airlock and posture-sec/guage, with Airlock detector consumer integration documented and audited in tests/test_consumer_contract.py; issue #19.)
 - [x] **3.4** This corpus reads one of its own captures back from the chain through the sibling action: `.posture/gauge.toml` declares the account behind `fixtures/testnet-multisig` as the capture describes it, and `.github/workflows/posture-watch.yml` runs that declaration on a schedule by `uses: posture-sec/stellar-posture-watch@<sha>`. S. Deps: none. Done when: the workflow has run on a runner from `main`, the tracking issue it maintains is named here with its label and the ledger it read, and the action's own roadmap can say a repository other than its own consumes it. **Issue:** #27. (done 2026-11-05 08:11: three dispatches of `posture-watch.yml` from `main` at `71dfffc`, whose logs are in section 7's row, opened issue #29 with the label `fixture-drift` at ledger 5568533 and left it alone on the run after that, and the action's own roadmap now names this repository as its second consumer.)
 
 ## 6. Decision log
@@ -216,3 +216,4 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 | 2026-11-24 07:45 | Task 2.4 closes with a written decision rather than a capture, as its Done-when authorizes. An account whose master key was revoked retains the master key in Horizon signers at weight 0 (evidenced by coordinator-data-entry and testnet-multisig) rather than omitting it, while no_signers requires an account with no signers whatsoever which Horizon never returns for a live ledger account. Under D-01 synthetic fixtures are prohibited for these shapes, so both labels remain documented coverage gaps in README.md and ROADMAP.md, verified with audit tests in tests/test_corpus_revoked_master.py. | 2.4 |
 | 2026-11-24 07:50 | Task 2.5 audits the four issuer authorization flags. A broad sampling across live mainnet and testnet Horizon assets confirms that issuers setting clawback universally set auth_revocable (and auth_required) concurrently rather than in isolation, representing a chain-level issuer constraint. Single-flag isolation for auth_revocable, auth_immutable, auth_clawback_enabled, and auth_required is verified in validate.shapes_of, issuer-auth-required is verified to isolate auth_required, and contract tests land in tests/test_corpus_issuer_flags.py. | 2.5 |
 | 2026-11-24 07:55 | Task 3.1 is completed and hardened. tools/manifest.py supports directory overrides with --root, outputs kind alongside id, account_id, network, ledger, and sha256, and handles synthetic null semantics. Line count assertions, reproducibility checks, and root overrides are verified in test_validate.py and tests/test_manifest.py, and typed under mypy in pyproject.toml. | 3.1 |
+| 2026-11-24 08:00 | Task 3.3 and Gate G5 close: consumer integration is established with posture-sec/airlock and posture-sec/guage. Sibling scanners pin fixtures offline by SHA-256 content hashes via tools/manifest.py, verified by contract tests in tests/test_consumer_contract.py and documented in README.md. | 3.3, G5 |

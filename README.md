@@ -85,7 +85,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **288 passing** | `python -m unittest` |
+| Test Suite | **291 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -214,10 +214,9 @@ sidecars and the tooling.
 
 Sibling projects: [Gauge](https://github.com/posture-sec/guage), which reads a real Stellar account
 and evaluates rules against it, and
-[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories. Both were the
-reason this corpus exists, and neither has been pointed at these fixtures yet: that is gate G5, and
-until a consumer names the two or more files it reads in its own test suite the sentence above
-describes intent rather than a run.
+[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories. Both
+consume fixtures from this corpus pinned offline by SHA-256 digests via `tools/manifest.py`,
+fulfilling gate G5.
 
 The third sibling is the one this corpus points at rather than the other way round:
 [stellar-posture-watch](https://github.com/posture-sec/stellar-posture-watch) is a scheduled
