@@ -19,7 +19,7 @@ FIXTURES_DIR = REPO_ROOT / "fixtures"
 class ValidateAccountIdVersionTest(unittest.TestCase):
     def test_all_shipped_sidecars_decode_as_version_48_public_keys(self) -> None:
         fixture_dirs = sorted(p for p in FIXTURES_DIR.iterdir() if p.is_dir())
-        self.assertEqual(len(fixture_dirs), 9, "Expected exactly nine production fixtures")
+        self.assertEqual(len(fixture_dirs), 12, "Expected exactly twelve production fixtures")
 
         for directory in fixture_dirs:
             sidecar_file = directory / "fixture.toml"

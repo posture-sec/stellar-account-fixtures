@@ -1,0 +1,17 @@
+# Synthetic fixture testing null home domain defenses (issue #58)
+schema_version = 1
+id = "null-home-domain"
+kind = "synthetic"
+scenario = "synthetic: explicit null home domain to test parser null-handling defenses"
+account_id = "GAAACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB7JZX"
+network = "public"
+shape = [
+  "master_is_signer",
+  "no_data",
+  "no_home_domain",
+  "no_inflation",
+  "not_sponsored",
+  "not_sponsoring",
+  "single_signer",
+  "thresholds_zero",
+]

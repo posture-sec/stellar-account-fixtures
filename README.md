@@ -15,7 +15,7 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Network Conformance](corpus/network-conformance.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -31,11 +31,15 @@ fixtures/
   domain-and-inflation/    account.json  fixture.toml
   issuer-auth-required/    account.json  fixture.toml
   multisig-custody/        account.json  fixture.toml
+  null-home-domain/        account.json  fixture.toml
   sponsored-trustlines/    account.json  fixture.toml
+  ten-balances-boundary/   account.json  fixture.toml
   testnet-multisig/        account.json  fixture.toml
+  testnet-sponsored/       account.json  fixture.toml
   whitespace-home-domain/  account.json  fixture.toml
 corpus/
   data-entries.md
+  network-conformance.md
   provenance.md
   root-diff.md
   root-public.json
@@ -84,8 +88,8 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 <!-- METRICS:START -->
 | Indicator | Value | Source |
 |---|---|---|
-| Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **274 passing** | `python -m unittest` |
+| Verified Captures | **12 accounts** (10 Mainnet, 2 Test) | `fixtures/` |
+| Test Suite | **278 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -105,16 +109,20 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 | `domain-and-inflation` | home_domain lobstr.co with an inflation destination and two sponsorships, a well-formed SEP-1 candidate |
 | `issuer-auth-required` | an issuer account with auth_required set, two signers at weight 1 and 150 sponsored entries |
 | `multisig-custody` | two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain |
+| `null-home-domain` | synthetic: explicit null home domain to test parser null-handling defenses |
 | `sponsored-trustlines` | num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed |
+| `ten-balances-boundary` | exactly ten balances testing the many_balances boundary condition in consumer parsers |
 | `testnet-multisig` | six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator |
+| `testnet-sponsored` | testnet account with sponsored entries exercising sponsorship tracking on the testnet branch |
 | `whitespace-home-domain` | home_domain is a single space, which a tool that trims before validating reads as absent |
 <!-- ACCOUNTS:END -->
 
-Account ids are in each sidecar. Eight are mainnet (`network = "public"`) and one is testnet
-(`network = "testnet"`), and the root document for each network is the one the capture tool
-fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md). For signer structure
-comparisons, master key presence, and authority analysis across all nine accounts, see
-[Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
+Account ids are in each sidecar. Captures are divided across mainnet (`network = "public"`)
+and testnet (`network = "testnet"`), and the root document for each network is the one the capture tool
+fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md) and
+[Network Conformance Audit](corpus/network-conformance.md) for full static network segregation proofs.
+For signer structure comparisons, master key presence, and authority analysis across captured accounts,
+see [Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
 [Threshold Combinations Matrix](corpus/thresholds.md).
 
 ## Using it from another project
@@ -172,9 +180,14 @@ roadmap 2.5 asks for one flag per account rather than one issuer carrying all th
 read taken for this corpus: every account fetched while hunting these shapes, on both
 networks, carries at least its native balance, so 2.3 may end in a decision that the label
 stays uncovered rather than in a capture. `has_data`, `sponsored` and the first testnet
-capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6. None of the remaining six is
-quietly worked around with synthetic data: a synthetic fixture is allowed by the schema and
-none is shipped, so every number in this section describes a real read.
+capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6.
+
+### Synthetic fixtures
+
+While live captures are preferred whenever accounts can be located on chain, synthetic
+fixtures are supported under `SCHEMA.md` Section 3 to test parser defense boundaries:
+
+- `fixtures/null-home-domain`: provides an explicit JSON null home domain (`"home_domain": null`) to verify parser null defenses without requiring live Horizon infrastructure. All provenance keys are strictly omitted per schema rules.
 
 ## Checks
 

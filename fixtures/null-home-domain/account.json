@@ -1,0 +1,31 @@
+{
+  "account_id": "GAAACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB7JZX",
+  "balances": [
+    {
+      "asset_type": "native",
+      "balance": "100.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": null,
+  "num_sponsored": 0,
+  "num_sponsoring": 0,
+  "signers": [
+    {
+      "key": "GAAACAQDAQCQMBYIBEFAWDANBYHRAEISCMKBKFQXDAMRUGY4DUPB7JZX",
+      "type": "ed25519_public_key",
+      "weight": 1
+    }
+  ],
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

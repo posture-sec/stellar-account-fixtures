@@ -28,7 +28,7 @@ class ManifestTest(unittest.TestCase):
             [p for p in FIXTURES_DIR.iterdir() if p.is_dir() and (p / "fixture.toml").is_file()]
         )
         self.assertEqual(len(records), expected_count)
-        self.assertEqual(len(records), 9)
+        self.assertEqual(len(records), 12)
 
     def test_build_manifest_is_sorted_by_id(self) -> None:
         records = build_manifest()
@@ -54,7 +54,7 @@ class ManifestTest(unittest.TestCase):
             check=True,
         )
         lines = [line.strip() for line in res.stdout.splitlines() if line.strip()]
-        self.assertEqual(len(lines), 9)
+        self.assertEqual(len(lines), 12)
         for line in lines:
             parsed = json.loads(line)
             self.assertIsInstance(parsed, dict)
