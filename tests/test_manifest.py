@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Contract test for tools/manifest.py (issue #17, #18).
+"""Contract test for tools/manifest.py.
 
 Asserts that tools/manifest.py outputs reproducible JSON lines sorted by fixture id,
-with exact fields (id, account_id, network, ledger, sha256), and line count matching
-the fixture directory count.
+with exact fields (id, kind, account_id, network, ledger, sha256), line count matching
+the fixture directory count, and supports directory root overrides.
 """
 
 from __future__ import annotations
@@ -28,7 +28,6 @@ class ManifestTest(unittest.TestCase):
             [p for p in FIXTURES_DIR.iterdir() if p.is_dir() and (p / "fixture.toml").is_file()]
         )
         self.assertEqual(len(records), expected_count)
-        self.assertEqual(len(records), 9)
 
     def test_build_manifest_is_sorted_by_id(self) -> None:
         records = build_manifest()
@@ -39,12 +38,14 @@ class ManifestTest(unittest.TestCase):
         records = build_manifest()
         for r in records:
             self.assertIn("id", r)
+            self.assertIn("kind", r)
             self.assertIn("account_id", r)
             self.assertIn("network", r)
             self.assertIn("ledger", r)
             self.assertIn("sha256", r)
             self.assertTrue(str(r["account_id"]).startswith("G"))
-            self.assertEqual(len(str(r["sha256"])), 64)
+            if r["kind"] == "captured":
+                self.assertEqual(len(str(r["sha256"])), 64)
 
     def test_cli_execution_outputs_valid_json_lines(self) -> None:
         res = subprocess.run(
@@ -54,12 +55,29 @@ class ManifestTest(unittest.TestCase):
             check=True,
         )
         lines = [line.strip() for line in res.stdout.splitlines() if line.strip()]
-        self.assertEqual(len(lines), 9)
+        expected_count = len(
+            [p for p in FIXTURES_DIR.iterdir() if p.is_dir() and (p / "fixture.toml").is_file()]
+        )
+        self.assertEqual(len(lines), expected_count)
         for line in lines:
             parsed = json.loads(line)
             self.assertIsInstance(parsed, dict)
             self.assertIn("id", parsed)
+            self.assertIn("kind", parsed)
             self.assertIn("sha256", parsed)
+
+    def test_cli_execution_with_root_option(self) -> None:
+        res = subprocess.run(
+            [sys.executable, str(MANIFEST_SCRIPT), "--root", str(REPO_ROOT)],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        lines = [line.strip() for line in res.stdout.splitlines() if line.strip()]
+        expected_count = len(
+            [p for p in FIXTURES_DIR.iterdir() if p.is_dir() and (p / "fixture.toml").is_file()]
+        )
+        self.assertEqual(len(lines), expected_count)
 
     def test_zero_em_dashes(self) -> None:
         content = Path(__file__).read_text(encoding="utf-8")

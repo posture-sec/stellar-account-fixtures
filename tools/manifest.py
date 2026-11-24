@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Generate a JSON Lines manifest of corpus fixtures for external consumers (issue #17, #18).
+"""Generate a JSON Lines manifest of corpus fixtures for external consumers.
 
-Prints one JSON object per line with id, account_id, network, ledger and sha256, sorted by id,
-allowing consumer test suites (such as Gauge) to pin the corpus by cryptographic content rather
-than repository commit hash.
+Prints one JSON object per line with id, kind, account_id, network, ledger and sha256,
+sorted by id, allowing consumer test suites (such as Gauge and Airlock) to pin the
+corpus by cryptographic content rather than repository commit hash.
+
+Null semantics:
+    ledger:  null on synthetic fixtures (never read from a chain)
+    sha256:  null on synthetic fixtures when not computed
+`account_id` and `network` are required on both captured and synthetic fixtures.
 """
 
 from __future__ import annotations
@@ -19,6 +24,7 @@ FIXTURES_DIR = REPO_ROOT / "fixtures"
 
 
 def build_manifest(fixtures_dir: Path | None = None) -> list[dict[str, object]]:
+    """Build sorted manifest records from fixture directories."""
     target_dir = fixtures_dir or FIXTURES_DIR
     if not target_dir.is_dir():
         return []
@@ -28,14 +34,21 @@ def build_manifest(fixtures_dir: Path | None = None) -> list[dict[str, object]]:
         sidecar = fixture_dir / "fixture.toml"
         account_file = fixture_dir / "account.json"
         if fixture_dir.is_dir() and sidecar.is_file() and account_file.is_file():
-            with open(sidecar, "rb") as f:
-                data = tomllib.load(f)
+            try:
+                with open(sidecar, "rb") as f:
+                    data = tomllib.load(f)
+            except Exception:
+                continue
+
+            ledger_val = data.get("ledger")
+            sha_val = data.get("sha256")
             record: dict[str, object] = {
                 "id": str(data.get("id", fixture_dir.name)),
+                "kind": str(data.get("kind", "captured")),
                 "account_id": str(data.get("account_id", "")),
                 "network": str(data.get("network", "")),
-                "ledger": data.get("ledger"),
-                "sha256": str(data.get("sha256", "")),
+                "ledger": int(ledger_val) if isinstance(ledger_val, int) else None,
+                "sha256": str(sha_val) if sha_val is not None else None,
             }
             records.append(record)
 
@@ -43,11 +56,27 @@ def build_manifest(fixtures_dir: Path | None = None) -> list[dict[str, object]]:
     return records
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.parse_args()
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=None,
+        help="Root repository directory or fixtures directory to generate manifest from",
+    )
+    args = parser.parse_args(argv)
 
-    records = build_manifest()
+    fixtures_dir: Path | None = None
+    if args.root:
+        if (args.root / "fixtures").is_dir():
+            fixtures_dir = args.root / "fixtures"
+        elif args.root.is_dir():
+            fixtures_dir = args.root
+        else:
+            print(f"manifest: {args.root} is not a valid directory", file=sys.stderr)
+            return 2
+
+    records = build_manifest(fixtures_dir)
     for record in records:
         print(json.dumps(record, sort_keys=True))
     return 0

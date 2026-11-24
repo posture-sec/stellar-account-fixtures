@@ -85,7 +85,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **285 passing** | `python -m unittest` |
+| Test Suite | **288 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -130,11 +130,15 @@ account = json.loads(fixture.read_text())
 ```
 
 Consumers can pin fixtures by content instead of repository commit using `tools/manifest.py`.
-The tool prints one JSON line per fixture with its `id`, `account_id`, `network`, `ledger`, and `sha256`:
+The tool prints one JSON line per fixture with its `id`, `kind`, `account_id`, `network`, `ledger`, and `sha256`:
 
 ```bash
 python3 tools/manifest.py
+python3 tools/manifest.py --root /path/to/corpus
 ```
+
+`ledger` and `sha256` are null on synthetic fixtures (which were never read from a ledger),
+and the output is deterministic and sorted by id without timestamps so the manifest itself can be pinned.
 
 `shape` in the sidecar is the label set to select by. The ids are part of the contract and
 do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies.
