@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "unnormalized-home-domain"
+kind = "captured"
+scenario = "home_domain carries uppercase characters StellarHQ.io to test SEP-1 case-folding discovery in consumers"
+account_id = "GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC"
+captured_at = "2026-11-24T06:52:56Z"
+ledger = 56040206
+horizon_version = "30.0.1-6f7cff3903be1df4fb980a12910a1313c5d7d8dd"
+sha256 = "6dcf9aadbdf36c9f0fa4b19fbda678e41163100bc5b33752b8ae0d1360523e37"
+shape = ["has_home_domain", "master_is_signer", "no_data", "no_inflation", "not_sponsored", "not_sponsoring", "single_signer", "thresholds_zero"]

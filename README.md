@@ -15,7 +15,7 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Ledger Ages](corpus/ledger-ages.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -25,17 +25,20 @@ verbatim, each with the provenance that lets you check the claim.
 
 ```
 fixtures/
-  asset-heavy-exchange/    account.json  fixture.toml
-  coordinator-data-entry/  account.json  fixture.toml
-  default-plain/           account.json  fixture.toml
-  domain-and-inflation/    account.json  fixture.toml
-  issuer-auth-required/    account.json  fixture.toml
-  multisig-custody/        account.json  fixture.toml
-  sponsored-trustlines/    account.json  fixture.toml
-  testnet-multisig/        account.json  fixture.toml
-  whitespace-home-domain/  account.json  fixture.toml
+  asset-heavy-exchange/     account.json  fixture.toml
+  coordinator-data-entry/   account.json  fixture.toml
+  default-plain/            account.json  fixture.toml
+  domain-and-inflation/     account.json  fixture.toml
+  issuer-auth-required/     account.json  fixture.toml
+  multisig-custody/         account.json  fixture.toml
+  sponsored-trustlines/     account.json  fixture.toml
+  testnet-multisig/         account.json  fixture.toml
+  testnet-plain/            account.json  fixture.toml
+  unnormalized-home-domain/ account.json  fixture.toml
+  whitespace-home-domain/   account.json  fixture.toml
 corpus/
   data-entries.md
+  ledger-ages.md
   provenance.md
   root-diff.md
   root-public.json
@@ -84,8 +87,8 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 <!-- METRICS:START -->
 | Indicator | Value | Source |
 |---|---|---|
-| Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **274 passing** | `python -m unittest` |
+| Verified Captures | **11 accounts** (9 Mainnet, 2 Test) | `fixtures/` |
+| Test Suite | **284 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -107,14 +110,17 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 | `multisig-custody` | two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain |
 | `sponsored-trustlines` | num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed |
 | `testnet-multisig` | six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator |
+| `testnet-plain` | plain single-signer testnet baseline with native balance and default zero thresholds next to testnet-multisig |
+| `unnormalized-home-domain` | home_domain carries uppercase characters StellarHQ.io to test SEP-1 case-folding discovery in consumers |
 | `whitespace-home-domain` | home_domain is a single space, which a tool that trims before validating reads as absent |
 <!-- ACCOUNTS:END -->
 
-Account ids are in each sidecar. Eight are mainnet (`network = "public"`) and one is testnet
-(`network = "testnet"`), and the root document for each network is the one the capture tool
-fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md). For signer structure
-comparisons, master key presence, and authority analysis across all nine accounts, see
-[Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
+Account ids are in each sidecar. Captures are divided across mainnet (`network = "public"`)
+and testnet (`network = "testnet"`), and the root document for each network is the one the capture tool
+fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md) and
+[Ledger Age Analysis](corpus/ledger-ages.md) for specimen freshness relative to root heads.
+For signer structure comparisons, master key presence, and authority analysis across captured accounts,
+see [Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
 [Threshold Combinations Matrix](corpus/thresholds.md).
 
 ## Using it from another project

@@ -16,7 +16,7 @@ sys.path.insert(0, str(REPO_ROOT))
 import validate  # noqa: E402
 
 FIXTURES_DIR = REPO_ROOT / "fixtures"
-EXPECTED_FIXTURE_COUNT = 9
+EXPECTED_FIXTURE_COUNT = 11
 
 
 def shipped_fixtures() -> list[Path]:
