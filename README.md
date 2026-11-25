@@ -37,6 +37,7 @@ fixtures/
   unnormalized-home-domain/ account.json  fixture.toml
   whitespace-home-domain/   account.json  fixture.toml
 corpus/
+  capture-log.md
   data-entries.md
   ledger-ages.md
   provenance.md
@@ -71,12 +72,15 @@ fixtures/whitespace-home-domain: blank_home_domain, has_inflation, master_is_sig
 validate: corpus agrees with itself
 ```
 
-That block is the output of the command above, run in this checkout on 2026-11-03. If a
-fixture changes, the block is stale and the command is not: regenerate rather than trust it.
+This block illustrates baseline shapes across the nine baseline specimens. Run
+`python3 validate.py --report` for the current report.
+
 A static cross-reference matrix across all nine fixtures and all 24 labels is documented in
 [Shape Label Matrix](corpus/shape-matrix.md). Consolidated account digests, ledger heights, and
-Horizon versions are tabulated in [Corpus Provenance](corpus/provenance.md). Specific multi-signature
-threshold triples (low, medium, high) are detailed in [Threshold Combinations Matrix](corpus/thresholds.md).
+Horizon versions are tabulated in [Corpus Provenance](corpus/provenance.md), and capture timestamps
+and ledger order are listed in the [Chronological Capture Log](corpus/capture-log.md). Specific
+multi-signature threshold triples (low, medium, high) are detailed in
+[Threshold Combinations Matrix](corpus/thresholds.md).
 
 This corpus says nothing about whether an account is well configured. No expectations, no
 severities, no rule ids: that is Gauge's job. Nothing here holds a secret key, and a
@@ -88,7 +92,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **14 accounts** (11 Mainnet, 3 Test) | `fixtures/` |
-| Test Suite | **288 passing** | `python -m unittest` |
+| Test Suite | **296 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -147,6 +151,7 @@ python3 tools/manifest.py
 
 `shape` in the sidecar is the label set to select by. The ids are part of the contract and
 do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies.
+For question-driven specimen selection, see [Choosing a Fixture](corpus/choosing-a-fixture.md).
 
 ## Adding a fixture
 
@@ -154,14 +159,22 @@ Only `G...` account ids, only through the tool, and never by hand:
 
 ```
 python3 tools/capture.py --network public --account G... \
-  --id my-new-shape --scenario "one sentence on why this shape is missing"
+  --id my-new-shape --scenario "one sentence on why this shape is missing" --root .
 python3 validate.py
 ```
 
 The tool refuses a `G`-shaped address whose checksum does not verify, refuses an endpoint
 whose `network_passphrase` is not the one that network should have, refuses a response
 that describes a different account, and refuses to write anything containing a
-seed-shaped string. Existing fixtures are not overwritten without `--update`.
+seed-shaped string. `--root` selects the checkout to write into and defaults to the current
+directory. Existing fixtures are not overwritten without `--update`; add it only when
+intentionally replacing a capture:
+
+```
+python3 tools/capture.py --network public --account G... \
+  --id existing-shape --scenario "why this account is being re-captured" \
+  --root /path/to/checkout --update
+```
 `CONTRIBUTING.md` has the rules for a pull request.
 
 ## Coverage gaps, stated
