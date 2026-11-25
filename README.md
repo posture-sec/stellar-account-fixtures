@@ -15,7 +15,7 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
+[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Ledger Ages](corpus/ledger-ages.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -25,17 +25,21 @@ verbatim, each with the provenance that lets you check the claim.
 
 ```
 fixtures/
-  asset-heavy-exchange/    account.json  fixture.toml
-  coordinator-data-entry/  account.json  fixture.toml
-  default-plain/           account.json  fixture.toml
-  domain-and-inflation/    account.json  fixture.toml
-  issuer-auth-required/    account.json  fixture.toml
-  multisig-custody/        account.json  fixture.toml
-  sponsored-trustlines/    account.json  fixture.toml
-  testnet-multisig/        account.json  fixture.toml
-  whitespace-home-domain/  account.json  fixture.toml
+  asset-heavy-exchange/     account.json  fixture.toml
+  coordinator-data-entry/   account.json  fixture.toml
+  default-plain/            account.json  fixture.toml
+  domain-and-inflation/     account.json  fixture.toml
+  issuer-auth-required/     account.json  fixture.toml
+  multisig-custody/         account.json  fixture.toml
+  sponsored-trustlines/     account.json  fixture.toml
+  testnet-multisig/         account.json  fixture.toml
+  testnet-plain/            account.json  fixture.toml
+  unnormalized-home-domain/ account.json  fixture.toml
+  whitespace-home-domain/   account.json  fixture.toml
 corpus/
+  capture-log.md
   data-entries.md
+  ledger-ages.md
   provenance.md
   root-diff.md
   root-public.json
@@ -68,12 +72,15 @@ fixtures/whitespace-home-domain: blank_home_domain, has_inflation, master_is_sig
 validate: corpus agrees with itself
 ```
 
-That block is the output of the command above, run in this checkout on 2026-11-03. If a
-fixture changes, the block is stale and the command is not: regenerate rather than trust it.
+This block illustrates baseline shapes across the nine baseline specimens. Run
+`python3 validate.py --report` for the current report.
+
 A static cross-reference matrix across all nine fixtures and all 24 labels is documented in
-[Shape Label Matrix](corpus/shape-matrix.md). Consolidated account digests, ledger heights, and
-Horizon versions are tabulated in [Corpus Provenance](corpus/provenance.md). Specific multi-signature
-threshold triples (low, medium, high) are detailed in [Threshold Combinations Matrix](corpus/thresholds.md).
+[Shape Label Matrix](corpus/shape-matrix.md). The raw values and omitted-key case for
+`home_domain` are tabulated in [Home Domain Values](corpus/home-domains.md). Consolidated
+account digests, ledger heights, and Horizon versions are tabulated in [Corpus Provenance](corpus/provenance.md).
+Specific multi-signature threshold triples (low, medium, high) are detailed in
+[Threshold Combinations Matrix](corpus/thresholds.md).
 
 This corpus says nothing about whether an account is well configured. No expectations, no
 severities, no rule ids: that is Gauge's job. Nothing here holds a secret key, and a
@@ -84,8 +91,8 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 <!-- METRICS:START -->
 | Indicator | Value | Source |
 |---|---|---|
-| Verified Captures | **9 accounts** (8 Mainnet, 1 Test) | `fixtures/` |
-| Test Suite | **291 passing** | `python -m unittest` |
+| Verified Captures | **14 accounts** (11 Mainnet, 3 Test) | `fixtures/` |
+| Test Suite | **359 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -105,16 +112,22 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 | `domain-and-inflation` | home_domain lobstr.co with an inflation destination and two sponsorships, a well-formed SEP-1 candidate |
 | `issuer-auth-required` | an issuer account with auth_required set, two signers at weight 1 and 150 sponsored entries |
 | `multisig-custody` | two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain |
+| `null-home-domain` | synthetic: explicit null home domain to test parser null-handling defenses |
 | `sponsored-trustlines` | num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed |
+| `ten-balances-boundary` | exactly ten balances testing the many_balances boundary condition in consumer parsers |
 | `testnet-multisig` | six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator |
+| `testnet-plain` | plain single-signer testnet baseline with native balance and default zero thresholds next to testnet-multisig |
+| `testnet-sponsored` | testnet account with sponsored entries exercising sponsorship tracking on the testnet branch |
+| `unnormalized-home-domain` | home_domain carries uppercase characters StellarHQ.io to test SEP-1 case-folding discovery in consumers |
 | `whitespace-home-domain` | home_domain is a single space, which a tool that trims before validating reads as absent |
 <!-- ACCOUNTS:END -->
 
-Account ids are in each sidecar. Eight are mainnet (`network = "public"`) and one is testnet
-(`network = "testnet"`), and the root document for each network is the one the capture tool
-fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md). For signer structure
-comparisons, master key presence, and authority analysis across all nine accounts, see
-[Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
+Account ids are in each sidecar. Captures are divided across mainnet (`network = "public"`)
+and testnet (`network = "testnet"`), and the root document for each network is the one the capture tool
+fetched while writing it; see [Root Diff Analysis](corpus/root-diff.md) and
+[Ledger Age Analysis](corpus/ledger-ages.md) for specimen freshness relative to root heads.
+For signer structure comparisons, master key presence, and authority analysis across captured accounts,
+see [Signer Structures](corpus/signers.md); for numerical threshold breakdowns, see
 [Threshold Combinations Matrix](corpus/thresholds.md).
 
 ## Using it from another project
@@ -130,18 +143,15 @@ account = json.loads(fixture.read_text())
 ```
 
 Consumers can pin fixtures by content instead of repository commit using `tools/manifest.py`.
-The tool prints one JSON line per fixture with its `id`, `kind`, `account_id`, `network`, `ledger`, and `sha256`:
+The tool prints one JSON line per fixture with its `id`, `account_id`, `network`, `ledger`, and `sha256`:
 
 ```bash
 python3 tools/manifest.py
-python3 tools/manifest.py --root /path/to/corpus
 ```
-
-`ledger` and `sha256` are null on synthetic fixtures (which were never read from a ledger),
-and the output is deterministic and sorted by id without timestamps so the manifest itself can be pinned.
 
 `shape` in the sidecar is the label set to select by. The ids are part of the contract and
 do not get renamed; if a fixture has to be replaced, `SCHEMA.md` section 7 applies.
+For question-driven specimen selection, see [Choosing a Fixture](corpus/choosing-a-fixture.md).
 
 ## Adding a fixture
 
@@ -149,32 +159,40 @@ Only `G...` account ids, only through the tool, and never by hand:
 
 ```
 python3 tools/capture.py --network public --account G... \
-  --id my-new-shape --scenario "one sentence on why this shape is missing"
+  --id my-new-shape --scenario "one sentence on why this shape is missing" --root .
 python3 validate.py
 ```
 
 The tool refuses a `G`-shaped address whose checksum does not verify, refuses an endpoint
 whose `network_passphrase` is not the one that network should have, refuses a response
 that describes a different account, and refuses to write anything containing a
-seed-shaped string. Existing fixtures are not overwritten without `--update`.
+seed-shaped string. `--root` selects the checkout to write into and defaults to the current
+directory. Existing fixtures are not overwritten without `--update`; add it only when
+intentionally replacing a capture:
+
+```
+python3 tools/capture.py --network public --account G... \
+  --id existing-shape --scenario "why this account is being re-captured" \
+  --root /path/to/checkout --update
+```
 `CONTRIBUTING.md` has the rules for a pull request.
 
 ## Coverage gaps, stated
 
-24 shape labels exist in `SCHEMA.md` section 5; see [Shape Label Matrix](corpus/shape-matrix.md)
-for the complete 9x24 cross-reference grid. Eighteen have a fixture. These 6 do not:
+The uncovered labels are derived from the vocabulary in `SCHEMA.md` section 5 and the
+union of shape lists in on-disk fixture sidecars. Synthetic fixtures count as coverage too.
+See [Shape Label Matrix](corpus/shape-matrix.md) for the complete 9x24 cross-reference grid.
 
-- `master_absent`, `no_signers`
-- `auth_revocable`, `auth_immutable`, `auth_clawback_enabled`
+<!-- SHAPE-GAPS:START -->
+18 of 24 shape labels have a fixture. These 6 do not:
+
+- `auth_clawback_enabled`
+- `auth_immutable`
+- `auth_revocable`
+- `master_absent`
 - `no_balances`
-
-`master_absent` and `no_signers` stay uncovered because Horizon retains revoked master keys at weight 0 rather than omitting the signer object from account payloads, and synthetic generation is disallowed under D-01 (see [Signer Structures](corpus/signers.md) for how `master_is_signer` checks key presence rather than signing authority). The three remaining auth flags need issuer accounts, and roadmap 2.5 asks for one flag per account rather than one issuer carrying all three; `auth_required` has had a fixture since 2026-11-02, while live network sampling reveals issuers setting `auth_clawback_enabled` co-occur with `auth_revocable` rather than isolating clawback alone. `no_balances` has not appeared in any
-read taken for this corpus: every account fetched while hunting these shapes, on both
-networks, carries at least its native balance, so 2.3 may end in a decision that the label
-stays uncovered rather than in a capture. `has_data`, `sponsored` and the first testnet
-capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6. None of the remaining six is
-quietly worked around with synthetic data: a synthetic fixture is allowed by the schema and
-none is shipped, so every number in this section describes a real read.
+- `no_signers`
+<!-- SHAPE-GAPS:END -->
 
 ## Checks
 
@@ -214,9 +232,10 @@ sidecars and the tooling.
 
 Sibling projects: [Gauge](https://github.com/posture-sec/guage), which reads a real Stellar account
 and evaluates rules against it, and
-[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories. Both
-consume fixtures from this corpus pinned offline by SHA-256 digests via `tools/manifest.py`,
-fulfilling gate G5.
+[Airlock](https://github.com/posture-sec/airlock), which scans Stellar repositories. Both were the
+reason this corpus exists, and neither has been pointed at these fixtures yet: that is gate G5, and
+until a consumer names the two or more files it reads in its own test suite the sentence above
+describes intent rather than a run.
 
 The third sibling is the one this corpus points at rather than the other way round:
 [stellar-posture-watch](https://github.com/posture-sec/stellar-posture-watch) is a scheduled

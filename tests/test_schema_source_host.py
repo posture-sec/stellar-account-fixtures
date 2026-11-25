@@ -111,10 +111,13 @@ class SourceHostAlignment(unittest.TestCase):
 
     def test_shipped_fixtures_satisfy_the_invariant(self) -> None:
         fixtures = sorted(path for path in (REPO_ROOT / "fixtures").iterdir() if path.is_dir())
-        self.assertEqual(len(fixtures), 9)
+        self.assertEqual(len(fixtures), 14)
         for directory in fixtures:
             with self.subTest(fixture=directory.name):
                 data = tomllib.loads((directory / "fixture.toml").read_text(encoding="utf-8"))
+                if data.get("kind") == "synthetic":
+                    self.assertNotIn("source_url", data)
+                    continue
                 expected = self.expected(data["network"], data["account_id"])
                 self.assertEqual(data["source_url"], expected)
 
