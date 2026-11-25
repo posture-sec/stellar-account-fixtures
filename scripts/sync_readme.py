@@ -5,6 +5,7 @@ Inspects the repository test suites, fixtures corpus, and status, and writes:
 1. Dynamic Shields.io JSON endpoints under `site/data/badge-*.json`.
 2. Marked block between `<!-- METRICS:START -->` and `<!-- METRICS:END -->` in `README.md`.
 3. Marked block between `<!-- ACCOUNTS:START -->` and `<!-- ACCOUNTS:END -->` in `README.md`.
+4. Marked block between `<!-- SHAPE-GAPS:START -->` and `<!-- SHAPE-GAPS:END -->` in `README.md`.
 
 With `--check`, exits 1 if any target is stale without modifying files.
 """
@@ -20,6 +21,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 README_PATH = REPO_ROOT / "README.md"
+SCHEMA_PATH = REPO_ROOT / "SCHEMA.md"
 FIXTURES_DIR = REPO_ROOT / "fixtures"
 DATA_DIR = REPO_ROOT / "site" / "data"
 
@@ -27,6 +29,8 @@ METRICS_START = "<!-- METRICS:START -->"
 METRICS_END = "<!-- METRICS:END -->"
 ACCOUNTS_START = "<!-- ACCOUNTS:START -->"
 ACCOUNTS_END = "<!-- ACCOUNTS:END -->"
+SHAPE_GAPS_START = "<!-- SHAPE-GAPS:START -->"
+SHAPE_GAPS_END = "<!-- SHAPE-GAPS:END -->"
 
 
 def count_fixtures() -> int:
@@ -60,21 +64,17 @@ def count_networks() -> tuple[int, int]:
 
 def count_tests() -> int:
     sys.path.insert(0, str(REPO_ROOT))
-    try:
-        import test_validate
+    import test_validate
 
-        suite1 = unittest.defaultTestLoader.loadTestsFromModule(test_validate)
-        count1 = suite1.countTestCases()
-    except Exception:
-        count1 = 97
+    suite1 = unittest.defaultTestLoader.loadTestsFromModule(test_validate)
+    count1 = suite1.countTestCases()
 
-    try:
-        suite2 = unittest.defaultTestLoader.discover(str(REPO_ROOT / "tests"), pattern="test_*.py")
-        count2 = suite2.countTestCases()
-    except Exception:
-        count2 = 29
+    loader = unittest.TestLoader()
+    suite2 = loader.discover(str(REPO_ROOT / "tests"), pattern="test_*.py")
+    if loader.errors:
+        raise RuntimeError("test discovery failed:\n" + "\n".join(map(str, loader.errors)))
 
-    return count1 + count2
+    return count1 + suite2.countTestCases()
 
 
 def generate_metrics_table(
@@ -124,6 +124,60 @@ def generate_accounts_table() -> str:
     for f_id, sc in rows:
         lines.append(f"| `{f_id}` | {sc} |")
     lines.append(ACCOUNTS_END)
+    return "\n".join(lines)
+
+
+def schema_shape_labels() -> set[str]:
+    """Read the shape-label vocabulary from Section 5 of SCHEMA.md."""
+    schema = SCHEMA_PATH.read_text(encoding="utf-8")
+    lines = schema.splitlines()
+    try:
+        start = lines.index("## 5. The shape vocabulary") + 1
+    except ValueError as exc:
+        raise ValueError("SCHEMA.md has no Section 5 shape vocabulary") from exc
+
+    labels: set[str] = set()
+    for line in lines[start:]:
+        if line.startswith("## "):
+            break
+        if line.startswith("| `"):
+            labels.add(line.split("`", 2)[1])
+    if not labels:
+        raise ValueError("SCHEMA.md Section 5 contains no shape labels")
+    return labels
+
+
+def fixture_shape_labels() -> set[str]:
+    """Return the union of shape labels declared by on-disk fixture sidecars."""
+    labels: set[str] = set()
+    if not FIXTURES_DIR.is_dir():
+        return labels
+    for sidecar in FIXTURES_DIR.glob("*/fixture.toml"):
+        with sidecar.open("rb") as f:
+            data = tomllib.load(f)
+        shapes = data.get("shape")
+        if not isinstance(shapes, list) or not all(isinstance(shape, str) for shape in shapes):
+            raise ValueError(f"{sidecar} must contain a list of string shape labels")
+        labels.update(shapes)
+    return labels
+
+
+def generate_shape_gaps_block() -> str:
+    """Render shape-label coverage from the schema vocabulary and fixture sidecars."""
+    vocabulary = schema_shape_labels()
+    uncovered = sorted(vocabulary - fixture_shape_labels())
+    covered_count = len(vocabulary) - len(uncovered)
+    lines = [SHAPE_GAPS_START]
+    if uncovered:
+        lines.append(
+            f"{covered_count} of {len(vocabulary)} shape labels have a fixture. "
+            f"These {len(uncovered)} do not:"
+        )
+        lines.append("")
+        lines.extend(f"- `{label}`" for label in uncovered)
+    else:
+        lines.append(f"All {len(vocabulary)} shape labels have a fixture.")
+    lines.append(SHAPE_GAPS_END)
     return "\n".join(lines)
 
 
@@ -184,6 +238,17 @@ def sync(*, check: bool = False) -> bool:
             new_accounts = generate_accounts_table()
             updated = f"{before}{new_accounts}{after}"
 
+        if updated.count(SHAPE_GAPS_START) != 1 or updated.count(SHAPE_GAPS_END) != 1:
+            print(
+                f"sync_readme: README.md must contain exactly one "
+                f"{SHAPE_GAPS_START} ... {SHAPE_GAPS_END} block.",
+                file=sys.stderr,
+            )
+            return False
+        before, rest = updated.split(SHAPE_GAPS_START, 1)
+        _, after = rest.split(SHAPE_GAPS_END, 1)
+        updated = f"{before}{generate_shape_gaps_block()}{after}"
+
         if updated != content:
             stale = True
             if not check:
@@ -191,7 +256,7 @@ def sync(*, check: bool = False) -> bool:
 
     if check and stale:
         print(
-            "sync_readme: README metrics, accounts table, or badge data are stale. "
+            "sync_readme: README metrics, accounts table, shape gap list, or badge data are stale. "
             "Run: python3 scripts/sync_readme.py",
             file=sys.stderr,
         )

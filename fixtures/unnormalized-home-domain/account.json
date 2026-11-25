@@ -1,0 +1,72 @@
+{
+  "_links": {
+    "data": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/data/{key}",
+      "templated": true
+    },
+    "effects": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/effects{?cursor,limit,order}",
+      "templated": true
+    },
+    "offers": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/offers{?cursor,limit,order}",
+      "templated": true
+    },
+    "operations": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/operations{?cursor,limit,order}",
+      "templated": true
+    },
+    "payments": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/payments{?cursor,limit,order}",
+      "templated": true
+    },
+    "self": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC"
+    },
+    "trades": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/trades{?cursor,limit,order}",
+      "templated": true
+    },
+    "transactions": {
+      "href": "https://horizon.stellar.org/accounts/GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC/transactions{?cursor,limit,order}",
+      "templated": true
+    }
+  },
+  "account_id": "GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC",
+  "balances": [
+    {
+      "asset_type": "native",
+      "balance": "1.9988601",
+      "buying_liabilities": "0.0000000",
+      "selling_liabilities": "0.0000000"
+    }
+  ],
+  "data": {},
+  "flags": {
+    "auth_clawback_enabled": false,
+    "auth_immutable": false,
+    "auth_required": false,
+    "auth_revocable": false
+  },
+  "home_domain": "StellarHQ.io",
+  "id": "GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC",
+  "last_modified_ledger": 56040206,
+  "last_modified_time": null,
+  "num_sponsored": 0,
+  "num_sponsoring": 0,
+  "paging_token": "GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC",
+  "sequence": "166128849677975555",
+  "signers": [
+    {
+      "key": "GAV2ZAQUTCTKYQVFM75A4MNR2Z4SMKE6P65WNS46QYEHS3UUCVF6JODC",
+      "type": "ed25519_public_key",
+      "weight": 1
+    }
+  ],
+  "subentry_count": 0,
+  "thresholds": {
+    "high_threshold": 0,
+    "low_threshold": 0,
+    "med_threshold": 0
+  }
+}

@@ -11,6 +11,8 @@ name: roadmap-check
 
 on:
   pull_request:
+  push:
+    branches: [main]
 
 permissions:
   contents: read

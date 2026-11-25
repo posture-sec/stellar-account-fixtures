@@ -19,6 +19,7 @@ import hashlib
 import http.server
 import json
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -974,6 +975,30 @@ class SidecarFormat(unittest.TestCase):
             shape=["thresholds_zero", "no_data"],
         )
         self.assertIn('shape = ["no_data", "thresholds_zero"]\n', written)
+
+
+class ManifestCorpusAssertionTest(unittest.TestCase):
+    """The manifest is a consumer's pin, so it is driven over the real tree."""
+
+    def test_one_line_per_fixture(self) -> None:
+        cmd = [sys.executable, str(ROOT / "tools" / "manifest.py")]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        lines = [line.strip() for line in res.stdout.splitlines() if line.strip()]
+        fixtures = [
+            p
+            for p in (ROOT / "fixtures").iterdir()
+            if p.is_dir() and (p / "fixture.toml").is_file()
+        ]
+        self.assertEqual(len(lines), len(fixtures))
+
+    def test_the_order_is_the_fixture_order_and_reproducible(self) -> None:
+        cmd = [sys.executable, str(ROOT / "tools" / "manifest.py")]
+        first = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
+        second = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
+        self.assertEqual(first, second)
+        records = [json.loads(line) for line in first.splitlines() if line.strip()]
+        ids = [r["id"] for r in records]
+        self.assertEqual(ids, sorted(ids))
 
 
 if __name__ == "__main__":

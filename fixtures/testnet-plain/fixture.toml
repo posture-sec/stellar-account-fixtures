@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "testnet-plain"
+kind = "captured"
+scenario = "plain single-signer testnet baseline with native balance and default zero thresholds next to testnet-multisig"
+account_id = "GADXTFPD7JFAQ2Q3C5MNDPFB75G6EZ6DLVJSFQOHNYFKEXZWB675HSS4"
+network = "testnet"
+source_url = "https://horizon-testnet.stellar.org/accounts/GADXTFPD7JFAQ2Q3C5MNDPFB75G6EZ6DLVJSFQOHNYFKEXZWB675HSS4"
+captured_at = "2026-11-24T06:52:58Z"
+ledger = 5895891
+horizon_version = "30.0.1-6f7cff3903be1df4fb980a12910a1313c5d7d8dd"
+sha256 = "8971468509c6586f5dadf128087ddd4bec86f3e128f945817cf1382cf39f5aed"
+shape = ["master_is_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsored", "not_sponsoring", "single_signer", "thresholds_zero"]

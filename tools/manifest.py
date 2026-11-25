@@ -9,6 +9,7 @@ than repository commit hash.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import tomllib
@@ -30,12 +31,15 @@ def build_manifest(fixtures_dir: Path | None = None) -> list[dict[str, object]]:
         if fixture_dir.is_dir() and sidecar.is_file() and account_file.is_file():
             with open(sidecar, "rb") as f:
                 data = tomllib.load(f)
+            digest = str(data.get("sha256", ""))
+            if not digest and account_file.is_file():
+                digest = hashlib.sha256(account_file.read_bytes()).hexdigest()
             record: dict[str, object] = {
                 "id": str(data.get("id", fixture_dir.name)),
                 "account_id": str(data.get("account_id", "")),
                 "network": str(data.get("network", "")),
                 "ledger": data.get("ledger"),
-                "sha256": str(data.get("sha256", "")),
+                "sha256": digest,
             }
             records.append(record)
 
