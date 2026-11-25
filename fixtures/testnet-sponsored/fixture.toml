@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "testnet-sponsored"
+kind = "captured"
+scenario = "testnet account with sponsored entries exercising sponsorship tracking on the testnet branch"
+account_id = "GBORJ5OEACW7Z22O46ZFNZRZC5IL36HYV7GF7DHGLJ3BE3MVWYV57YAQ"
+network = "testnet"
+source_url = "https://horizon-testnet.stellar.org/accounts/GBORJ5OEACW7Z22O46ZFNZRZC5IL36HYV7GF7DHGLJ3BE3MVWYV57YAQ"
+captured_at = "2026-11-23T14:57:48Z"
+ledger = 5884375
+horizon_version = "30.0.1-6f7cff3903be1df4fb980a12910a1313c5d7d8dd"
+sha256 = "a410d5ccd20b18d9ba9b21e5abcf3ddee852a27ba5f25c69f2c95f848cd8ca9c"
+shape = ["master_is_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsoring", "single_signer", "sponsored", "thresholds_zero"]

@@ -1,0 +1,13 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+schema_version = 1
+id = "ten-balances-boundary"
+kind = "captured"
+scenario = "exactly ten balances testing the many_balances boundary condition in consumer parsers"
+account_id = "GA6H7KUNUTSKIE2RYMGLOOEKJMKIS7UTR2T6LIKSIUMNMJXOKXYGX5SQ"
+network = "public"
+source_url = "https://horizon.stellar.org/accounts/GA6H7KUNUTSKIE2RYMGLOOEKJMKIS7UTR2T6LIKSIUMNMJXOKXYGX5SQ"
+captured_at = "2026-11-23T14:57:42Z"
+ledger = 65631935
+horizon_version = "30.0.1-6f7cff3903be1df4fb980a12910a1313c5d7d8dd"
+sha256 = "50d4c7c1d3cf7186bd9c35a51dcf3b06de135c3f09f0276f5811d259576cb005"
+shape = ["many_balances", "master_is_signer", "no_data", "no_home_domain", "no_inflation", "not_sponsored", "not_sponsoring", "single_signer", "thresholds_zero"]

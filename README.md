@@ -87,8 +87,8 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 <!-- METRICS:START -->
 | Indicator | Value | Source |
 |---|---|---|
-| Verified Captures | **11 accounts** (9 Mainnet, 2 Test) | `fixtures/` |
-| Test Suite | **284 passing** | `python -m unittest` |
+| Verified Captures | **14 accounts** (11 Mainnet, 3 Test) | `fixtures/` |
+| Test Suite | **288 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
@@ -108,9 +108,12 @@ A cryptographic specimen vault and ledger matrix is published at **[https://post
 | `domain-and-inflation` | home_domain lobstr.co with an inflation destination and two sponsorships, a well-formed SEP-1 candidate |
 | `issuer-auth-required` | an issuer account with auth_required set, two signers at weight 1 and 150 sponsored entries |
 | `multisig-custody` | two signers, master weight 2 and nonzero thresholds, the shape a shared custody account leaves on chain |
+| `null-home-domain` | synthetic: explicit null home domain to test parser null-handling defenses |
 | `sponsored-trustlines` | num_sponsored 17 against num_sponsoring 0: seventeen balances and two signers, the account whose own entries are paid for by someone else, which no earlier capture showed |
+| `ten-balances-boundary` | exactly ten balances testing the many_balances boundary condition in consumer parsers |
 | `testnet-multisig` | six signers on testnet, master weight 0 and all three thresholds at 3, the first capture that runs the testnet branch of the validator |
 | `testnet-plain` | plain single-signer testnet baseline with native balance and default zero thresholds next to testnet-multisig |
+| `testnet-sponsored` | testnet account with sponsored entries exercising sponsorship tracking on the testnet branch |
 | `unnormalized-home-domain` | home_domain carries uppercase characters StellarHQ.io to test SEP-1 case-folding discovery in consumers |
 | `whitespace-home-domain` | home_domain is a single space, which a tool that trims before validating reads as absent |
 <!-- ACCOUNTS:END -->
@@ -178,9 +181,14 @@ roadmap 2.5 asks for one flag per account rather than one issuer carrying all th
 read taken for this corpus: every account fetched while hunting these shapes, on both
 networks, carries at least its native balance, so 2.3 may end in a decision that the label
 stays uncovered rather than in a capture. `has_data`, `sponsored` and the first testnet
-capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6. None of the remaining six is
-quietly worked around with synthetic data: a synthetic fixture is allowed by the schema and
-none is shipped, so every number in this section describes a real read.
+capture arrived on 2026-11-03 as roadmap 2.1, 2.2 and 2.6.
+
+### Synthetic fixtures
+
+While live captures are preferred whenever accounts can be located on chain, synthetic
+fixtures are supported under `SCHEMA.md` Section 3 to test parser defense boundaries:
+
+- `fixtures/null-home-domain`: provides an explicit JSON null home domain (`"home_domain": null`) to verify parser null defenses without requiring live Horizon infrastructure. All provenance keys are strictly omitted per schema rules.
 
 ## Checks
 
