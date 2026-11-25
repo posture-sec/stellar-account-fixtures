@@ -139,6 +139,7 @@ class FuzzMalformedCorpusFiles(unittest.TestCase):
         shutil.copytree(REPO_ROOT / "fixtures" / FIXTURE_ID, self.root / "fixtures" / FIXTURE_ID)
         (self.root / "corpus").mkdir()
         shutil.copy(REPO_ROOT / "corpus" / "root-public.json", self.root / "corpus")
+        shutil.copy(REPO_ROOT / "corpus" / "root-public.toml", self.root / "corpus")
         self.directory = self.root / "fixtures" / FIXTURE_ID
         self.originals = {name: (self.directory / name).read_bytes() for name in FILES}
 

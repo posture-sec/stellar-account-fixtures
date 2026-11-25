@@ -6,7 +6,7 @@ nothing is invented: the bytes Horizon returns are written verbatim and the
 sidecar records where they came from.
 
 Exit codes: 0 wrote a fixture, 2 refused (bad input, unknown key, seed-shaped
-string, network mismatch), 1 the fetch failed.
+string, network mismatch, older ledger), 1 the fetch failed.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ import json
 import re
 import sys
 import time
+import tomllib
 import urllib.error
 import urllib.request
 from datetime import UTC, datetime
@@ -153,6 +154,31 @@ def sidecar(
     )
 
 
+def root_sidecar(*, url: str, captured: str, digest: str) -> str:
+    """Provenance for one captured root document, in the flat style of fixture.toml."""
+    return (
+        "# Written by tools/capture.py. Edit the capture, not this file.\n"
+        f'url = "{toml_escape(url)}"\n'
+        f'captured_at = "{captured}"\n'
+        f'sha256 = "{digest}"\n'
+    )
+
+
+def existing_ledger(directory: Path) -> int:
+    """The ledger recorded by a fixture that --update is about to replace."""
+    manifest = directory / "fixture.toml"
+    if not manifest.is_file():
+        raise Refused(f"{manifest} is missing; cannot check that an update is newer")
+    try:
+        data = tomllib.loads(manifest.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise Refused(f"cannot read the ledger in {manifest}: {exc}") from exc
+    ledger = data.get("ledger")
+    if not isinstance(ledger, int) or isinstance(ledger, bool):
+        raise Refused(f"cannot read the ledger in {manifest}: {ledger!r} is not an integer")
+    return ledger
+
+
 def capture(
     fixture_id: str, account_id: str, scenario: str, network: str, root: Path, update: bool
 ) -> Path:
@@ -174,8 +200,11 @@ def capture(
     if network not in ENDPOINTS:
         raise Refused(f"unknown network {network!r}; expected one of {sorted(ENDPOINTS)}")
     directory = root / "fixtures" / fixture_id
-    if directory.exists() and not update:
-        raise Refused(f"{directory} already exists; pass --update to replace it")
+    previous_ledger: int | None = None
+    if directory.exists():
+        if not update:
+            raise Refused(f"{directory} already exists; pass --update to replace it")
+        previous_ledger = existing_ledger(directory)
     endpoint = ENDPOINTS[network]
     core = verify_network(endpoint, PASSPHRASES[network])
 
@@ -193,14 +222,20 @@ def capture(
         raise Refused(
             f"response describes {payload.get('account_id')!r}, not the requested {account_id!r}"
         )
+    ledger = int(payload.get("last_modified_ledger") or 0)
+    if previous_ledger is not None and ledger < previous_ledger:
+        raise Refused(
+            f"refusing to replace fixture ledger {previous_ledger} with older ledger {ledger}"
+        )
 
     directory.mkdir(parents=True, exist_ok=True)
 
     pretty = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-    digest = hashlib.sha256(pretty.encode()).hexdigest()
-    (directory / "account.json").write_text(pretty, encoding="utf-8")
+    account_bytes = pretty.encode("utf-8")
+    digest = hashlib.sha256(account_bytes).hexdigest()
+    (directory / "account.json").write_bytes(account_bytes)
     captured = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    (directory / "fixture.toml").write_text(
+    (directory / "fixture.toml").write_bytes(
         sidecar(
             fixture_id=fixture_id,
             account_id=account_id,
@@ -208,20 +243,26 @@ def capture(
             scenario=scenario,
             source=source,
             digest=digest,
-            ledger=int(payload.get("last_modified_ledger") or 0),
+            ledger=ledger,
             captured=captured,
             core=core,
             shape=sorted(shapes_of(payload)),
-        ),
-        encoding="utf-8",
+        ).encode("utf-8")
     )
 
     corpus_file = root / "corpus" / f"root-{network}.json"
     corpus_file.parent.mkdir(parents=True, exist_ok=True)
     root_body = fetch(endpoint + "/", ROOT_CAP)
-    corpus_file.write_text(
-        json.dumps(json.loads(root_body), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    root_bytes = (json.dumps(json.loads(root_body), indent=2, sort_keys=True) + "\n").encode(
+        "utf-8"
     )
+    corpus_file.write_bytes(root_bytes)
+    companion = root_sidecar(
+        url=endpoint + "/",
+        captured=captured,
+        digest=hashlib.sha256(root_bytes).hexdigest(),
+    )
+    corpus_file.with_suffix(".toml").write_bytes(companion.encode("utf-8"))
     return directory
 
 

@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-25 08:55 UTC
+Last updated: 2026-11-25 09:18 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well

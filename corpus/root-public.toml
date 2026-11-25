@@ -1,0 +1,4 @@
+# Written by tools/capture.py. Edit the capture, not this file.
+url = "https://horizon.stellar.org/"
+captured_at = "2026-11-03T09:57:18Z"
+sha256 = "fb61eab995560d93a45e57c8ccb2aee0c83947388257c61ba99039e467934e1b"

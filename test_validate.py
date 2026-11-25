@@ -147,6 +147,15 @@ def root_document(**overrides) -> dict:
     return document
 
 
+def root_sidecar_text(url: str, body: bytes) -> str:
+    return (
+        "# Specimen root sidecar.\n"
+        f'url = "{url}"\n'
+        f'captured_at = "{CAPTURED_AT}"\n'
+        f'sha256 = "{hashlib.sha256(body).hexdigest()}"\n'
+    )
+
+
 class Fixture:
     """One fixture directory: the account bytes and the sidecar that describes them."""
 
@@ -217,8 +226,10 @@ class Scratch(unittest.TestCase):
         self.fixtures: dict[str, Fixture] = {}
         self.add_fixture("plain")
         (self.root / "corpus").mkdir()
-        (self.root / "corpus" / "root-public.json").write_text(
-            pretty(root_document()), encoding="utf-8"
+        root_body = pretty(root_document()).encode("utf-8")
+        (self.root / "corpus" / "root-public.json").write_bytes(root_body)
+        (self.root / "corpus" / "root-public.toml").write_text(
+            root_sidecar_text(ENDPOINT + "/", root_body), encoding="utf-8"
         )
 
     def add_fixture(self, name: str, **account_overrides) -> Fixture:
@@ -595,6 +606,21 @@ class RootDocument(Scratch):
     def test_a_root_document_that_is_not_an_object(self) -> None:
         self.root_path().write_text("[]\n", encoding="utf-8")
         self.assert_problem("corpus/root-public.json: not a JSON object")
+
+    def test_a_changed_root_document_is_caught_by_its_sidecar(self) -> None:
+        changed = pretty(root_document()).replace("22.2.1", "22.2.2")
+        self.root_path().write_text(changed, encoding="utf-8")
+        self.assert_problem("sha256 does not match root document")
+
+    def test_a_missing_root_sidecar_is_named(self) -> None:
+        (self.root / "corpus" / "root-public.toml").unlink()
+        self.assert_problem(validate.ROOT_SIDECAR_MISSING)
+
+    def test_a_root_sidecar_with_a_bad_digest_is_named(self) -> None:
+        path = self.root / "corpus" / "root-public.toml"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace("sha256 = ", "sha256 = x"), encoding="utf-8")
+        self.assert_problem("root sidecar is not valid TOML")
 
     def test_an_unknown_network_with_a_file_of_its_own_does_not_crash(self) -> None:
         """The network set is closed, so there is no passphrase to look up."""

@@ -10,6 +10,7 @@ streams rather than trusting the source to keep them apart.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -46,6 +47,20 @@ def run(*args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def write_root_public(corpus_dir: Path) -> None:
+    """Write the public root document and the sha256 sidecar validate.py requires."""
+    document = json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n"
+    path = corpus_dir / "root-public.json"
+    path.write_text(document, encoding="utf-8")
+    digest = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    (corpus_dir / "root-public.toml").write_text(
+        'url = "https://horizon.stellar.org/"\n'
+        'captured_at = "2026-11-25T00:00:00Z"\n'
+        f'sha256 = "{digest}"\n',
+        encoding="utf-8",
+    )
+
+
 class ValidateCliContractTest(unittest.TestCase):
     def setUp(self) -> None:
         self.stage = tempfile.TemporaryDirectory(prefix="cli-contract-test-")
@@ -79,10 +94,7 @@ class ValidateCliContractTest(unittest.TestCase):
             encoding="utf-8",
         )
         (self.root / "corpus").mkdir()
-        (self.root / "corpus" / "root-public.json").write_text(
-            json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n",
-            encoding="utf-8",
-        )
+        write_root_public(self.root / "corpus")
 
     def assert_no_traceback(self, result: subprocess.CompletedProcess[str]) -> None:
         for stream, text in (("stdout", result.stdout), ("stderr", result.stderr)):

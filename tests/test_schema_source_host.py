@@ -38,9 +38,15 @@ class SourceHostAlignment(unittest.TestCase):
         self.addCleanup(stage.cleanup)
         self.root = Path(stage.name)
         (self.root / "corpus").mkdir()
-        for network, (_, passphrase) in validate.NETWORKS.items():
-            (self.root / "corpus" / f"root-{network}.json").write_text(
-                json.dumps({"network_passphrase": passphrase}) + "\n", encoding="utf-8"
+        for network, (endpoint, passphrase) in validate.NETWORKS.items():
+            root_body = (json.dumps({"network_passphrase": passphrase}) + "\n").encode()
+            (self.root / "corpus" / f"root-{network}.json").write_bytes(root_body)
+            (self.root / "corpus" / f"root-{network}.toml").write_text(
+                "# Test root sidecar.\n"
+                f'url = "{endpoint}/"\n'
+                'captured_at = "2026-11-02T00:00:00Z"\n'
+                f'sha256 = "{hashlib.sha256(root_body).hexdigest()}"\n',
+                encoding="utf-8",
             )
         self.account: dict[str, object] = {"account_id": ACCOUNT}
         self.body = (json.dumps(self.account, indent=2, sort_keys=True) + "\n").encode()

@@ -11,6 +11,7 @@ rather than silently relying on it means a later change to that set is caught he
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import tempfile
@@ -51,6 +52,20 @@ def sidecar_text(account_id: str, shape: list[str]) -> str:
     )
 
 
+def write_root_public(corpus_dir: Path) -> None:
+    """Write the public root document and the sha256 sidecar validate.py requires."""
+    document = json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n"
+    path = corpus_dir / "root-public.json"
+    path.write_text(document, encoding="utf-8")
+    digest = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    (corpus_dir / "root-public.toml").write_text(
+        'url = "https://horizon.stellar.org/"\n'
+        'captured_at = "2026-11-25T00:00:00Z"\n'
+        f'sha256 = "{digest}"\n',
+        encoding="utf-8",
+    )
+
+
 class ValidateNestedDirectoryTest(unittest.TestCase):
     def setUp(self) -> None:
         self.stage = tempfile.TemporaryDirectory(prefix="nested-directory-test-")
@@ -75,10 +90,7 @@ class ValidateNestedDirectoryTest(unittest.TestCase):
             encoding="utf-8",
         )
         (self.root / "corpus").mkdir()
-        (self.root / "corpus" / "root-public.json").write_text(
-            json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n",
-            encoding="utf-8",
-        )
+        write_root_public(self.root / "corpus")
 
     def test_nested_directory_is_not_reported_as_an_unexpected_file(self) -> None:
         nested = self.fixture_dir / "backup" / "2026" / "older"

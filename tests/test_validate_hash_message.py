@@ -27,16 +27,27 @@ def make_account_id() -> str:
     return "".join(ALPHABET[(bits >> (5 * (55 - index))) & 0x1F] for index in range(56))
 
 
+def write_root_public(corpus_dir: Path) -> None:
+    """Write the public root document and the sha256 sidecar validate.py requires."""
+    document = json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n"
+    path = corpus_dir / "root-public.json"
+    path.write_text(document, encoding="utf-8")
+    digest = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    (corpus_dir / "root-public.toml").write_text(
+        'url = "https://horizon.stellar.org/"\n'
+        'captured_at = "2026-11-25T00:00:00Z"\n'
+        f'sha256 = "{digest}"\n',
+        encoding="utf-8",
+    )
+
+
 class ValidateHashMessageTest(unittest.TestCase):
     def setUp(self) -> None:
         self.stage = tempfile.TemporaryDirectory(prefix="hash-message-test-")
         self.addCleanup(self.stage.cleanup)
         self.root = Path(self.stage.name)
         (self.root / "corpus").mkdir()
-        (self.root / "corpus" / "root-public.json").write_text(
-            json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n",
-            encoding="utf-8",
-        )
+        write_root_public(self.root / "corpus")
         self.account_id = make_account_id()
         self.account: dict[str, object] = {
             "account_id": self.account_id,

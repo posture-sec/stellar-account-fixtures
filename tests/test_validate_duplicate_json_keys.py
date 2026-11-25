@@ -31,6 +31,20 @@ def valid_account_id() -> str:
     return "".join(ALPHABET[(bits >> (5 * (55 - index))) & 0x1F] for index in range(56))
 
 
+def write_root_public(corpus_dir: Path) -> None:
+    """Write the public root document and the sha256 sidecar validate.py requires."""
+    document = json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n"
+    path = corpus_dir / "root-public.json"
+    path.write_text(document, encoding="utf-8")
+    digest = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    (corpus_dir / "root-public.toml").write_text(
+        'url = "https://horizon.stellar.org/"\n'
+        'captured_at = "2026-11-25T00:00:00Z"\n'
+        f'sha256 = "{digest}"\n',
+        encoding="utf-8",
+    )
+
+
 class ValidateDuplicateJsonKeysTest(unittest.TestCase):
     def test_account_json_duplicate_keys_use_last_value_for_shape_derivation(self) -> None:
         account_id = valid_account_id()
@@ -50,10 +64,7 @@ class ValidateDuplicateJsonKeysTest(unittest.TestCase):
             fixture_dir = root / "fixtures" / "duplicate-home-domain"
             fixture_dir.mkdir(parents=True)
             (root / "corpus").mkdir()
-            (root / "corpus" / "root-public.json").write_text(
-                json.dumps({"network_passphrase": validate.NETWORKS["public"][1]}) + "\n",
-                encoding="utf-8",
-            )
+            write_root_public(root / "corpus")
 
             account_path = fixture_dir / "account.json"
             account_path.write_bytes(account_bytes)

@@ -12,6 +12,7 @@ fixtures/<fixture-id>/
   fixture.toml      the sidecar: what this is, where it came from, what shape it has
 corpus/
   root-<network>.json  the Horizon root document captured alongside the fixture
+  root-<network>.toml  provenance for that document: url, capture time, sha256
 tools/
   capture.py        writes a new captured fixture and its root document
 validate.py         checks the whole tree against this schema
@@ -34,8 +35,9 @@ that has been edited is a fixture whose provenance claim is a lie. LF line endin
 Consequences worth stating plainly:
 
 - Field names and shapes follow Horizon, so they can change when Horizon changes. A
-  `--update` re-capture is how a fixture is refreshed; the ledger number in the sidecar
-  is what tells you how old the bytes are.
+   `--update` re-capture is how a fixture is refreshed; the ledger number in the sidecar
+   is what tells you how old the bytes are, and an update that would move that ledger
+   backwards is refused.
 - The capture is a point-in-time read. An account that was multisig at ledger 65266865
   can be single-signer tomorrow. Do not treat `last_modified_ledger` as decorative.
 - `data` is present in some captures and empty in others. Empty means the account has no
@@ -162,15 +164,11 @@ consumer can pick fixtures by what they contain without re-implementing Horizon 
 | `not_sponsored` | `num_sponsored` is 0 |
 | `sponsoring` | `num_sponsoring` is greater than 0 |
 | `not_sponsoring` | `num_sponsoring` is 0 |
-| `no_balances` | `balances` is an empty list (synthetic only: unreachable on live ledgers due to protocol native balance requirements) |
+| `no_balances` | `balances` is an empty list; Horizon always returns at least the native entry, so only a synthetic fixture can carry it |
 | `many_balances` | `balances` has 10 or more entries |
 
-Three reading notes:
+Two reading notes:
 
-- **`no_balances` applies strictly to synthetic fixtures.** On active Stellar ledgers, every valid
-  account resource returned by Horizon carries at least one balance entry: the native XLM balance
-  required by base reserve consensus rules. An account with zero balances cannot exist on chain;
-  see `corpus/label-reachability.md` for the protocol constraints.
 - **`master_absent` means Horizon omitted the master key from `signers`, which is what a
   revoked master key looks like on the account resource.** The ledger does not carry a
   `master_key_revoked` boolean. A consumer that needs the difference between "revoked" and
@@ -235,26 +233,30 @@ Failure to satisfy the contract results in specific validator error conditions:
 4. **Passphrase Mismatch**: If `network_passphrase` does not match the hardcoded network constant:
    `network_passphrase '<observed>' is not the <network> passphrase`
 
-## 7. Versioning and Re-captures
+### Root document provenance
+
+Each root document has a companion `corpus/root-<network>.toml`, written by
+`tools/capture.py` from the same read. It is flat TOML, one section, LF line endings, and
+ends with a newline. It has exactly three keys: `url` is the endpoint root URL that was
+read, `captured_at` has the same `YYYY-MM-DDTHH:MM:SSZ` UTC form as a fixture sidecar,
+and `sha256` is the digest of the exact bytes of the root document on disk.
+
+`validate.py` checks every referenced root document against its companion before it
+parses the document. A sidecar that is missing reports
+`missing; every root document must have a sha256 sidecar`. A digest that does not match
+the bytes reports `sha256 does not match root document (bytes say <first twelve hex>...)`.
+Unknown keys, missing keys, CRLF line endings, a bad timestamp and a malformed sidecar
+are problems on `corpus/root-<network>.toml`, named by key or line where the parser can
+name one. Editing a root document without updating its digest is therefore a validation
+failure, the same as editing `account.json` without updating its fixture sidecar.
+
+## 7. Versioning
 
 `schema_version` is 1. A key is added by adding it here, making `validate.py` accept it,
 and shipping fixtures that use it. A key is renamed, a shape label changes meaning, or
 `account.json` stops being verbatim bytes: that is version 2, and the validator has to
 read both for a release cycle so consumers are not broken mid-flight. Nothing is a version
 2 candidate today.
-
-### Re-capture and Replacement Criteria
-
-Existing fixtures may be re-captured using `tools/capture.py --update` only when refreshing
-byte freshness without altering the specimen's canonical shape labels or scenario properties.
-If an account state change on chain would add, remove, or mutate any derived shape label emitted
-by `validate.py shapes_of`, re-capturing the existing fixture is forbidden: a new fixture with
-a distinct fixture ID must be created instead to preserve consumer test reproducibility.
-
-Every re-capture must be documented in `ROADMAP.md` Section 7 (Changelog) recording the before
-and after ledger sequence numbers, before and after SHA-256 digests, and explicit confirmation
-that derived shape labels remained invariant across the update. For a worked example of this
-workflow, see `corpus/recapture-example.md`.
 
 ## 8. What this schema does not do
 

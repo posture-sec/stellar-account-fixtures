@@ -57,6 +57,8 @@ ID_SHAPE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SEED_SHAPE = re.compile(r"(?<![A-Z2-7])S[A-Z2-7]{55}(?![A-Z2-7])")
 TIMESTAMP_SHAPE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 SHA_SHAPE = re.compile(r"^[0-9a-f]{64}$")
+ROOT_SIDECAR_KEYS = {"url", "captured_at", "sha256"}
+ROOT_SIDECAR_MISSING = "missing; every root document must have a sha256 sidecar"
 ALLOWED_FILES = {"account.json", "fixture.toml"}
 MISSING_ROOT = "missing; every network used must have its root document"
 AUTH_FLAGS = (
@@ -441,6 +443,53 @@ def validate_fixture(corpus: Corpus, directory: Path, seen_ids: dict[str, str]) 
         corpus.report.append(f"{where}: {', '.join(sorted(shapes_of(account)))}")
 
 
+def check_root_provenance(corpus: Corpus, where: str, sidecar: Path, raw: bytes) -> None:
+    """The root document's digest and provenance, read before its contents are trusted."""
+    if not sidecar.is_file():
+        corpus.error(where, ROOT_SIDECAR_MISSING)
+        return
+    data_bytes = sidecar.read_bytes()
+    if b"\r" in data_bytes:
+        corpus.error(where, "root sidecar has CRLF line endings")
+    try:
+        text = data_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        corpus.error(where, f"root sidecar is not valid UTF-8: {exc}")
+        return
+    if not text.endswith("\n"):
+        corpus.error(where, "root sidecar does not end with a newline")
+    for number, line in enumerate(text.splitlines(), start=1):
+        if line != line.rstrip():
+            corpus.error(where, f"line {number} has trailing whitespace")
+    try:
+        data = tomllib.loads(text)
+    except tomllib.TOMLDecodeError as exc:
+        corpus.error(where, f"root sidecar is not valid TOML: {describe_toml_error(exc, text)}")
+        return
+    unknown = sorted(set(data) - ROOT_SIDECAR_KEYS)
+    if unknown:
+        corpus.error(where, f"unknown key(s) in root sidecar: {', '.join(unknown)}")
+    missing = sorted(ROOT_SIDECAR_KEYS - set(data))
+    if missing:
+        corpus.error(where, f"missing key(s): {', '.join(missing)}")
+    digest = hashlib.sha256(raw).hexdigest()
+    recorded = data.get("sha256")
+    if not isinstance(recorded, str) or not SHA_SHAPE.match(recorded):
+        corpus.error(where, f"sha256 {recorded!r} is not 64 lowercase hex characters")
+    elif recorded != digest:
+        corpus.error(where, f"sha256 does not match root document (bytes say {digest[:12]}...)")
+    url = data.get("url")
+    if not isinstance(url, str) or not url:
+        corpus.error(where, f"url {url!r} is not a string")
+    captured = data.get("captured_at")
+    if not isinstance(captured, str) or not TIMESTAMP_SHAPE.match(captured):
+        corpus.error(where, f"captured_at {captured!r} must look like 2026-01-02T03:04:05Z")
+    else:
+        stamp = datetime.strptime(captured, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+        if stamp > datetime.now(UTC):
+            corpus.error(where, f"captured_at {captured} is in the future")
+
+
 def check_root(corpus: Corpus, networks: set[str]) -> None:
     # An unknown network is already a problem on its fixture; there is no
     # passphrase to compare it against, and indexing NETWORKS with it would raise.
@@ -449,8 +498,10 @@ def check_root(corpus: Corpus, networks: set[str]) -> None:
         if not path.is_file():
             corpus.error(f"corpus/root-{network}.json", MISSING_ROOT)
             continue
+        raw = path.read_bytes()
+        check_root_provenance(corpus, f"corpus/root-{network}.toml", path.with_suffix(".toml"), raw)
         try:
-            root = json.loads(path.read_text(encoding="utf-8"))
+            root = json.loads(raw)
         except ValueError as exc:
             corpus.error(f"corpus/root-{network}.json", f"not JSON: {exc}")
             continue

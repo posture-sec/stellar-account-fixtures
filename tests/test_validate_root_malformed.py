@@ -11,7 +11,9 @@ errors differently across Python versions, so a parse failure is matched on the 
 
 from __future__ import annotations
 
+import hashlib
 import io
+import re
 import shutil
 import sys
 import tempfile
@@ -64,6 +66,18 @@ class MalformedRootDocument(unittest.TestCase):
     def root_path(self, network: str) -> Path:
         return self.root / "corpus" / f"root-{network}.json"
 
+    def write_root_bytes(self, network: str, data: bytes) -> None:
+        """Replace a root document and refresh the digest its sidecar records."""
+        path = self.root_path(network)
+        path.write_bytes(data)
+        sidecar = path.with_suffix(".toml")
+        text = sidecar.read_text(encoding="utf-8")
+        digest = hashlib.sha256(data).hexdigest()
+        sidecar.write_text(
+            re.sub(r'^sha256 = ".*"$', f'sha256 = "{digest}"', text, count=1, flags=re.MULTILINE),
+            encoding="utf-8",
+        )
+
     def problems(self) -> list[str]:
         # The point of this suite: anything raised here fails the test with its traceback.
         problems, _ = validate.validate(self.root)
@@ -92,9 +106,9 @@ class MalformedRootDocument(unittest.TestCase):
             original = self.root_path(network).read_bytes()
             for label, data, expected in BYTE_CASES:
                 with self.subTest(network=network, case=label):
-                    self.root_path(network).write_bytes(data)
+                    self.write_root_bytes(network, data)
                     self.assert_only_problem(network, expected)
-            self.root_path(network).write_bytes(original)
+            self.write_root_bytes(network, original)
 
     def test_a_directory_named_like_the_root_document_is_missing(self) -> None:
         for network in self.networks:
@@ -106,12 +120,12 @@ class MalformedRootDocument(unittest.TestCase):
                 (path / "network_passphrase").write_text("decoy\n", encoding="utf-8")
                 self.assert_only_problem(network, validate.MISSING_ROOT)
                 shutil.rmtree(path)
-                path.write_bytes(original)
+                self.write_root_bytes(network, original)
 
     def test_main_exits_one_with_the_problem_line(self) -> None:
         for label, data, _ in BYTE_CASES:
             with self.subTest(case=label):
-                self.root_path("public").write_bytes(data)
+                self.write_root_bytes("public", data)
                 stdout, stderr = io.StringIO(), io.StringIO()
                 with redirect_stdout(stdout), redirect_stderr(stderr):
                     code = validate.main(["--root", str(self.root)])
@@ -126,7 +140,7 @@ class MalformedRootDocument(unittest.TestCase):
         Either way the root is not an object, so the test pins that exactly one structured
         problem comes back and leaves which of the two wordings to the interpreter.
         """
-        self.root_path("public").write_bytes(b"[" * 100_000 + b"]" * 100_000 + b"\n")
+        self.write_root_bytes("public", b"[" * 100_000 + b"]" * 100_000 + b"\n")
         problems = self.problems()
         self.assertEqual(len(problems), 1, problems)
         self.assertIn(
