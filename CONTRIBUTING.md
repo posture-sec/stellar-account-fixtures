@@ -72,7 +72,8 @@ run and a hosted run use the same two versions. `mypy` reads its target list fro
 
 ## When a shape is missing
 
-`README.md` lists eight labels with no fixture. Close one in this order:
+The uncovered shape-label list in `README.md` is generated from `SCHEMA.md` and the
+fixture sidecars; do not edit the list by hand. Close a gap in this order:
 
 1. Find a real account with that shape. Say which one, on which network, in the issue.
 2. Capture it:
@@ -86,8 +87,8 @@ run and a hosted run use the same two versions. `mypy` reads its target list fro
 3. Only if the search failed, write a synthetic fixture, and put the reason in `scenario`.
    D-01 is that captured beats synthetic; the schema allows a synthetic fixture so a rare
    shape is not unreachable, and forbids it from claiming a ledger, a URL or a digest.
-4. Update the gap list in `README.md`, tick the roadmap task, and record the date and the
-   evidence in the changelog row.
+4. Run `python3 scripts/sync_readme.py` to regenerate the README, tick the roadmap task,
+   and record the date and evidence in the changelog row.
 
 `--root` selects the checkout to write into and defaults to the current directory. Use
 `--update` only when intentionally replacing an existing fixture. A re-capture at a later
