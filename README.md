@@ -15,11 +15,7 @@
 
 Public Stellar account reads, captured from Horizon and kept honest by a validator.
 
-<<<<<<< HEAD
-[Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Network Conformance](corpus/network-conformance.md) · [Account Links](corpus/account-links.md) · [Balances](corpus/balances.md) · [Fixtures Index](fixtures/README.md) · [Corpus Guide](corpus/README.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
-=======
 [Documentation site & Specimen Vault](https://posture-sec.github.io/stellar-account-fixtures/) · [Schema Specification](SCHEMA.md) · [The Nine Accounts](#the-nine-accounts) · [Shape Matrix](corpus/shape-matrix.md) · [Provenance](corpus/provenance.md) · [Signers](corpus/signers.md) · [Thresholds](corpus/thresholds.md) · [Data Entries](corpus/data-entries.md) · [Root Diff](corpus/root-diff.md) · [Ledger Ages](corpus/ledger-ages.md) · [Adding a Fixture](#adding-a-fixture) · [Contributing](CONTRIBUTING.md)
->>>>>>> origin/main
 
 Gauge audits the configuration of a real Stellar account. Airlock scans Stellar
 repositories. Both need account-shaped JSON that is not invented: a rule written against
@@ -29,21 +25,6 @@ verbatim, each with the provenance that lets you check the claim.
 
 ```
 fixtures/
-<<<<<<< HEAD
-  README.md
-  asset-heavy-exchange/    account.json  fixture.toml
-  coordinator-data-entry/  account.json  fixture.toml
-  default-plain/           account.json  fixture.toml
-  domain-and-inflation/    account.json  fixture.toml
-  issuer-auth-required/    account.json  fixture.toml
-  multisig-custody/        account.json  fixture.toml
-  null-home-domain/        account.json  fixture.toml
-  sponsored-trustlines/    account.json  fixture.toml
-  ten-balances-boundary/   account.json  fixture.toml
-  testnet-multisig/        account.json  fixture.toml
-  testnet-sponsored/       account.json  fixture.toml
-  whitespace-home-domain/  account.json  fixture.toml
-=======
   asset-heavy-exchange/     account.json  fixture.toml
   coordinator-data-entry/   account.json  fixture.toml
   default-plain/            account.json  fixture.toml
@@ -55,16 +36,8 @@ fixtures/
   testnet-plain/            account.json  fixture.toml
   unnormalized-home-domain/ account.json  fixture.toml
   whitespace-home-domain/   account.json  fixture.toml
->>>>>>> origin/main
 corpus/
-<<<<<<< HEAD
-  README.md
-  account-links.md
-  balances.md
-  choosing-a-fixture.md
-=======
   capture-log.md
->>>>>>> origin/main
   data-entries.md
   ledger-ages.md
   provenance.md
@@ -119,7 +92,7 @@ seed-shaped string (`S...`) is refused by both the capture tool and the validato
 | Indicator | Value | Source |
 |---|---|---|
 | Verified Captures | **14 accounts** (11 Mainnet, 3 Test) | `fixtures/` |
-| Test Suite | **343 passing** | `python -m unittest` |
+| Test Suite | **303 passing** | `python -m unittest` |
 | Integrity Assurance | **SHA-256 sidecars verified** | `validate.py` |
 | Safety Invariant | **Zero secret keys (`S...`)** | Validator enforced |
 <!-- METRICS:END -->
