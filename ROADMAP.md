@@ -1,6 +1,6 @@
 # ROADMAP: Stellar account fixtures
 
-Last updated: 2026-11-25 10:15 UTC
+Last updated: 2026-11-26 02:12 UTC
 
 A corpus of public Stellar account reads, their provenance, and the validator that keeps
 the provenance honest. Nothing here is a claim about whether an account is well
@@ -36,9 +36,9 @@ empty gap list is gate G2.
 |---|---|---|---|---|
 | 0 | Ground truth | 6 | 6 | 100% |
 | 1 | Repository wrapper | 10 | 10 | 100% |
-| 2 | Coverage | 48 | 50 | 96% |
+| 2 | Coverage | 49 | 51 | 96% |
 | 3 | Consumer contract | 4 | 5 | 80% |
-| **All phases** | **Readiness total** | **68** | **71** | **96%** |
+| **All phases** | **Readiness total** | **69** | **72** | **96%** |
 | Gates | G1 to G5 | 3 | 5 | 60% |
 <!-- PROGRESS:END -->
 
@@ -177,6 +177,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 - [x] **2.48** Prevent `scripts/sync_readme.py` from publishing fallback test counts when test discovery fails. M. Deps: none. Done when: import and discovery errors fail `--check` before README or badge files are changed, with regression tests in `tests/test_readme_test_count_fallback.py`. **Issue:** #102.
 - [x] **2.49** Pin the branch of `validate()` that the CLI's own guard hides: a temporary root with no `fixtures/` returns one structured problem ending in `fixtures: no readable fixtures directory`. S. Deps: 2.35. Done when: `tests/test_validate_missing_fixtures.py` drives that root and asserts the single problem. **Issue:** #67. (done 2026-11-25: the problem names `fixtures/` once instead of escaping as a traceback, verified by the new test.)
 - [x] **2.50** Pin that `check_root` reads only the networks the corpus declares: an unparseable `corpus/root-orphan.json` beside valid fixtures is never opened. S. Deps: 2.35. Done when: a scratch corpus with an orphan root validates clean, and a malformed root for a declared network still reports. **Issue:** #68. (done 2026-11-25: `tests/test_validate_orphan_root.py` pins both halves, so a future change that reads every file in `corpus/` fails the test.)
+- [x] **2.51** Add a relative link and heading anchor checker for documentation files in `scripts/check_docs_links.py` with subprocess tests in `tests/test_docs_link_check.py`. M. Deps: none. Done when: `scripts/check_docs_links.py` verifies relative markdown links and anchor fragments across `README.md`, `CONTRIBUTING.md`, `SCHEMA.md`, and `docs/`, exits 1 on broken targets, and `tests/test_docs_link_check.py` passes as a subprocess suite. **Issue:** #104. (done 2026-11-26 02:12: added `scripts/check_docs_links.py` and `tests/test_docs_link_check.py`; verified existing documentation relative links resolve cleanly.)
 
 ### Phase 3: Consumer contract
 
@@ -200,6 +201,7 @@ python3 scripts/roadmap_progress.py --check ROADMAP.md
 ## 7. Changelog
 
 | When | What | Tasks |
+| 2026-11-26 02:12 | Task 2.51 (closing #104): add `scripts/check_docs_links.py` to verify relative markdown links and heading anchors across `README.md`, `CONTRIBUTING.md`, `SCHEMA.md`, and `docs/`, plus subprocess tests in `tests/test_docs_link_check.py`, and regenerate README metrics and badges via `scripts/sync_readme.py`. Issue #6 (Gate G5) stays unticked because external consumer CI proof in Gauge or Airlock cannot be created inside this repository. | 2.51 |
 | 2026-11-25 10:15 | Repair the duplicated roadmap tail that the 2.54 merge appended: conflict markers, a second copy of Phase 3, the decision log and the changelog, and tasks 2.39 to 2.42 repeated as 2.48 to 2.52. Phase 2 is one numbered run from 2.1 to 2.50, the changelog references point at the tasks they describe, and `tests/test_roadmap_task_guard.py` fails when a merge drops task lines, reuses a number or names a task the list does not contain. |
 | 2026-11-25 09:31 | Task 2.50 (closing #68) pins the scope of `check_root`: an unparseable `corpus/root-orphan.json` alongside valid fixtures produces no problem and is not opened, while the declared networks' root documents and sidecars are read. A third case retires every testnet fixture and shows that a malformed `root-testnet.json` is then left untouched, which is the design implication for network cleanups. `check_root`, network discovery and the shipped `corpus/` are unchanged. README metrics and badge data were regenerated for the three added cases. Verified locally: `python3 validate.py`, both unittest suites, `ruff check .`, `ruff format --check .`, `mypy`, `roadmap_progress.py --check` and `sync_readme.py --check` all exit 0. | 2.44 |
 | 2026-11-25 09:28 | Task 2.49 (closing #67) pins the branch of `validate()` that the CLI's own guard hides: a temporary root with no `fixtures/` returns one structured problem ending in `fixtures: no fixtures directory`, report mode returns an empty report, no exception escapes, and a file occupying that name is refused the same way. `validate.py`, its messages and its exit codes were not touched. README metrics and badge data were regenerated for the three added cases. Verified locally: `python3 validate.py`, both unittest suites, `ruff check .`, `ruff format --check .`, `mypy`, `roadmap_progress.py --check` and `sync_readme.py --check` all exit 0. | 2.43 |
