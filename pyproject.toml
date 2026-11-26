@@ -13,6 +13,7 @@ python_version = "3.11"
 files = [
     "validate.py",
     "tools/capture.py",
+    "scripts/check_docs_links.py",
     "test_validate.py",
     "tests/test_corpus_account_links.py",
     "tests/test_corpus_balances.py",
@@ -22,6 +23,7 @@ files = [
     "tests/test_corpus_shape_matrix.py",
     "tests/test_corpus_signers.py",
     "tests/test_corpus_thresholds.py",
+    "tests/test_docs_link_check.py",
     "tests/test_roadmap_gate.py",
     "tests/test_schema_scenario_bounds.py",
     "tests/test_schema_shape_duplicates.py",
